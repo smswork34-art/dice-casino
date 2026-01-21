@@ -95,7 +95,7 @@
         }
 
         .content {
-            padding: 24px;
+            padding: 20px;
         }
 
         .page {
@@ -192,8 +192,7 @@
             background: rgba(0, 0, 0, 0.3);
             border-radius: 20px;
             padding: 20px;
-            margin-bottom: 24px;
-            text-align: center;
+            margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
@@ -229,189 +228,24 @@
             100% { opacity: 1; }
         }
 
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #4a90e2, #003366);
-            width: 60px;
-            height: 60px;
-            right: 20px;
-            bottom: 20px;
-            box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
-        }
-
-        .clouds {
-            position: absolute;
-            width: 100%;
-            height: 30%;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50% 50% 0 0;
-        }
-
-        .rocket-container {
-            width: 100%;
-            height: 200px;
-            position: relative;
-            margin-bottom: 24px;
-            overflow: hidden;
-            perspective: 1000px;
-        }
-
-        /* 3D Ракета под 75 градусов */
-        .rocket-3d {
-            position: absolute;
-            bottom: 20px;
-            left: 50px;
-            width: 60px;
-            height: 120px;
-            transform: rotateX(75deg) rotateZ(0deg);
-            transform-style: preserve-3d;
-            transition: all 0.1s linear;
-        }
-
-        .rocket-body-3d {
-            position: absolute;
-            width: 60px;
-            height: 100px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-            border-radius: 30px 30px 10px 10px;
-            transform: translateZ(30px);
-            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
-        }
-
-        .rocket-nose {
-            position: absolute;
-            width: 60px;
-            height: 30px;
-            background: #ff5252;
-            top: -30px;
-            left: 0;
-            border-radius: 30px 30px 0 0;
-            transform: translateZ(30px);
-        }
-
-        .rocket-wing {
-            position: absolute;
-            width: 20px;
-            height: 40px;
-            background: #ff5252;
-            border-radius: 5px;
-        }
-
-        .wing-left {
-            left: -15px;
-            bottom: 20px;
-            transform: rotateY(-90deg) translateZ(10px);
-        }
-
-        .wing-right {
-            right: -15px;
-            bottom: 20px;
-            transform: rotateY(90deg) translateZ(10px);
-        }
-
-        .rocket-engine {
-            position: absolute;
-            width: 40px;
-            height: 20px;
-            background: #ff9800;
-            bottom: -10px;
-            left: 10px;
-            border-radius: 0 0 10px 10px;
-            transform: translateZ(30px);
-            overflow: hidden;
-        }
-
-        .engine-fire {
-            position: absolute;
-            width: 100%;
-            height: 40px;
-            background: linear-gradient(to bottom, #ff9800 0%, #ff5722 50%, transparent 100%);
-            bottom: -40px;
-            border-radius: 0 0 10px 10px;
-            animation: fireBurn 0.3s infinite alternate;
-        }
-
-        @keyframes fireBurn {
-            0% { height: 40px; opacity: 0.8; }
-            100% { height: 60px; opacity: 1; }
-        }
-
-        .rocket-window-3d {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #87CEEB;
-            border-radius: 50%;
-            top: 30px;
-            left: 20px;
-            transform: translateZ(45px);
-            border: 2px solid #2aabee;
-        }
-
-        /* Взрыв */
-        .explosion-3d {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateZ(0);
-        }
-
-        .explosion-core {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #ff9800 0%, #ff5722 50%, transparent 70%);
-            border-radius: 50%;
-            animation: explosionCore 0.8s ease-out forwards;
-        }
-
-        .explosion-particle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #ff9800;
-            border-radius: 50%;
-            animation: explosionParticle 0.8s ease-out forwards;
-        }
-
-        @keyframes explosionCore {
-            0% { transform: scale(0); opacity: 1; }
-            50% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-
-        @keyframes explosionParticle {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
-
-        .multiplier-display {
-            font-size: 48px;
-            font-weight: 800;
-            margin: 16px 0;
-            color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            font-family: 'Courier New', monospace;
-        }
-
         .multiplier-history {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             overflow-x: auto;
             padding: 12px 0;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+
+        .multiplier-history::-webkit-scrollbar {
+            display: none;
         }
 
         .multiplier-item {
-            min-width: 60px;
+            min-width: 70px;
             height: 40px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -419,6 +253,7 @@
             font-weight: 700;
             border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(5px);
+            flex-shrink: 0;
         }
 
         .multiplier-win {
@@ -431,8 +266,190 @@
             border-color: rgba(255, 107, 107, 0.3);
         }
 
-        .bet-input-container {
+        .multiplier-display-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .multiplier-display {
+            font-size: 56px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+            margin-bottom: 10px;
+        }
+
+        .game-info-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .rocket-container {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+            perspective: 1000px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Ракета с вашим PNG изображением */
+        .rocket {
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            width: 80px;
+            height: 150px;
+            background-image: url('https://cloud.turbotext.ru/userfiles/wd4/remove_background/free/2026/01/22/28228378dc188d019e1c4ecb1ac81bd4.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform: rotate(-10deg);
+            transition: all 0.1s linear;
+            filter: drop-shadow(0 0 10px rgba(255, 100, 100, 0.5));
+            z-index: 10;
+        }
+
+        /* Анимация огня для ракеты */
+        .rocket-fire {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to top, #ff9800 0%, #ff5722 50%, transparent 100%);
+            border-radius: 50% 50% 0 0;
+            animation: fireBurn 0.3s infinite alternate;
+            z-index: 5;
+        }
+
+        @keyframes fireBurn {
+            0% { 
+                height: 40px; 
+                opacity: 0.8; 
+                background: linear-gradient(to top, #ff9800 0%, #ff5722 50%, transparent 100%);
+            }
+            100% { 
+                height: 70px; 
+                opacity: 1; 
+                background: linear-gradient(to top, #ff5722 0%, #ff0000 50%, transparent 100%);
+            }
+        }
+
+        .explosion {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateZ(0);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+        }
+
+        .explosion-core {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #ff9800 0%, #ff5722 50%, transparent 70%);
+            border-radius: 50%;
+            animation: explosionCore 0.8s ease-out forwards;
+        }
+
+        @keyframes explosionCore {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Настройки игры - как на скриншоте */
+        .game-settings {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .setting-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auto-stop-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auto-stop-input {
+            width: 60px;
+            padding: 6px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .auto-stop-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        /* Блок ставки - как на скриншоте */
+        .bet-controls {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bet-amount-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .bet-input-container {
+            flex: 1;
         }
 
         .bet-input {
@@ -441,20 +458,40 @@
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 18px;
             text-align: center;
-            transition: all 0.2s ease;
             color: white;
+            font-weight: 600;
         }
 
         .bet-input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
 
-        .bet-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.15);
+        .bet-adjust-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .bet-adjust-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .bet-adjust-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .quick-bets {
@@ -465,11 +502,11 @@
         }
 
         .quick-bet-btn {
-            padding: 12px;
+            padding: 14px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             color: white;
             cursor: pointer;
@@ -487,77 +524,131 @@
             border-color: #667eea;
         }
 
-        .crash-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
+        .max-bet-btn {
+            padding: 14px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
         }
 
-        .crash-button {
-            padding: 18px;
+        .max-bet-btn:active {
+            transform: scale(0.95);
+        }
+
+        .place-bet-section {
+            margin-top: 20px;
+        }
+
+        .place-bet-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             border: none;
             border-radius: 16px;
+            color: white;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             backdrop-filter: blur(5px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .crash-button:active {
+        .place-bet-btn:active {
             transform: scale(0.98);
         }
 
-        .crash-button:disabled {
+        .place-bet-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
 
-        .place-bet-btn {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-        }
-
         .cashout-btn {
+            width: 100%;
+            padding: 20px;
             background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            border: none;
+            border-radius: 16px;
             color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             display: none;
         }
 
-        .auto-stop {
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .auto-stop label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .auto-stop-input {
-            width: 60px;
-            padding: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            color: white;
-            text-align: center;
+        .cashout-btn:active {
+            transform: scale(0.98);
         }
 
         .timer-display {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
-            margin-top: 12px;
+            margin-top: 16px;
             font-weight: 600;
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Статистика игроков */
+        .players-stats {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .players-count {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .players-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .players-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .total-bet {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
+        }
+
+        .total-bet-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .total-bet-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4CAF50;
         }
 
         /* Игра DICE */
@@ -770,6 +861,11 @@
             gap: 10px;
             overflow-x: auto;
             padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+
+        .history-items::-webkit-scrollbar {
+            display: none;
         }
 
         .history-item {
@@ -1547,6 +1643,58 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.4);
         }
+
+        /* Кнопка анимации */
+        .animation-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            transition: .4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
     </style>
 </head>
 <body>
@@ -1591,62 +1739,115 @@
                 <div class="crash-game">
                     <div class="space-background">
                         <div class="stars"></div>
-                        <div class="planet"></div>
-                        <div class="clouds"></div>
                     </div>
                     
+                    <!-- История множителей -->
+                    <div class="multiplier-history" id="multiplierHistory">
+                        <div class="multiplier-item multiplier-win">3.04x</div>
+                        <div class="multiplier-item multiplier-win">1.07x</div>
+                        <div class="multiplier-item multiplier-win">2.34x</div>
+                        <div class="multiplier-item multiplier-crash">1.37x</div>
+                        <div class="multiplier-item multiplier-win">1.71x</div>
+                        <div class="multiplier-item multiplier-crash">1.02x</div>
+                    </div>
+                    
+                    <!-- Отображение текущего множителя -->
+                    <div class="multiplier-display-container">
+                        <div class="multiplier-display" id="multiplierDisplay">1.00x</div>
+                        <div class="game-info-label">
+                            <span>?</span>
+                            <span>23.81X</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Контейнер для ракеты -->
                     <div class="rocket-container">
-                        <div class="rocket-3d" id="rocket3d">
-                            <div class="rocket-body-3d">
-                                <div class="rocket-nose"></div>
-                                <div class="rocket-window-3d"></div>
-                                <div class="rocket-wing wing-left"></div>
-                                <div class="rocket-wing wing-right"></div>
-                                <div class="rocket-engine">
-                                    <div class="engine-fire"></div>
-                                </div>
+                        <div class="rocket" id="rocket">
+                            <div class="rocket-fire"></div>
+                        </div>
+                        <div class="explosion" id="explosion">
+                            <div class="explosion-core"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Настройки игры -->
+                    <div class="game-settings">
+                        <div class="setting-row">
+                            <div class="setting-label">
+                                <span>🔴 Анимация включена</span>
+                            </div>
+                            <div class="animation-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="animationToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
-                        <div class="explosion-3d" id="explosion3d"></div>
+                        
+                        <div class="setting-row">
+                            <div class="setting-label">
+                                <span>🔵 Автостоп</span>
+                            </div>
+                            <div class="auto-stop-control">
+                                <span>2,00</span>
+                                <input type="number" class="auto-stop-input" id="autoStopInput" value="2.00" step="0.01" min="1.01" max="100">
+                                <span class="auto-stop-value">x</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="multiplier-display" id="multiplierDisplay">1.00x</div>
-                    
-                    <div class="multiplier-history" id="multiplierHistory">
-                        <!-- История множителей -->
+                    <!-- Блок ставки -->
+                    <div class="bet-controls">
+                        <div class="bet-amount-control">
+                            <div class="bet-adjust-buttons">
+                                <button class="bet-adjust-btn" id="decreaseBet">-</button>
+                            </div>
+                            
+                            <div class="bet-input-container">
+                                <input type="number" class="bet-input" id="crashBetAmount" placeholder="1 ₽" min="1" value="10">
+                            </div>
+                            
+                            <div class="bet-adjust-buttons">
+                                <button class="bet-adjust-btn" id="increaseBet">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-bets">
+                            <button class="quick-bet-btn" data-amount="10">+10</button>
+                            <button class="quick-bet-btn" data-amount="50">+50</button>
+                            <button class="quick-bet-btn" data-amount="100">+100</button>
+                            <button class="max-bet-btn" id="maxBetBtn">Max</button>
+                        </div>
+                        
+                        <div class="place-bet-section">
+                            <button class="place-bet-btn" id="placeBetBtn">
+                                ВОЙТИ
+                            </button>
+                            <button class="cashout-btn" id="cashoutBtn">
+                                ЗАБРАТЬ
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="bet-input-container">
-                        <input type="number" class="bet-input" id="crashBetAmount" placeholder="Введите сумму ставки (TON)" min="1" value="10">
-                    </div>
-                    
-                    <div class="quick-bets">
-                        <button class="quick-bet-btn" data-amount="10">10</button>
-                        <button class="quick-bet-btn" data-amount="50">50</button>
-                        <button class="quick-bet-btn" data-amount="100">100</button>
-                        <button class="quick-bet-btn" data-amount="500">500</button>
-                    </div>
-
-                    <div class="auto-stop">
-                        <label for="autoStopInput">Автостоп:</label>
-                        <input type="number" class="auto-stop-input" id="autoStopInput" value="2.00" step="0.01" min="1.01" max="100">
-                        <span style="color: rgba(255,255,255,0.8);">x</span>
-                    </div>
-                    
-                    <div class="crash-controls">
-                        <button class="crash-button place-bet-btn" id="placeBetBtn">
-                            Сделать ставку
-                        </button>
-                        <button class="crash-button cashout-btn" id="cashoutBtn">
-                            Забрать
-                        </button>
-                    </div>
-                    
+                    <!-- Таймер -->
                     <div class="timer-display" id="timerDisplay">
                         Следующий раунд через: <span id="countdown">10</span> сек
                     </div>
+                    
+                    <!-- Статистика игроков -->
+                    <div class="players-stats">
+                        <div class="players-count">
+                            <div class="players-label">Игроки онлайн</div>
+                            <div class="players-value">57</div>
+                        </div>
+                        <div class="total-bet">
+                            <div class="total-bet-label">Общая ставка</div>
+                            <div class="total-bet-value">₽ 3,121.00</div>
+                        </div>
+                    </div>
                 </div>
                 
+                <!-- История крашей -->
                 <div class="history-section">
                     <div class="history-title">
                         <span class="history-icon"></span>
@@ -1896,6 +2097,7 @@
         let crashTimerInterval = null;
         let autoStopMultiplier = 2.00;
         let isUserInCrashGame = false;
+        let animationEnabled = true;
         
         // Игра DICE переменные
         let diceBetAmount = 10;
@@ -1928,17 +2130,20 @@
         const withdrawPage = document.getElementById('withdrawPage');
         
         // Игра КРАШ элементы
-        const rocket3d = document.getElementById('rocket3d');
-        const explosion3d = document.getElementById('explosion3d');
+        const rocket = document.getElementById('rocket');
+        const explosion = document.getElementById('explosion');
         const multiplierDisplay = document.getElementById('multiplierDisplay');
-        const multiplierHistory = document.getElementById('multiplierHistory');
         const crashBetAmountInput = document.getElementById('crashBetAmount');
-        const quickBetBtns = document.querySelectorAll('.quick-bet-btn');
         const placeBetBtn = document.getElementById('placeBetBtn');
         const cashoutBtn = document.getElementById('cashoutBtn');
         const timerDisplay = document.getElementById('countdown');
         const crashHistoryItems = document.getElementById('crashHistoryItems');
         const autoStopInput = document.getElementById('autoStopInput');
+        const decreaseBetBtn = document.getElementById('decreaseBet');
+        const increaseBetBtn = document.getElementById('increaseBet');
+        const maxBetBtn = document.getElementById('maxBetBtn');
+        const quickBetBtns = document.querySelectorAll('.quick-bet-btn');
+        const animationToggle = document.getElementById('animationToggle');
         
         // Игра DICE элементы
         const dice = document.getElementById('dice');
@@ -2054,36 +2259,35 @@
         
         // ==================== ИГРА КРАШ ====================
         function initCrashGame() {
+            // Кнопки + и -
+            decreaseBetBtn.addEventListener('click', () => {
+                crashBetAmount = Math.max(1, crashBetAmount - 1);
+                crashBetAmountInput.value = crashBetAmount;
+            });
+            
+            increaseBetBtn.addEventListener('click', () => {
+                crashBetAmount += 1;
+                crashBetAmountInput.value = crashBetAmount;
+            });
+            
+            // Кнопка Max
+            maxBetBtn.addEventListener('click', () => {
+                crashBetAmount = balance;
+                crashBetAmountInput.value = crashBetAmount;
+            });
+            
             // Обработчики быстрых ставок
             quickBetBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const amount = parseInt(btn.dataset.amount);
-                    crashBetAmount = amount;
-                    crashBetAmountInput.value = amount;
-                    
-                    quickBetBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+                    crashBetAmount += amount;
+                    crashBetAmountInput.value = crashBetAmount;
                 });
             });
             
             // Обработчик ввода суммы ставки
             crashBetAmountInput.addEventListener('input', () => {
                 crashBetAmount = parseInt(crashBetAmountInput.value) || 0;
-                
-                // Снимаем активные кнопки если сумма не совпадает
-                let hasActive = false;
-                quickBetBtns.forEach(btn => {
-                    if (parseInt(btn.dataset.amount) === crashBetAmount) {
-                        btn.classList.add('active');
-                        hasActive = true;
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                if (!hasActive) {
-                    quickBetBtns.forEach(btn => btn.classList.remove('active'));
-                }
             });
             
             // Автостоп
@@ -2094,7 +2298,17 @@
                 autoStopInput.value = autoStopMultiplier.toFixed(2);
             });
             
-            // Кнопка "Сделать ставку"
+            // Переключатель анимации
+            animationToggle.addEventListener('change', () => {
+                animationEnabled = animationToggle.checked;
+                if (!animationEnabled) {
+                    rocket.style.display = 'none';
+                } else {
+                    rocket.style.display = 'block';
+                }
+            });
+            
+            // Кнопка "Войти"
             placeBetBtn.addEventListener('click', () => {
                 if (crashGameActive) return;
                 if (balance < crashBetAmount) {
@@ -2122,9 +2336,6 @@
                 
                 cashout();
             });
-            
-            // Инициализируем историю множителей
-            updateMultiplierHistory();
         }
         
         function cashout() {
@@ -2185,12 +2396,11 @@
             isUserInCrashGame = false;
             
             // Сбрасываем ракету
-            rocket3d.style.left = '50px';
-            rocket3d.style.transform = 'rotateX(75deg) rotateZ(0deg)';
+            rocket.style.left = '50px';
+            rocket.style.bottom = '30px';
             
             // Сбрасываем взрыв
-            explosion3d.innerHTML = '';
-            explosion3d.style.opacity = '0';
+            explosion.style.opacity = '0';
             
             // Алгоритм краша
             const crashPoint = generateCrashPoint();
@@ -2207,9 +2417,11 @@
                 currentCrashMultiplier += 0.01;
                 multiplierDisplay.textContent = currentCrashMultiplier.toFixed(2) + 'x';
                 
-                // Двигаем ракету вправо (горизонтально)
-                const rocketPosition = 50 + (currentCrashMultiplier * 10);
-                rocket3d.style.left = `${Math.min(rocketPosition, 300)}px`;
+                // Двигаем ракету вправо и вверх
+                const rocketPositionX = 50 + (currentCrashMultiplier * 15);
+                const rocketPositionY = 30 + (currentCrashMultiplier * 5);
+                rocket.style.left = `${Math.min(rocketPositionX, 300)}px`;
+                rocket.style.bottom = `${Math.min(rocketPositionY, 150)}px`;
                 
                 // Автостоп
                 if (hasPlacedBet && currentCrashMultiplier >= autoStopMultiplier) {
@@ -2287,35 +2499,11 @@
         }
         
         function createExplosion() {
-            explosion3d.innerHTML = '';
-            explosion3d.style.opacity = '1';
-            
-            const core = document.createElement('div');
-            core.className = 'explosion-core';
-            explosion3d.appendChild(core);
-            
-            // Создаем частицы взрыва
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'explosion-particle';
-                
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 100 + Math.random() * 100;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
-                
-                particle.style.setProperty('--tx', `${tx}px`);
-                particle.style.setProperty('--ty', `${ty}px`);
-                particle.style.left = '50%';
-                particle.style.top = '50%';
-                particle.style.animationDelay = `${Math.random() * 0.3}s`;
-                
-                explosion3d.appendChild(particle);
-            }
+            explosion.style.opacity = '1';
             
             // Убираем взрыв через 1 секунду
             setTimeout(() => {
-                explosion3d.style.opacity = '0';
+                explosion.style.opacity = '0';
             }, 1000);
         }
         
@@ -2326,13 +2514,6 @@
             cashoutBtn.style.display = 'none';
             crashBetAmount = 10;
             crashBetAmountInput.value = crashBetAmount;
-            
-            quickBetBtns.forEach(btn => {
-                btn.classList.remove('active');
-                if (parseInt(btn.dataset.amount) === crashBetAmount) {
-                    btn.classList.add('active');
-                }
-            });
         }
         
         function addMultiplierToHistory(multiplier) {
@@ -2340,16 +2521,17 @@
             item.className = `multiplier-item ${parseFloat(multiplier) < 2.0 ? 'multiplier-crash' : 'multiplier-win'}`;
             item.textContent = multiplier + 'x';
             
-            // Вставляем в начало
-            if (multiplierHistory.firstChild) {
-                multiplierHistory.insertBefore(item, multiplierHistory.firstChild);
+            // Вставляем в начало истории
+            const historyContainer = document.querySelector('.multiplier-history');
+            if (historyContainer.firstChild) {
+                historyContainer.insertBefore(item, historyContainer.firstChild);
             } else {
-                multiplierHistory.appendChild(item);
+                historyContainer.appendChild(item);
             }
             
             // Ограничиваем количество
-            if (multiplierHistory.children.length > 10) {
-                multiplierHistory.removeChild(multiplierHistory.lastChild);
+            if (historyContainer.children.length > 10) {
+                historyContainer.removeChild(historyContainer.lastChild);
             }
         }
         
@@ -2359,14 +2541,6 @@
             if (crashHistory.length > 20) crashHistory.pop();
             localStorage.setItem(`crashHistory_${getUserId()}`, JSON.stringify(crashHistory));
             updateCrashHistory();
-        }
-        
-        function updateMultiplierHistory() {
-            // Добавляем демо-историю
-            const demoMultipliers = ['1.24x', '2.56x', '0.98x', '3.12x', '1.67x'];
-            demoMultipliers.forEach(mult => {
-                addMultiplierToHistory(mult.replace('x', ''));
-            });
         }
         
         function updateCrashHistory() {
