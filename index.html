@@ -1222,6 +1222,21 @@
         </div>
     </div>
 
+    <!-- Скрытая панель админа -->
+<div id="adminPanel" style="position: fixed; top: 10px; right: 10px; z-index: 9999; display: none;">
+    <div style="background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <button onclick="addTestFunds(1000)" style="background: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 6px; margin: 2px; cursor: pointer;">
+            +1000 TON
+        </button>
+        <button onclick="addTestFunds(5000)" style="background: #2196F3; color: white; border: none; padding: 8px 12px; border-radius: 6px; margin: 2px; cursor: pointer;">
+            +5000 TON
+        </button>
+        <button onclick="resetBalance()" style="background: #f44336; color: white; border: none; padding: 8px 12px; border-radius: 6px; margin: 2px; cursor: pointer;">
+            Сброс
+        </button>
+    </div>
+</div>
+
     <script>
         // ==================== КОНСТАНТЫ ====================
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
