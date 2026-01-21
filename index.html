@@ -90,11 +90,28 @@
             transform: translateY(0);
         }
 
+        .balance-icon {
+            width: 16px;
+            height: 16px;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%234CAF50" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
         /* Основной контент */
         .content {
             padding: 24px;
         }
 
+        .page {
+            display: block;
+        }
+
+        .page.hidden {
+            display: none;
+        }
+
+        /* Страница игры */
         .game-area {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -325,6 +342,17 @@
             transform: none !important;
         }
 
+        .play-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M8 5v14l11-7z"/></svg>') no-repeat center;
+            mask-size: contain;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
         /* История */
         .history {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
@@ -339,6 +367,17 @@
             font-weight: 700;
             margin-bottom: 20px;
             color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-icon {
+            width: 20px;
+            height: 20px;
+            background: #2aabee;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>') no-repeat center;
+            mask-size: contain;
         }
 
         .history-items {
@@ -372,6 +411,166 @@
             background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
             color: white;
             border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        /* Страница статистики */
+        .stats-page {
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(42, 171, 238, 0.15);
+        }
+
+        .stats-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stats-icon {
+            width: 24px;
+            height: 24px;
+            background: #2aabee;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .stats-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+            border: 1px solid #e6f4ff;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-win {
+            color: #4CAF50;
+        }
+
+        .stat-lose {
+            color: #ff6b6b;
+        }
+
+        .stat-total {
+            color: #2aabee;
+        }
+
+        .stat-profit {
+            color: #4CAF50;
+        }
+
+        .stat-loss {
+            color: #ff6b6b;
+        }
+
+        .bets-history {
+            margin-top: 24px;
+        }
+
+        .bets-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .bets-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bet-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e6f4ff;
+        }
+
+        .bet-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .bet-amount {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .bet-result {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .bet-win {
+            color: #4CAF50;
+        }
+
+        .bet-lose {
+            color: #ff6b6b;
+        }
+
+        .bet-outcome {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .bet-outcome.win {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .bet-outcome.lose {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+
+        .empty-stats {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .dice-icon {
+            width: 40px;
+            height: 40px;
+            background: #2aabee;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>') no-repeat center;
+            mask-size: contain;
+            margin: 0 auto 16px;
         }
 
         /* Модальное окно депозита */
@@ -484,6 +683,17 @@
             cursor: not-allowed;
         }
 
+        .deposit-icon {
+            width: 20px;
+            height: 20px;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
+            mask-size: contain;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
         /* Анимация кости */
         @keyframes roll {
             0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
@@ -575,53 +785,128 @@
         }
 
         .nav-icon {
-            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            background: #888;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+
+        .nav-icon.game {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>');
+        }
+
+        .nav-icon.stats {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>');
+        }
+
+        .nav-icon.profile {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+        }
+
+        .nav-item.active .nav-icon {
+            background: #2aabee;
+        }
+
+        .nav-item:hover .nav-icon {
+            background: #2aabee;
         }
     </style>
 </head>
 <body>
     <!-- Главная страница игры -->
     <div class="container">
-        <!-- НОВАЯ ВЕРХНЯЯ ПАНЕЛЬ -->
+        <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
         <div class="top-panel">
             <div class="user-info">
                 <div class="user-avatar" id="userAvatar">👤</div>
                 <div class="username" id="username">Гость</div>
             </div>
             <button class="balance-btn" id="openDepositModal">
-                💰 <span id="balanceAmount">1,500 TON</span>
+                <span class="balance-icon"></span>
+                <span id="balanceAmount">1,500 TON</span>
             </button>
         </div>
 
         <div class="content">
-            <div class="game-area">
-                <div class="dice-container">
-                    <div class="dice" id="dice">
-                        <!-- Грани кубика -->
-                        <div class="dice-face face-1"><div class="dots-container"><div class="dot"></div></div></div>
-                        <div class="dice-face face-2"><div class="dots-container"><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-3"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-4"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-5"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-6"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <!-- Страница игры -->
+            <div class="page game-page" id="gamePage">
+                <div class="game-area">
+                    <div class="dice-container">
+                        <div class="dice" id="dice">
+                            <!-- Грани кубика -->
+                            <div class="dice-face face-1"><div class="dots-container"><div class="dot"></div></div></div>
+                            <div class="dice-face face-2"><div class="dots-container"><div class="dot"></div><div class="dot"></div></div></div>
+                            <div class="dice-face face-3"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                            <div class="dice-face face-4"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                            <div class="dice-face face-5"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                            <div class="dice-face face-6"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                        </div>
+                    </div>
+
+                    <div class="bet-controls">
+                        <button class="bet-button active" data-bet="10">10 TON</button>
+                        <button class="bet-button" data-bet="50">50 TON</button>
+                        <button class="bet-button" data-bet="100">100 TON</button>
+                    </div>
+
+                    <button class="play-button" id="playButton">
+                        <span class="play-icon"></span>
+                        Крутить кость
+                    </button>
+                </div>
+
+                <div class="history">
+                    <div class="history-title">
+                        <span class="history-icon"></span>
+                        История игр
+                    </div>
+                    <div class="history-items" id="historyItems">
+                        <!-- История будет здесь -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Страница статистики -->
+            <div class="page stats-page hidden" id="statsPage">
+                <div class="stats-header">
+                    <span class="stats-icon"></span>
+                    <h2 class="stats-title">Статистика игр</h2>
+                </div>
+
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <div class="stat-value stat-total" id="totalGames">0</div>
+                        <div class="stat-label">Всего игр</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-value stat-profit" id="totalProfit">0 TON</div>
+                        <div class="stat-label">Общая прибыль</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-value stat-win" id="winRate">0%</div>
+                        <div class="stat-label">Процент побед</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-value stat-loss" id="totalLoss">0 TON</div>
+                        <div class="stat-label">Общий проигрыш</div>
                     </div>
                 </div>
 
-                <div class="bet-controls">
-                    <button class="bet-button active" data-bet="10">10 TON</button>
-                    <button class="bet-button" data-bet="50">50 TON</button>
-                    <button class="bet-button" data-bet="100">100 TON</button>
-                </div>
-
-                <button class="play-button" id="playButton">
-                    🎲 Крутить кость
-                </button>
-            </div>
-
-            <div class="history">
-                <div class="history-title">История игр</div>
-                <div class="history-items" id="historyItems">
-                    <!-- История будет здесь -->
+                <div class="bets-history">
+                    <div class="bets-title">Последние 10 ставок</div>
+                    <div class="bets-list" id="betsList">
+                        <!-- Список ставок будет здесь -->
+                    </div>
+                    <div class="empty-stats" id="emptyStats">
+                        <div class="dice-icon"></div>
+                        <p>Статистика пока пуста</p>
+                        <p style="font-size: 14px; margin-top: 8px;">Сыграйте несколько игр, чтобы увидеть статистику</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -631,7 +916,7 @@
     <div class="modal-overlay" id="depositModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 style="margin: 0; font-size: 20px;">💰 Пополнение баланса</h2>
+                <h2 style="margin: 0; font-size: 20px;">Пополнение баланса</h2>
                 <button class="modal-close" id="closeModal">×</button>
             </div>
             <div class="modal-content">
@@ -653,6 +938,7 @@
                 </div>
                 
                 <button class="send-button" id="sendDeposit" disabled>
+                    <span class="deposit-icon"></span>
                     Отправить <span id="selectedAmount">10</span> TON
                 </button>
             </div>
@@ -661,16 +947,16 @@
 
     <!-- Нижнее меню -->
     <div class="bottom-nav">
-        <div class="nav-item active">
-            <div class="nav-icon">🎲</div>
+        <div class="nav-item active" data-page="game">
+            <div class="nav-icon game"></div>
             <div>Играть</div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">📊</div>
+        <div class="nav-item" data-page="stats">
+            <div class="nav-icon stats"></div>
             <div>Статистика</div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">👤</div>
+        <div class="nav-item" data-page="profile">
+            <div class="nav-icon profile"></div>
             <div>Профиль</div>
         </div>
     </div>
@@ -688,6 +974,7 @@
         let isRolling = false;
         let currentDepositAmount = 10;
         let username = localStorage.getItem('username') || 'Игрок #' + Math.floor(Math.random() * 10000);
+        let betsHistory = JSON.parse(localStorage.getItem('betsHistory')) || [];
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const dice = document.getElementById('dice');
@@ -705,6 +992,15 @@
         const betButtons = document.querySelectorAll('.bet-button');
         const usernameElement = document.getElementById('username');
         const userAvatar = document.getElementById('userAvatar');
+        const gamePage = document.getElementById('gamePage');
+        const statsPage = document.getElementById('statsPage');
+        const navItems = document.querySelectorAll('.nav-item');
+        const totalGamesEl = document.getElementById('totalGames');
+        const totalProfitEl = document.getElementById('totalProfit');
+        const winRateEl = document.getElementById('winRate');
+        const totalLossEl = document.getElementById('totalLoss');
+        const betsListEl = document.getElementById('betsList');
+        const emptyStatsEl = document.getElementById('emptyStats');
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
@@ -720,6 +1016,127 @@
             
             // Восстанавливаем историю
             initHistory();
+            
+            // Восстанавливаем статистику
+            updateStats();
+            
+            // Навигация
+            setupNavigation();
+        }
+        
+        // ==================== НАВИГАЦИЯ ====================
+        function setupNavigation() {
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.dataset.page;
+                    
+                    // Обновляем активный элемент навигации
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    // Показываем соответствующую страницу
+                    if (page === 'game') {
+                        gamePage.classList.remove('hidden');
+                        statsPage.classList.add('hidden');
+                    } else if (page === 'stats') {
+                        gamePage.classList.add('hidden');
+                        statsPage.classList.remove('hidden');
+                        updateStats();
+                    }
+                });
+            });
+        }
+        
+        // ==================== СТАТИСТИКА ====================
+        function updateStats() {
+            const totalGames = betsHistory.length;
+            const totalWins = betsHistory.filter(bet => bet.win).length;
+            const totalLosses = totalGames - totalWins;
+            
+            // Рассчитываем прибыль/убыток
+            let totalProfit = 0;
+            let totalLoss = 0;
+            
+            betsHistory.forEach(bet => {
+                if (bet.win) {
+                    totalProfit += bet.bet * 2; // Выигрыш 2x ставки
+                } else {
+                    totalLoss += bet.bet;
+                }
+            });
+            
+            const netProfit = totalProfit - totalLoss;
+            const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+            
+            // Обновляем элементы
+            totalGamesEl.textContent = totalGames;
+            totalProfitEl.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
+            winRateEl.textContent = winRate + '%';
+            totalLossEl.textContent = totalLoss + ' TON';
+            
+            // Обновляем список ставок
+            updateBetsList();
+            
+            // Показываем/скрываем сообщение о пустой статистике
+            if (totalGames === 0) {
+                emptyStatsEl.style.display = 'block';
+                betsListEl.style.display = 'none';
+            } else {
+                emptyStatsEl.style.display = 'none';
+                betsListEl.style.display = 'flex';
+            }
+        }
+        
+        function updateBetsList() {
+            // Очищаем список
+            betsListEl.innerHTML = '';
+            
+            // Берем последние 10 ставок
+            const lastBets = betsHistory.slice(-10).reverse();
+            
+            lastBets.forEach(bet => {
+                const betItem = document.createElement('div');
+                betItem.className = 'bet-item';
+                
+                const time = new Date(bet.timestamp).toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                betItem.innerHTML = `
+                    <div class="bet-info">
+                        <div class="bet-amount">${bet.bet} TON</div>
+                        <div class="bet-result ${bet.win ? 'bet-win' : 'bet-lose'}">
+                            ${bet.win ? 'Выигрыш' : 'Проигрыш'} • ${time}
+                        </div>
+                    </div>
+                    <div class="bet-outcome ${bet.win ? 'win' : 'lose'}">
+                        ${bet.win ? '+' + (bet.bet * 2) + ' TON' : '-' + bet.bet + ' TON'}
+                    </div>
+                `;
+                
+                betsListEl.appendChild(betItem);
+            });
+        }
+        
+        function addToBetsHistory(bet, win) {
+            const betRecord = {
+                bet: bet,
+                win: win,
+                timestamp: Date.now(),
+                result: Math.floor(Math.random() * 6) + 1
+            };
+            
+            betsHistory.push(betRecord);
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('betsHistory', JSON.stringify(betsHistory));
+            
+            // Обновляем статистику
+            updateStats();
         }
         
         // ==================== ИНИЦИАЛИЗАЦИЯ TON CONNECT ====================
@@ -848,6 +1265,7 @@
                 
                 updateBalanceDisplay();
                 addToHistory(result, win);
+                addToBetsHistory(currentBet, win);
                 isRolling = false;
             }, 1200);
         });
