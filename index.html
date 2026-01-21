@@ -114,10 +114,10 @@
         }
 
         .dice-container {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 24px;
-            perspective: 1000px;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            perspective: 800px;
             position: relative;
         }
 
@@ -134,10 +134,10 @@
 
         .dice-face {
             position: absolute;
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -148,14 +148,14 @@
         .dots-container {
             width: 100%;
             height: 100%;
-            padding: 16px;
+            padding: 12px;
             display: grid;
-            gap: 8px;
+            gap: 6px;
         }
 
         .dot {
-            width: 14px;
-            height: 14px;
+            width: 10px;
+            height: 10px;
             background: white;
             border-radius: 50%;
             justify-self: center;
@@ -163,22 +163,22 @@
         }
 
         .face-1 { 
-            transform: translateZ(50px);
+            transform: translateZ(40px);
         }
         .face-2 { 
-            transform: rotateY(90deg) translateZ(50px);
+            transform: rotateY(90deg) translateZ(40px);
         }
         .face-3 { 
-            transform: rotateX(90deg) translateZ(50px);
+            transform: rotateX(90deg) translateZ(40px);
         }
         .face-4 { 
-            transform: rotateX(-90deg) translateZ(50px);
+            transform: rotateX(-90deg) translateZ(40px);
         }
         .face-5 { 
-            transform: rotateY(-90deg) translateZ(50px);
+            transform: rotateY(-90deg) translateZ(40px);
         }
         .face-6 { 
-            transform: rotateY(180deg) translateZ(50px);
+            transform: rotateY(180deg) translateZ(40px);
         }
 
         .face-1 .dots-container {
