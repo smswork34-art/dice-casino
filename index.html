@@ -31,7 +31,6 @@
             border: 1px solid rgba(42, 171, 238, 0.1);
         }
 
-        /* НОВАЯ ВЕРХНЯЯ ПАНЕЛЬ */
         .top-panel {
             padding: 12px 16px;
             display: flex;
@@ -78,16 +77,11 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.3s;
-        }
-
-        .balance-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            transition: all 0.2s ease;
         }
 
         .balance-btn:active {
-            transform: translateY(0);
+            transform: scale(0.95);
         }
 
         .balance-icon {
@@ -98,7 +92,6 @@
             mask-size: contain;
         }
 
-        /* Основной контент */
         .content {
             padding: 24px;
         }
@@ -111,20 +104,19 @@
             display: none;
         }
 
-        /* Страница игры */
         .game-area {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
-            padding: 28px;
+            padding: 24px;
             margin-bottom: 24px;
             text-align: center;
             border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .dice-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 28px;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
             perspective: 1000px;
             position: relative;
         }
@@ -142,95 +134,53 @@
 
         .dice-face {
             position: absolute;
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 16px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
             backface-visibility: hidden;
-            box-shadow: 
-                inset 0 0 20px rgba(255, 255, 255, 0.4),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3),
-                0 8px 20px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Тень на гранях для объема */
-        .dice-face::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(255,255,255,0.15) 0%, 
-                rgba(255,255,255,0) 15%,
-                rgba(0,0,0,0.08) 85%, 
-                rgba(0,0,0,0.15) 100%);
-            border-radius: 14px;
-        }
-
-        /* Контейнер для точек */
         .dots-container {
             width: 100%;
             height: 100%;
-            padding: 20px;
+            padding: 16px;
             display: grid;
-            gap: 12px;
+            gap: 8px;
         }
 
         .dot {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             background: white;
             border-radius: 50%;
-            box-shadow: 
-                0 3px 6px rgba(0, 0, 0, 0.4),
-                inset 0 2px 4px rgba(255, 255, 255, 0.6),
-                0 0 0 2px rgba(0, 0, 0, 0.1);
             justify-self: center;
             align-self: center;
-            position: relative;
         }
 
-        /* Эффект блеска на точках */
-        .dot::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            filter: blur(1px);
-        }
-
-        /* Расположение граней в 3D пространстве */
         .face-1 { 
-            transform: translateZ(60px);
+            transform: translateZ(50px);
         }
         .face-2 { 
-            transform: rotateY(90deg) translateZ(60px);
+            transform: rotateY(90deg) translateZ(50px);
         }
         .face-3 { 
-            transform: rotateX(90deg) translateZ(60px);
+            transform: rotateX(90deg) translateZ(50px);
         }
         .face-4 { 
-            transform: rotateX(-90deg) translateZ(60px);
+            transform: rotateX(-90deg) translateZ(50px);
         }
         .face-5 { 
-            transform: rotateY(-90deg) translateZ(60px);
+            transform: rotateY(-90deg) translateZ(50px);
         }
         .face-6 { 
-            transform: rotateY(180deg) translateZ(60px);
+            transform: rotateY(180deg) translateZ(50px);
         }
 
-        /* Конфигурации точек для каждой грани */
         .face-1 .dots-container {
             grid-template-columns: 1fr;
             grid-template-rows: 1fr;
@@ -280,26 +230,27 @@
         .bet-controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
         .bet-button {
             background: white;
             border: 2px solid #e6f4ff;
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 14px;
             font-size: 16px;
             font-weight: 700;
             color: #2aabee;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .bet-button:active {
+            transform: scale(0.95);
         }
 
         .bet-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
             border-color: #2aabee;
         }
 
@@ -307,44 +258,34 @@
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border-color: #2aabee;
             color: white;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
         }
 
         .play-button {
             width: 100%;
-            padding: 22px;
+            padding: 20px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             color: white;
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .play-button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(42, 171, 238, 0.4);
+            transition: all 0.2s ease;
         }
 
         .play-button:active {
-            transform: translateY(-1px);
+            transform: scale(0.98);
         }
 
         .play-button:disabled {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
 
         .play-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: white;
             mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M8 5v14l11-7z"/></svg>') no-repeat center;
             mask-size: contain;
@@ -353,19 +294,18 @@
             margin-right: 8px;
         }
 
-        /* История */
         .history {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
-            border-radius: 20px;
-            padding: 24px;
-            margin-top: 24px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
             border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .history-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             color: #1a1a1a;
             display: flex;
             align-items: center;
@@ -373,8 +313,8 @@
         }
 
         .history-icon {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             background: #2aabee;
             mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>') no-repeat center;
             mask-size: contain;
@@ -382,24 +322,28 @@
 
         .history-items {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             overflow-x: auto;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .history-item {
-            min-width: 50px;
-            height: 50px;
+            min-width: 40px;
+            height: 40px;
             background: white;
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 700;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.15);
             border: 2px solid rgba(42, 171, 238, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .history-item:active {
+            transform: scale(0.95);
         }
 
         .win { 
@@ -413,31 +357,30 @@
             border-color: rgba(255, 107, 107, 0.3);
         }
 
-        /* Страница статистики */
         .stats-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 20px;
             border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .stats-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .stats-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: #2aabee;
             mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>') no-repeat center;
             mask-size: contain;
         }
 
         .stats-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #1a1a1a;
         }
@@ -445,27 +388,31 @@
         .stats-summary {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
         .stat-card {
             background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+            border-radius: 12px;
+            padding: 16px;
             border: 1px solid #e6f4ff;
             text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
         }
 
         .stat-value {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .stat-label {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
             font-weight: 500;
         }
@@ -491,30 +438,35 @@
         }
 
         .bets-history {
-            margin-top: 24px;
+            margin-top: 20px;
         }
 
         .bets-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: #1a1a1a;
         }
 
         .bets-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .bet-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
+            padding: 12px;
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid #e6f4ff;
+            transition: transform 0.2s ease;
+        }
+
+        .bet-item:active {
+            transform: scale(0.98);
         }
 
         .bet-info {
@@ -525,11 +477,11 @@
 
         .bet-amount {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .bet-result {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
         }
 
@@ -542,10 +494,10 @@
         }
 
         .bet-outcome {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 4px 10px;
+            border-radius: 16px;
         }
 
         .bet-outcome.win {
@@ -560,168 +512,162 @@
 
         .empty-stats {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 16px;
             color: #666;
         }
 
         .dice-icon {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: #2aabee;
             mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>') no-repeat center;
             mask-size: contain;
-            margin: 0 auto 16px;
+            margin: 0 auto 12px;
         }
 
-        /* Страница вывода */
         .withdraw-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 20px;
             border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .withdraw-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .withdraw-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: #2aabee;
             mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-6-7h3v-2h-3V8l-4 4 4 4v-3z"/></svg>') no-repeat center;
             mask-size: contain;
         }
 
         .withdraw-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #1a1a1a;
         }
 
         .withdraw-info {
             background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
             border: 1px solid #e6f4ff;
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.1);
         }
 
         .withdraw-balance {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: #4CAF50;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .withdraw-label {
             text-align: center;
             color: #666;
-            font-size: 14px;
-            margin-bottom: 24px;
+            font-size: 12px;
+            margin-bottom: 20px;
         }
 
         .withdraw-form {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .form-label {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             color: #1a1a1a;
         }
 
         .form-input {
-            padding: 16px;
+            padding: 14px;
             border: 2px solid #e6f4ff;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s ease;
         }
 
         .form-input:focus {
             outline: none;
             border-color: #2aabee;
-            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
         }
 
         .withdraw-amounts {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 8px;
+            gap: 10px;
+            margin-top: 6px;
         }
 
         .withdraw-amount-btn {
             background: white;
             border: 2px solid #e6f4ff;
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 12px;
             font-weight: 600;
             color: #2aabee;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             text-align: center;
         }
 
-        .withdraw-amount-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
+        .withdraw-amount-btn:active {
+            transform: scale(0.95);
         }
 
         .withdraw-amount-btn.active {
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border-color: #2aabee;
             color: white;
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
         }
 
         .withdraw-button {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
             border: none;
-            border-radius: 16px;
+            border-radius: 12px;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 8px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
         }
 
-        .withdraw-button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        .withdraw-button:active {
+            transform: scale(0.98);
         }
 
         .withdraw-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
         .withdraw-note {
             background: #fff8e1;
             border: 1px solid #ffd54f;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 24px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 12px;
             color: #5d4037;
         }
 
@@ -730,48 +676,53 @@
         }
 
         .withdraw-history {
-            margin-top: 32px;
+            margin-top: 24px;
         }
 
         .withdraw-history-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: #1a1a1a;
         }
 
         .withdraw-history-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .withdraw-history-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
+            padding: 12px;
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid #e6f4ff;
+            transition: transform 0.2s ease;
+        }
+
+        .withdraw-history-item:active {
+            transform: scale(0.98);
         }
 
         .withdraw-history-amount {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             color: #ff6b6b;
         }
 
         .withdraw-history-date {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
         }
 
         .withdraw-history-status {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 4px 10px;
+            border-radius: 16px;
             background: rgba(255, 107, 107, 0.1);
             color: #ff6b6b;
         }
@@ -786,7 +737,6 @@
             color: #4CAF50;
         }
 
-        /* Модальное окно депозита */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -798,116 +748,116 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 20px;
+            padding: 16px;
         }
 
         .modal {
             background: white;
-            border-radius: 24px;
+            border-radius: 20px;
             max-width: 400px;
             width: 100%;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
         .modal-header {
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            padding: 24px;
+            padding: 20px;
             color: white;
             position: relative;
         }
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 16px;
+            right: 16px;
             background: none;
             border: none;
             color: white;
             font-size: 24px;
             cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .modal-close:active {
+            transform: scale(0.9);
         }
 
         .modal-content {
-            padding: 24px;
+            padding: 20px;
         }
 
         .wallet-info {
             background: #f8fbff;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 12px;
         }
 
         .deposit-amounts {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .amount-button {
             background: white;
             border: 2px solid #e6f4ff;
-            border-radius: 16px;
-            padding: 16px;
-            font-size: 16px;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 14px;
             font-weight: 700;
             color: #2aabee;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             text-align: center;
         }
 
-        .amount-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
+        .amount-button:active {
+            transform: scale(0.95);
         }
 
         .amount-button.active {
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border-color: #2aabee;
             color: white;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
         }
 
         .send-button {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             border: none;
-            border-radius: 16px;
+            border-radius: 12px;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
         }
 
-        .send-button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        .send-button:active {
+            transform: scale(0.98);
         }
 
         .send-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
         .deposit-icon {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             background: white;
             mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
             mask-size: contain;
             display: inline-block;
             vertical-align: middle;
-            margin-right: 8px;
+            margin-right: 6px;
         }
 
-        /* Анимация кости */
         @keyframes roll {
             0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
             25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
@@ -920,24 +870,22 @@
             animation: roll 1.2s linear forwards;
         }
 
-        /* Уведомление */
         .notification {
             position: fixed;
-            top: 20px;
+            top: 16px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             background: white;
             color: #1a1a1a;
-            padding: 16px 32px;
-            border-radius: 50px;
+            padding: 12px 24px;
+            border-radius: 40px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             z-index: 1000;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.3s ease;
             border: 2px solid #e6f4ff;
-            font-size: 16px;
+            font-size: 14px;
             text-align: center;
-            min-width: 300px;
+            min-width: 280px;
             max-width: 90vw;
         }
 
@@ -959,7 +907,6 @@
             border-color: rgba(42, 171, 238, 0.3);
         }
 
-        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -967,10 +914,9 @@
             right: 0;
             background: white;
             border-top: 1px solid #e6f4ff;
-            padding: 16px 24px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-around;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
@@ -978,28 +924,27 @@
             flex-direction: column;
             align-items: center;
             color: #888;
-            font-size: 12px;
-            gap: 6px;
+            font-size: 11px;
+            gap: 4px;
             cursor: pointer;
-            transition: all 0.3s;
-            padding: 8px 16px;
-            border-radius: 16px;
+            transition: all 0.2s ease;
+            padding: 6px 12px;
+            border-radius: 12px;
         }
 
-        .nav-item:hover {
-            background: rgba(42, 171, 238, 0.08);
-            color: #2aabee;
+        .nav-item:active {
+            transform: scale(0.95);
         }
 
         .nav-item.active {
             color: #2aabee;
-            background: rgba(42, 171, 238, 0.12);
+            background: rgba(42, 171, 238, 0.1);
             font-weight: 600;
         }
 
         .nav-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: #888;
             mask-size: contain;
             mask-repeat: no-repeat;
@@ -1028,17 +973,42 @@
 
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
+            margin-right: 6px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        .no-funds {
+            text-align: center;
+            padding: 24px 16px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .connect-wallet-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+        }
+        
+        .connect-wallet-btn:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -1053,7 +1023,7 @@
             </div>
             <button class="balance-btn" id="openDepositModal">
                 <span class="balance-icon"></span>
-                <span id="balanceAmount">1,500 TON</span>
+                <span id="balanceAmount">0 TON</span>
             </button>
         </div>
 
@@ -1077,6 +1047,15 @@
                         <button class="bet-button active" data-bet="10">10 TON</button>
                         <button class="bet-button" data-bet="50">50 TON</button>
                         <button class="bet-button" data-bet="100">100 TON</button>
+                    </div>
+
+                    <div id="noFundsMessage" class="no-funds" style="display: none;">
+                        <div class="dice-icon"></div>
+                        <p>Для игры нужны средства на балансе</p>
+                        <p style="font-size: 12px; margin-top: 6px;">Пополните баланс, чтобы начать игру</p>
+                        <button class="connect-wallet-btn" id="connectWalletBtn">
+                            Пополнить баланс
+                        </button>
                     </div>
 
                     <button class="play-button" id="playButton">
@@ -1133,7 +1112,7 @@
                     <div class="empty-stats" id="emptyStats">
                         <div class="dice-icon"></div>
                         <p>Статистика пока пуста</p>
-                        <p style="font-size: 14px; margin-top: 8px;">Сыграйте несколько игр, чтобы увидеть статистику</p>
+                        <p style="font-size: 12px; margin-top: 6px;">Сыграйте несколько игр, чтобы увидеть статистику</p>
                     </div>
                 </div>
             </div>
@@ -1146,13 +1125,13 @@
                 </div>
 
                 <div class="withdraw-info">
-                    <div class="withdraw-balance" id="withdrawBalance">1,500 TON</div>
+                    <div class="withdraw-balance" id="withdrawBalance">0 TON</div>
                     <div class="withdraw-label">Доступно для вывода</div>
 
                     <div class="withdraw-form">
                         <div class="form-group">
                             <label class="form-label">Сумма вывода (TON)</label>
-                            <input type="number" class="form-input" id="withdrawAmount" placeholder="Введите сумму" min="10" max="1500" value="100">
+                            <input type="number" class="form-input" id="withdrawAmount" placeholder="Введите сумму" min="10" value="100">
                             
                             <div class="withdraw-amounts">
                                 <button class="withdraw-amount-btn" data-amount="50">50 TON</button>
@@ -1198,7 +1177,7 @@
     <div class="modal-overlay" id="depositModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 style="margin: 0; font-size: 20px;">Пополнение баланса</h2>
+                <h2 style="margin: 0; font-size: 18px;">Пополнение баланса</h2>
                 <button class="modal-close" id="closeModal">×</button>
             </div>
             <div class="modal-content">
@@ -1206,11 +1185,11 @@
                 
                 <div class="wallet-info" id="walletInfo" style="display: none;">
                     <p><strong>Кошелёк подключен:</strong></p>
-                    <p id="walletAddress" style="margin-top: 8px; font-size: 12px; color: #666;"></p>
+                    <p id="walletAddress" style="margin-top: 6px; font-size: 11px; color: #666;"></p>
                 </div>
                 
-                <div style="margin: 20px 0;">
-                    <div style="font-weight: 600; margin-bottom: 12px;">Сумма пополнения:</div>
+                <div style="margin: 16px 0;">
+                    <div style="font-weight: 600; margin-bottom: 10px; font-size: 14px;">Сумма пополнения:</div>
                     <div class="deposit-amounts">
                         <button class="amount-button active" data-amount="10">10 TON</button>
                         <button class="amount-button" data-amount="25">25 TON</button>
@@ -1248,19 +1227,19 @@
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
         const ADMIN_CHAT_ID = '8155919358';
         const YOUR_WALLET_ADDRESS = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh';
-        const WITHDRAW_FEE_PERCENT = 5; // 5% комиссия
+        const WITHDRAW_FEE_PERCENT = 5;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let tonConnectUI;
         let isWalletConnected = false;
         let currentBet = 10;
-        let balance = parseInt(localStorage.getItem('balance')) || 1500;
-        let history = JSON.parse(localStorage.getItem('history')) || [];
+        let balance = 0; // НАЧАЛЬНЫЙ БАЛАНС 0
+        let history = [];
         let isRolling = false;
         let currentDepositAmount = 10;
-        let username = localStorage.getItem('username') || 'Гость';
-        let betsHistory = JSON.parse(localStorage.getItem('betsHistory')) || [];
-        let withdrawHistory = JSON.parse(localStorage.getItem('withdrawHistory')) || [];
+        let username = 'Гость';
+        let betsHistory = [];
+        let withdrawHistory = [];
         let currentWithdrawAmount = 500;
         let tg = null;
         
@@ -1297,6 +1276,8 @@
         const withdrawAmountBtns = document.querySelectorAll('.withdraw-amount-btn');
         const withdrawHistoryList = document.getElementById('withdrawHistoryList');
         const emptyWithdrawHistoryEl = document.getElementById('emptyWithdrawHistory');
+        const noFundsMessage = document.getElementById('noFundsMessage');
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
@@ -1306,39 +1287,97 @@
                 tg.expand();
                 tg.enableClosingConfirmation();
                 
-                // Получаем данные пользователя из Telegram
                 const user = tg.initDataUnsafe?.user;
                 if (user) {
                     username = user.username ? '@' + user.username : user.first_name || 'Telegram User';
                     usernameElement.textContent = username;
                     userAvatar.textContent = user.first_name ? user.first_name.charAt(0) : 'T';
-                    
-                    // Сохраняем в localStorage
-                    localStorage.setItem('username', username);
                 }
             }
             
-            // Устанавливаем имя пользователя
             usernameElement.textContent = username;
             userAvatar.textContent = username.charAt(0);
             
-            // Обновляем баланс
             updateBalanceDisplay();
-            
-            // Инициализируем TON Connect
             initTonConnect();
-            
-            // Восстанавливаем историю
-            initHistory();
-            
-            // Восстанавливаем статистику
-            updateStats();
-            
-            // Инициализируем страницу вывода
+            loadUserData();
             initWithdrawPage();
-            
-            // Навигация
             setupNavigation();
+            checkBalanceForGame();
+        }
+        
+        function loadUserData() {
+            const userId = getUserId();
+            const userData = localStorage.getItem(`user_${userId}`);
+            
+            if (userData) {
+                const data = JSON.parse(userData);
+                balance = data.balance || 0;
+                history = data.history || [];
+                betsHistory = data.betsHistory || [];
+                withdrawHistory = data.withdrawHistory || [];
+                
+                updateBalanceDisplay();
+                updateStats();
+                initHistory();
+            }
+        }
+        
+        function saveUserData() {
+            const userId = getUserId();
+            const userData = {
+                balance: balance,
+                history: history,
+                betsHistory: betsHistory,
+                withdrawHistory: withdrawHistory,
+                username: username
+            };
+            localStorage.setItem(`user_${userId}`, JSON.stringify(userData));
+        }
+        
+        function getUserId() {
+            if (tg?.initDataUnsafe?.user?.id) {
+                return tg.initDataUnsafe.user.id.toString();
+            }
+            return 'guest';
+        }
+        
+        function checkBalanceForGame() {
+            if (balance <= 0) {
+                playButton.style.display = 'none';
+                noFundsMessage.style.display = 'block';
+            } else {
+                playButton.style.display = 'block';
+                noFundsMessage.style.display = 'none';
+                
+                if (currentBet > balance) {
+                    betButtons.forEach(btn => {
+                        const betAmount = parseInt(btn.dataset.bet);
+                        if (betAmount > balance) {
+                            btn.style.opacity = '0.5';
+                            btn.style.pointerEvents = 'none';
+                        } else {
+                            btn.style.opacity = '1';
+                            btn.style.pointerEvents = 'auto';
+                        }
+                    });
+                    
+                    const availableBets = Array.from(betButtons)
+                        .map(btn => parseInt(btn.dataset.bet))
+                        .filter(bet => bet <= balance);
+                    
+                    if (availableBets.length > 0) {
+                        const maxBet = Math.max(...availableBets);
+                        currentBet = maxBet;
+                        betButtons.forEach(btn => {
+                            btn.classList.remove('active');
+                            if (parseInt(btn.dataset.bet) === maxBet) {
+                                btn.classList.add('active');
+                            }
+                        });
+                    }
+                }
+            }
         }
         
         // ==================== ТЕЛЕГРАМ БОТ ИНТЕГРАЦИЯ ====================
@@ -1404,7 +1443,6 @@
         
         async function checkWithdrawStatus() {
             try {
-                // Запрашиваем обновления у бота
                 const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=-10`);
                 const data = await response.json();
                 
@@ -1418,13 +1456,11 @@
                                 const withdrawId = callbackData.split('_')[2];
                                 const status = callbackData.includes('approve') ? 'completed' : 'rejected';
                                 
-                                // Обновляем статус в истории
                                 const withdrawIndex = withdrawHistory.findIndex(w => w.id == withdrawId);
                                 if (withdrawIndex !== -1) {
                                     withdrawHistory[withdrawIndex].status = status;
-                                    localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
+                                    saveUserData();
                                     
-                                    // Если отклонено, возвращаем баланс
                                     if (status === 'rejected') {
                                         balance += withdrawHistory[withdrawIndex].amount;
                                         updateBalanceDisplay();
@@ -1433,7 +1469,6 @@
                                         showNotification(`✅ Заявка #${withdrawId} выплачена!`, 'info');
                                     }
                                     
-                                    // Обновляем отображение
                                     updateWithdrawHistory();
                                 }
                             }
@@ -1447,20 +1482,14 @@
         
         // ==================== СТРАНИЦА ВЫВОДА ====================
         function initWithdrawPage() {
-            // Обновляем доступный баланс
             withdrawBalanceEl.textContent = balance + ' TON';
             
-            // Устанавливаем максимальное значение ввода
-            withdrawAmountInput.max = balance;
-            
-            // Обработчик выбора суммы
             withdrawAmountBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     withdrawAmountBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     currentWithdrawAmount = parseInt(btn.dataset.amount);
                     
-                    // Проверяем, что сумма не превышает баланс
                     if (currentWithdrawAmount > balance) {
                         currentWithdrawAmount = balance;
                     }
@@ -1469,18 +1498,15 @@
                 });
             });
             
-            // Обработчик изменения ввода
             withdrawAmountInput.addEventListener('input', () => {
                 const amount = parseInt(withdrawAmountInput.value) || 0;
                 
-                // Проверяем лимиты
                 if (amount < 10) {
                     withdrawAmountInput.value = 10;
                 } else if (amount > balance) {
                     withdrawAmountInput.value = balance;
                 }
                 
-                // Снимаем активные кнопки если сумма не совпадает
                 let hasActive = false;
                 withdrawAmountBtns.forEach(btn => {
                     if (parseInt(btn.dataset.amount) === parseInt(withdrawAmountInput.value)) {
@@ -1491,29 +1517,24 @@
                     }
                 });
                 
-                // Если нет совпадения с кнопками, снимаем все активные
                 if (!hasActive) {
                     withdrawAmountBtns.forEach(btn => btn.classList.remove('active'));
                 }
             });
             
-            // Обработчик запроса вывода
             requestWithdrawBtn.addEventListener('click', () => {
                 requestWithdraw();
             });
             
-            // Загружаем историю выводов
             updateWithdrawHistory();
             
-            // Периодически проверяем статус выводов
-            setInterval(checkWithdrawStatus, 30000); // Каждые 30 секунд
+            setInterval(checkWithdrawStatus, 30000);
         }
         
         async function requestWithdraw() {
             const amount = parseInt(withdrawAmountInput.value) || 0;
             const address = withdrawAddressInput.value.trim();
             
-            // Валидация
             if (amount < 10) {
                 showNotification('Минимальная сумма вывода: 10 TON', 'lose');
                 return;
@@ -1534,11 +1555,9 @@
                 return;
             }
             
-            // Расчет комиссии
             const fee = Math.ceil(amount * (WITHDRAW_FEE_PERCENT / 100));
             const netAmount = amount - fee;
             
-            // Создаем заявку на вывод
             const withdrawId = Date.now();
             const withdrawRequest = {
                 id: withdrawId,
@@ -1550,31 +1569,23 @@
                 status: 'pending'
             };
             
-            // Показываем загрузку
             const originalText = requestWithdrawBtn.innerHTML;
             requestWithdrawBtn.innerHTML = '<span class="loading"></span>Обработка...';
             requestWithdrawBtn.disabled = true;
             
             try {
-                // Списываем с баланса
                 balance -= amount;
                 updateBalanceDisplay();
                 
-                // Добавляем в историю
                 withdrawHistory.push(withdrawRequest);
-                localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
+                saveUserData();
                 
-                // Обновляем интерфейс
                 withdrawBalanceEl.textContent = balance + ' TON';
-                withdrawAmountInput.max = balance;
                 
-                // Отправляем уведомление админу в Telegram
                 await sendWithdrawToTelegramBot(withdrawRequest);
                 
-                // Обновляем историю
                 updateWithdrawHistory();
                 
-                // Очищаем форму
                 withdrawAmountInput.value = Math.min(100, balance);
                 withdrawAddressInput.value = '';
                 
@@ -1584,18 +1595,16 @@
                 console.error('Ошибка создания заявки:', error);
                 showNotification('❌ Ошибка при создании заявки', 'lose');
                 
-                // Возвращаем баланс в случае ошибки
                 balance += amount;
                 updateBalanceDisplay();
             } finally {
-                // Восстанавливаем кнопку
                 requestWithdrawBtn.innerHTML = originalText;
                 requestWithdrawBtn.disabled = false;
+                checkBalanceForGame();
             }
         }
         
         function updateWithdrawHistory() {
-            // Очищаем список
             withdrawHistoryList.innerHTML = '';
             
             if (withdrawHistory.length === 0) {
@@ -1607,7 +1616,6 @@
             emptyWithdrawHistoryEl.style.display = 'none';
             withdrawHistoryList.style.display = 'flex';
             
-            // Сортируем по дате (новые сверху)
             const sortedHistory = [...withdrawHistory].reverse();
             
             sortedHistory.forEach(withdraw => {
@@ -1642,26 +1650,21 @@
         function setupNavigation() {
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
-                    const page = item.dataset.page;
-                    
-                    // Обновляем активный элемент навигации
                     navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
                     
-                    // Показываем соответствующую страницу
                     gamePage.classList.add('hidden');
                     statsPage.classList.add('hidden');
                     withdrawPage.classList.add('hidden');
                     
-                    if (page === 'game') {
+                    if (item.dataset.page === 'game') {
                         gamePage.classList.remove('hidden');
-                    } else if (page === 'stats') {
+                    } else if (item.dataset.page === 'stats') {
                         statsPage.classList.remove('hidden');
                         updateStats();
-                    } else if (page === 'withdraw') {
+                    } else if (item.dataset.page === 'withdraw') {
                         withdrawPage.classList.remove('hidden');
                         withdrawBalanceEl.textContent = balance + ' TON';
-                        withdrawAmountInput.max = balance;
                         updateWithdrawHistory();
                     }
                 });
@@ -1742,7 +1745,7 @@
             };
             
             betsHistory.push(betRecord);
-            localStorage.setItem('betsHistory', JSON.stringify(betsHistory));
+            saveUserData();
             updateStats();
         }
         
@@ -1766,11 +1769,9 @@
                     sendDeposit.disabled = false;
                     sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
                     
-                    // Обновляем имя пользователя
                     const walletUsername = shortenAddress(wallet.account.address);
                     usernameElement.textContent = walletUsername;
                     userAvatar.textContent = '👛';
-                    localStorage.setItem('username', walletUsername);
                     
                     showNotification('✅ Кошелёк подключен!', 'info');
                 } else {
@@ -1805,7 +1806,7 @@
         
         function updateBalanceDisplay() {
             balanceAmount.textContent = balance + ' TON';
-            localStorage.setItem('balance', balance);
+            withdrawBalanceEl.textContent = balance + ' TON';
         }
         
         function addToHistory(result, win) {
@@ -1820,7 +1821,7 @@
                 history.pop();
             }
             
-            localStorage.setItem('history', JSON.stringify(history));
+            saveUserData();
         }
         
         // ==================== ИГРА ====================
@@ -1872,11 +1873,17 @@
                 addToHistory(result, win);
                 addToBetsHistory(currentBet, win);
                 isRolling = false;
+                checkBalanceForGame();
+                saveUserData();
             }, 1200);
         });
         
         // ==================== ДЕПОЗИТ ====================
         openDepositModalBtn.addEventListener('click', () => {
+            depositModal.style.display = 'flex';
+        });
+        
+        connectWalletBtn.addEventListener('click', () => {
             depositModal.style.display = 'flex';
         });
         
@@ -1933,6 +1940,8 @@
                     updateBalanceDisplay();
                     showNotification(`✅ Баланс пополнен на ${currentDepositAmount} TON!`, 'info');
                     depositModal.style.display = 'none';
+                    checkBalanceForGame();
+                    saveUserData();
                 }, 2000);
                 
             } catch (error) {
@@ -1950,11 +1959,6 @@
                     div.className = `history-item ${item.win ? 'win' : 'lose'}`;
                     div.textContent = item.result;
                     historyItems.appendChild(div);
-                });
-            } else {
-                const demoHistory = [6, 2, 4, 1, 5, 3, 6, 4];
-                demoHistory.forEach(result => {
-                    addToHistory(result, result >= 4);
                 });
             }
         }
