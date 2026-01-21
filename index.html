@@ -1221,22 +1221,7 @@
             <div>Вывод</div>
         </div>
     </div>
-
-    <!-- Скрытая панель админа -->
-<div id="adminPanel" style="position: fixed; top: 10px; right: 10px; z-index: 9999; display: none;">
-    <div style="background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        <button onclick="addTestFunds(1000)" style="background: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 6px; margin: 2px; cursor: pointer;">
-            +1000 TON
-        </button>
-        <button onclick="addTestFunds(5000)" style="background: #2196F3; color: white; border: none; padding: 8px 12px; border-radius: 6px; margin: 2px; cursor: pointer;">
-            +5000 TON
-        </button>
-        <button onclick="resetBalance()" style="background: #f44336; color: white; border: none; padding: 8px 12px; border-radius: 6px; margin: 2px; cursor: pointer;">
-            Сброс
-        </button>
-    </div>
-</div>
-
+    
     <script>
         // ==================== КОНСТАНТЫ ====================
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
@@ -1992,6 +1977,40 @@
             
             dice.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
+        // Функции для тестирования
+function addTestFunds(amount) {
+    balance += amount;
+    updateBalanceDisplay();
+    saveUserData();
+    checkBalanceForGame();
+    showNotification(`✅ Добавлено ${amount} TON`, 'info');
+}
+
+function resetBalance() {
+    balance = 0;
+    updateBalanceDisplay();
+    saveUserData();
+    checkBalanceForGame();
+    showNotification('💰 Баланс сброшен', 'info');
+}
+
+// Показать панель админа по тройному тапу
+let tapCount = 0;
+let lastTap = 0;
+document.addEventListener('click', (e) => {
+    const now = Date.now();
+    if (now - lastTap < 500) {
+        tapCount++;
+        if (tapCount >= 3) {
+            document.getElementById('adminPanel').style.display = 'block';
+            tapCount = 0;
+            showNotification('🔧 Панель админа активирована', 'info');
+        }
+    } else {
+        tapCount = 1;
+    }
+    lastTap = now;
+});
     </script>
 </body>
 </html>
