@@ -3,600 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Dice Casino</title>
+    <title>Dice Casino - TON Game</title>
+    <!-- Подключаем TonConnect UI -->
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
+        /* Все предыдущие стили остаются... */
+        /* Добавим только новые стили для страницы депозита */
 
-        body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e6f4ff 100%);
-            color: #1a1a1a;
-            min-height: 100vh;
-            padding: 16px;
-        }
-
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(42, 171, 238, 0.15);
-            border: 1px solid rgba(42, 171, 238, 0.1);
-        }
-
-        /* Header стиль как в Telegram Wallet */
-        .header {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            padding: 28px 24px;
-            position: relative;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-
-        .header-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-        }
-
-        .balance-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 24px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .balance-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .balance-amount {
-            font-size: 36px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #1a1a1a;
-        }
-
-        .balance-amount span {
-            font-size: 18px;
-            color: #2aabee;
-            font-weight: 700;
-        }
-
-        /* Основной контент */
-        .content {
-            padding: 24px;
-        }
-
-        .game-area {
-            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
-            border-radius: 20px;
-            padding: 28px;
-            margin-bottom: 24px;
-            text-align: center;
-            border: 1px solid rgba(42, 171, 238, 0.15);
-        }
-
-        .dice-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 28px;
-            perspective: 1000px;
-            position: relative;
-        }
-
-        .dice {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform-style: preserve-3d;
-            transition: transform 1s ease-out;
-            transform: rotateX(15deg) rotateY(15deg);
-        }
-
-        .dice-face {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backface-visibility: hidden;
-            box-shadow: 
-                inset 0 0 20px rgba(255, 255, 255, 0.4),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3),
-                0 8px 20px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Тень на гранях для объема */
-        .dice-face::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(255,255,255,0.15) 0%, 
-                rgba(255,255,255,0) 15%,
-                rgba(0,0,0,0.08) 85%, 
-                rgba(0,0,0,0.15) 100%);
-            border-radius: 14px;
-        }
-
-        /* Контейнер для точек */
-        .dots-container {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            display: grid;
-            gap: 12px;
-        }
-
-        .dot {
-            width: 18px;
-            height: 18px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 
-                0 3px 6px rgba(0, 0, 0, 0.4),
-                inset 0 2px 4px rgba(255, 255, 255, 0.6),
-                0 0 0 2px rgba(0, 0, 0, 0.1);
-            justify-self: center;
-            align-self: center;
-            position: relative;
-        }
-
-        /* Эффект блеска на точках */
-        .dot::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            filter: blur(1px);
-        }
-
-        /* Расположение граней в 3D пространстве */
-        .face-1 { 
-            transform: translateZ(60px);
-        }
-        .face-2 { 
-            transform: rotateY(90deg) translateZ(60px);
-        }
-        .face-3 { 
-            transform: rotateX(90deg) translateZ(60px);
-        }
-        .face-4 { 
-            transform: rotateX(-90deg) translateZ(60px);
-        }
-        .face-5 { 
-            transform: rotateY(-90deg) translateZ(60px);
-        }
-        .face-6 { 
-            transform: rotateY(180deg) translateZ(60px);
-        }
-
-        /* Конфигурации точек для каждой грани */
-        /* Грань 1: одна точка в центре */
-        .face-1 .dots-container {
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
-            place-items: center;
-        }
-
-        /* Грань 2: две точки по диагонали */
-        .face-2 .dots-container {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-        }
-        .face-2 .dot:nth-child(1) {
-            grid-column: 1;
-            grid-row: 1;
-        }
-        .face-2 .dot:nth-child(2) {
-            grid-column: 2;
-            grid-row: 2;
-        }
-
-        /* Грань 3: три точки по диагонали */
-        .face-3 .dots-container {
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-        }
-        .face-3 .dot:nth-child(1) {
-            grid-column: 1;
-            grid-row: 1;
-        }
-        .face-3 .dot:nth-child(2) {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        .face-3 .dot:nth-child(3) {
-            grid-column: 3;
-            grid-row: 3;
-        }
-
-        /* Грань 4: четыре точки в углах */
-        .face-4 .dots-container {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-        }
-        .face-4 .dot {
-            justify-self: center;
-            align-self: center;
-        }
-        .face-4 .dot:nth-child(1) {
-            grid-column: 1;
-            grid-row: 1;
-        }
-        .face-4 .dot:nth-child(2) {
-            grid-column: 2;
-            grid-row: 1;
-        }
-        .face-4 .dot:nth-child(3) {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        .face-4 .dot:nth-child(4) {
-            grid-column: 2;
-            grid-row: 2;
-        }
-
-        /* Грань 5: пять точек (как на игральной кости) */
-        .face-5 .dots-container {
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-        }
-        .face-5 .dot:nth-child(1) {
-            grid-column: 1;
-            grid-row: 1;
-        }
-        .face-5 .dot:nth-child(2) {
-            grid-column: 3;
-            grid-row: 1;
-        }
-        .face-5 .dot:nth-child(3) {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        .face-5 .dot:nth-child(4) {
-            grid-column: 1;
-            grid-row: 3;
-        }
-        .face-5 .dot:nth-child(5) {
-            grid-column: 3;
-            grid-row: 3;
-        }
-
-        /* Грань 6: шесть точек в два ряда */
-        .face-6 .dots-container {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-        }
-        .face-6 .dot {
-            justify-self: center;
-            align-self: center;
-        }
-        .face-6 .dot:nth-child(1) {
-            grid-column: 1;
-            grid-row: 1;
-        }
-        .face-6 .dot:nth-child(2) {
-            grid-column: 2;
-            grid-row: 1;
-        }
-        .face-6 .dot:nth-child(3) {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        .face-6 .dot:nth-child(4) {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        .face-6 .dot:nth-child(5) {
-            grid-column: 1;
-            grid-row: 3;
-        }
-        .face-6 .dot:nth-child(6) {
-            grid-column: 2;
-            grid-row: 3;
-        }
-
-        .bet-controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 28px;
-        }
-
-        .bet-button {
-            background: white;
-            border: 2px solid #e6f4ff;
-            border-radius: 16px;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            color: #2aabee;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
-        }
-
-        .bet-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
-        }
-
-        .bet-button.active {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-color: #2aabee;
-            color: white;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
-        }
-
-        .play-button {
-            width: 100%;
-            padding: 22px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            font-size: 20px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .play-button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(42, 171, 238, 0.4);
-        }
-
-        .play-button:active {
-            transform: translateY(-1px);
-        }
-
-        .play-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* История */
-        .history {
-            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid rgba(42, 171, 238, 0.15);
-        }
-
-        .history-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #1a1a1a;
-        }
-
-        .history-refresh {
-            background: none;
-            border: none;
-            color: #2aabee;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 12px;
-            transition: all 0.2s;
-        }
-
-        .history-refresh:hover {
-            background: rgba(42, 171, 238, 0.1);
-        }
-
-        .history-items {
-            display: flex;
-            gap: 14px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: thin;
-            scrollbar-color: #2aabee #e6f4ff;
-        }
-
-        .history-items::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .history-items::-webkit-scrollbar-track {
-            background: #e6f4ff;
-            border-radius: 3px;
-        }
-
-        .history-items::-webkit-scrollbar-thumb {
-            background: #2aabee;
-            border-radius: 3px;
-        }
-
-        .history-item {
-            min-width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 800;
-            flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.15);
-            border: 2px solid rgba(42, 171, 238, 0.1);
-            transition: all 0.3s;
-        }
-
-        .history-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(42, 171, 238, 0.25);
-        }
-
-        .win { 
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            border-color: rgba(76, 175, 80, 0.3);
-        }
-        .lose { 
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-            color: white;
-            border-color: rgba(255, 107, 107, 0.3);
-        }
-
-        /* Нижнее меню */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e6f4ff;
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-around;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #888;
-            font-size: 12px;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 8px 16px;
-            border-radius: 16px;
-        }
-
-        .nav-item:hover {
-            background: rgba(42, 171, 238, 0.08);
-            color: #2aabee;
-        }
-
-        .nav-item.active {
-            color: #2aabee;
-            background: rgba(42, 171, 238, 0.12);
-            font-weight: 600;
-        }
-
-        .nav-icon {
-            font-size: 22px;
-            transition: transform 0.3s;
-        }
-
-        .nav-item:hover .nav-icon {
-            transform: translateY(-2px);
-        }
-
-        /* Иконки SVG для навигации */
-        .icon-dice {
-            background: #2aabee;
-            width: 22px;
-            height: 22px;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>') no-repeat center;
-            mask-size: contain;
-        }
-
-        .icon-deposit {
-            background: #888;
-            width: 22px;
-            height: 22px;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
-            mask-size: contain;
-        }
-
-        .icon-stats {
-            background: #888;
-            width: 22px;
-            height: 22px;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>') no-repeat center;
-            mask-size: contain;
-        }
-
-        .icon-profile {
-            background: #888;
-            width: 22px;
-            height: 22px;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
-            mask-size: contain;
-        }
-
-        .nav-item.active .icon-dice {
-            background: #2aabee;
-        }
-
-        .nav-item.active .icon-deposit,
-        .nav-item.active .icon-stats,
-        .nav-item.active .icon-profile {
-            background: #2aabee;
-        }
-
-        .nav-item:hover .icon-dice,
-        .nav-item:hover .icon-deposit,
-        .nav-item:hover .icon-stats,
-        .nav-item:hover .icon-profile {
-            background: #2aabee;
-        }
-
-        /* Страница депозита с TON Connect */
+        /* Страница депозита (скрыта по умолчанию) */
         .deposit-page {
             display: none;
         }
 
-        .deposit-header {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            padding: 28px 24px;
-            position: relative;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-
+        /* Кнопка назад */
         .back-button {
             background: none;
             border: none;
@@ -610,10 +29,12 @@
             gap: 8px;
         }
 
+        /* Контент депозита */
         .deposit-content {
             padding: 24px;
         }
 
+        /* Подключение кошелька */
         .wallet-connect {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -641,39 +62,16 @@
             margin-bottom: 24px;
         }
 
-        .connect-button {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border: none;
-            border-radius: 16px;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .connect-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
-        }
-
-        .connect-button.connected {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-        }
-
-        .wallet-address {
-            font-size: 14px;
-            color: #666;
-            margin-top: 12px;
-            word-break: break-all;
-            background: white;
-            padding: 12px;
+        .connect-status {
+            font-size: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 12px;
-            border: 1px solid #e6f4ff;
+            margin-bottom: 16px;
+            word-break: break-all;
         }
 
+        /* Суммы пополнения */
         .deposit-amounts {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -691,6 +89,7 @@
             color: #2aabee;
             cursor: pointer;
             transition: all 0.3s;
+            text-align: center;
         }
 
         .amount-button:hover {
@@ -706,7 +105,8 @@
             box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
         }
 
-        .deposit-button {
+        /* Кнопка пополнения */
+        .deposit-action-button {
             width: 100%;
             padding: 22px;
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
@@ -717,82 +117,64 @@
             font-weight: 800;
             cursor: pointer;
             transition: all 0.3s;
+            margin-bottom: 16px;
         }
 
-        .deposit-button:hover:not(:disabled) {
+        .deposit-action-button:hover:not(:disabled) {
             transform: translateY(-4px);
             box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
         }
 
-        .deposit-button:disabled {
+        .deposit-action-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
-        /* Анимация кости - более реалистичная */
-        @keyframes roll {
-            0% { 
-                transform: rotateX(0) rotateY(0) rotateZ(0); 
-            }
-            20% { 
-                transform: rotateX(90deg) rotateY(180deg) rotateZ(45deg); 
-            }
-            40% { 
-                transform: rotateX(180deg) rotateY(360deg) rotateZ(90deg); 
-            }
-            60% { 
-                transform: rotateX(270deg) rotateY(540deg) rotateZ(135deg); 
-            }
-            80% { 
-                transform: rotateX(360deg) rotateY(720deg) rotateZ(180deg); 
-            }
-            100% { 
-                transform: var(--final-rotation); 
-            }
+        .deposit-action-button.connect {
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
         }
 
-        .rolling {
-            animation: roll 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        /* Иконки навигации */
+        .icon-dice, .icon-deposit, .icon-stats, .icon-profile {
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
+
+        .icon-dice { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>'); }
+        .icon-deposit { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'); }
+        .icon-stats { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>'); }
+        .icon-profile { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); }
+
+        .nav-item.active .icon-dice { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>'); }
+        .nav-item.active .icon-deposit { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'); }
+        .nav-item.active .icon-stats { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>'); }
+        .nav-item.active .icon-profile { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); }
 
         /* Уведомление */
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: white;
-            color: #1a1a1a;
-            padding: 16px 32px;
-            border-radius: 50px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            z-index: 1000;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            white-space: nowrap;
-            border: 2px solid #e6f4ff;
-            font-size: 16px;
-            text-align: center;
-            min-width: 300px;
-            max-width: 90vw;
-        }
-
-        .notification.win {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            border-color: rgba(76, 175, 80, 0.3);
-        }
-
-        .notification.lose {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-            color: white;
-            border-color: rgba(255, 107, 107, 0.3);
-        }
-
         .notification.info {
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             color: white;
             border-color: rgba(42, 171, 238, 0.3);
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 6px;
+            background: #e6f4ff;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            width: 0%;
+            transition: width 0.3s;
         }
     </style>
 </head>
@@ -815,57 +197,13 @@
             <div class="game-area">
                 <div class="dice-container">
                     <div class="dice" id="dice">
-                        <!-- Грань 1 -->
-                        <div class="dice-face face-1">
-                            <div class="dots-container">
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                        <!-- Грань 2 -->
-                        <div class="dice-face face-2">
-                            <div class="dots-container">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                        <!-- Грань 3 -->
-                        <div class="dice-face face-3">
-                            <div class="dots-container">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                        <!-- Грань 4 -->
-                        <div class="dice-face face-4">
-                            <div class="dots-container">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                        <!-- Грань 5 -->
-                        <div class="dice-face face-5">
-                            <div class="dots-container">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                        <!-- Грань 6 -->
-                        <div class="dice-face face-6">
-                            <div class="dots-container">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
+                        <!-- Грани кубика -->
+                        <div class="dice-face face-1"><div class="dots-container"><div class="dot"></div></div></div>
+                        <div class="dice-face face-2"><div class="dots-container"><div class="dot"></div><div class="dot"></div></div></div>
+                        <div class="dice-face face-3"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                        <div class="dice-face face-4"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                        <div class="dice-face face-5"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                        <div class="dice-face face-6"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
                     </div>
                 </div>
 
@@ -876,31 +214,27 @@
                 </div>
 
                 <button class="play-button" id="playButton">
-                    <span>🎲 Крутить кость</span>
+                    🎲 Крутить кость
                 </button>
             </div>
 
-            <!-- История игр -->
             <div class="history">
-                <div class="history-title">
-                    История игр
-                    <button class="history-refresh" id="refreshHistory">⟳ Обновить</button>
-                </div>
+                <div class="history-title">История игр</div>
                 <div class="history-items" id="historyItems">
-                    <!-- История будет добавляться динамически -->
+                    <!-- История будет здесь -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Страница депозита с TON Connect -->
+    <!-- Страница депозита -->
     <div class="container deposit-page" id="depositPage">
-        <div class="deposit-header">
+        <div class="header">
             <button class="back-button" id="backButton">
                 ← Назад
             </button>
             <div class="header-title">💰 Пополнение баланса</div>
-            <div class="header-subtitle">Подключите TON кошелёк</div>
+            <div class="header-subtitle">Используйте TON Connect</div>
         </div>
 
         <div class="deposit-content">
@@ -908,13 +242,13 @@
                 <div class="wallet-icon">👛</div>
                 <div class="wallet-title">TON Connect</div>
                 <div class="wallet-description">
-                    Подключите свой TON кошелёк для пополнения баланса
+                    Подключите TON кошелёк для пополнения баланса
                 </div>
-                <button class="connect-button" id="connectButton">
-                    Подключить кошелёк
-                </button>
-                <div class="wallet-address" id="walletAddress" style="display: none;">
-                    Адрес кошелька: <span id="addressText"></span>
+                
+                <div id="tonconnect-button-deposit"></div>
+                
+                <div class="connect-status" id="walletStatus" style="display: none;">
+                    Кошелёк подключен: <span id="walletAddress"></span>
                 </div>
             </div>
 
@@ -933,14 +267,22 @@
                     <button class="amount-button" data-amount="500">500 TON</button>
                 </div>
 
-                <button class="deposit-button" id="depositButton" disabled>
+                <button class="deposit-action-button connect" id="connectWalletBtn">
+                    Подключить кошелёк
+                </button>
+                
+                <button class="deposit-action-button" id="sendDepositBtn" disabled>
                     Пополнить на <span id="selectedAmount">10</span> TON
                 </button>
+
+                <div class="progress-bar" id="progressBar" style="display: none;">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Нижняя навигация -->
+    <!-- Нижнее меню -->
     <div class="bottom-nav">
         <div class="nav-item active" data-page="game">
             <div class="nav-icon icon-dice"></div>
@@ -961,36 +303,32 @@
     </div>
 
     <script>
-        // Элементы
-        const dice = document.getElementById('dice');
-        const playButton = document.getElementById('playButton');
-        const betButtons = document.querySelectorAll('.bet-button');
-        const historyItems = document.getElementById('historyItems');
-        const balanceAmount = document.getElementById('balanceAmount');
-        const refreshHistoryBtn = document.getElementById('refreshHistory');
-        const navItems = document.querySelectorAll('.nav-item');
-        const gamePage = document.getElementById('gamePage');
-        const depositPage = document.getElementById('depositPage');
-        const backButton = document.getElementById('backButton');
-        const connectButton = document.getElementById('connectButton');
-        const depositButton = document.getElementById('depositButton');
-        const walletAddress = document.getElementById('walletAddress');
-        const addressText = document.getElementById('addressText');
-        const selectedAmountSpan = document.getElementById('selectedAmount');
-        const amountButtons = document.querySelectorAll('.amount-button');
-
-        // Переменные игры
+        // Глобальные переменные
+        let tonConnectUI;
+        let isWalletConnected = false;
+        let walletAddress = '';
         let currentBet = 10;
         let balance = parseInt(localStorage.getItem('balance')) || 1500;
         let history = JSON.parse(localStorage.getItem('history')) || [];
         let isRolling = false;
-        let isWalletConnected = false;
         let currentDepositAmount = 10;
 
-        // Обновляем отображение баланса
-        updateBalanceDisplay();
+        // Элементы DOM
+        const gamePage = document.getElementById('gamePage');
+        const depositPage = document.getElementById('depositPage');
+        const backButton = document.getElementById('backButton');
+        const navItems = document.querySelectorAll('.nav-item');
+        const balanceAmount = document.getElementById('balanceAmount');
+        const walletStatus = document.getElementById('walletStatus');
+        const walletAddressSpan = document.getElementById('walletAddress');
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const sendDepositBtn = document.getElementById('sendDepositBtn');
+        const selectedAmountSpan = document.getElementById('selectedAmount');
+        const amountButtons = document.querySelectorAll('.amount-button');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
 
-        // Маппинг вращений для каждой грани
+        // Маппинг вращений для кубика
         const rotationMap = {
             1: 'rotateX(0deg) rotateY(0deg)',
             2: 'rotateY(-90deg)',
@@ -1000,16 +338,63 @@
             6: 'rotateY(180deg)'
         };
 
+        // Инициализация TonConnect
+        function initTonConnect() {
+            const manifestUrl = window.location.origin + '/tonconnect-manifest.json';
+            
+            tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+                manifestUrl: manifestUrl,
+                buttonRootId: 'tonconnect-button-deposit',
+                actionsConfiguration: {
+                    twaReturnUrl: 'https://t.me/DiceCasinoBot' // Замените на ваш бот
+                }
+            });
+            
+            // Слушаем изменения статуса кошелька
+            tonConnectUI.onStatusChange(wallet => {
+                if (wallet) {
+                    isWalletConnected = true;
+                    walletAddress = wallet.account.address;
+                    updateWalletUI(true);
+                    console.log('Кошелёк подключен:', wallet);
+                } else {
+                    isWalletConnected = false;
+                    walletAddress = '';
+                    updateWalletUI(false);
+                    console.log('Кошелёк отключен');
+                }
+            });
+        }
+
+        // Обновление UI кошелька
+        function updateWalletUI(connected) {
+            if (connected) {
+                connectWalletBtn.textContent = 'Кошелёк подключен ✓';
+                connectWalletBtn.disabled = true;
+                sendDepositBtn.disabled = false;
+                walletStatus.style.display = 'block';
+                walletAddressSpan.textContent = shortenAddress(walletAddress);
+            } else {
+                connectWalletBtn.textContent = 'Подключить кошелёк';
+                connectWalletBtn.disabled = false;
+                sendDepositBtn.disabled = true;
+                walletStatus.style.display = 'none';
+            }
+        }
+
+        // Сокращение адреса
+        function shortenAddress(address) {
+            return address ? address.substring(0, 6) + '...' + address.substring(address.length - 4) : '';
+        }
+
         // Навигация
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const page = item.dataset.page;
                 
-                // Обновляем активный элемент навигации
                 navItems.forEach(nav => nav.classList.remove('active'));
                 item.classList.add('active');
                 
-                // Показываем соответствующую страницу
                 if (page === 'game') {
                     gamePage.style.display = 'block';
                     depositPage.style.display = 'none';
@@ -1020,41 +405,23 @@
             });
         });
 
-        // Кнопка "Назад" на странице депозита
+        // Кнопка "Назад"
         backButton.addEventListener('click', () => {
             gamePage.style.display = 'block';
             depositPage.style.display = 'none';
-            
-            // Обновляем навигацию
             navItems.forEach(nav => nav.classList.remove('active'));
             navItems[0].classList.add('active');
         });
 
-        // Подключение кошелька (симуляция)
-        connectButton.addEventListener('click', () => {
+        // Подключение кошелька
+        connectWalletBtn.addEventListener('click', async () => {
             if (!isWalletConnected) {
-                // В реальном приложении здесь будет вызов TonConnectUI
-                isWalletConnected = true;
-                connectButton.textContent = 'Кошелёк подключен ✓';
-                connectButton.classList.add('connected');
-                depositButton.disabled = false;
-                
-                // Показываем адрес кошелька (в демо - случайный)
-                const demoAddress = 'EQ' + Array.from({length: 48}, () => 
-                    '0123456789ABCDEF'[Math.floor(Math.random() * 16)]
-                ).join('');
-                addressText.textContent = demoAddress.substring(0, 12) + '...' + demoAddress.substring(demoAddress.length - 12);
-                walletAddress.style.display = 'block';
-                
-                showNotification('Кошелёк успешно подключен!', 'info');
-            } else {
-                // Отключение кошелька
-                isWalletConnected = false;
-                connectButton.textContent = 'Подключить кошелёк';
-                connectButton.classList.remove('connected');
-                depositButton.disabled = true;
-                walletAddress.style.display = 'none';
-                showNotification('Кошелёк отключен', 'info');
+                try {
+                    await tonConnectUI.openModal();
+                } catch (error) {
+                    console.error('Ошибка подключения:', error);
+                    showNotification('Ошибка подключения кошелька', 'lose');
+                }
             }
         });
 
@@ -1068,133 +435,138 @@
             });
         });
 
-        // Кнопка пополнения (симуляция)
-        depositButton.addEventListener('click', () => {
+        // Отправка депозита
+        sendDepositBtn.addEventListener('click', async () => {
             if (!isWalletConnected) {
                 showNotification('Сначала подключите кошелёк', 'info');
                 return;
             }
 
-            // В реальном приложении здесь будет:
-            // 1. Создание транзакции через TonConnect
-            // 2. Ожидание подтверждения
-            // 3. Проверка транзакции
-            
-            // Демо-симуляция
-            const oldBalance = balance;
-            balance += currentDepositAmount;
-            updateBalanceDisplay();
-            saveToLocalStorage();
-            
-            showNotification(`✅ Баланс пополнен на ${currentDepositAmount} TON!`, 'info');
+            try {
+                showNotification('Подготовка транзакции...', 'info');
+                progressBar.style.display = 'block';
+                progressFill.style.width = '25%';
+
+                // Создаём транзакцию
+                // ЗАМЕНИТЕ НА ВАШ АДРЕС КОШЕЛЬКА!
+                const recipientAddress = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh'; // Ваш кошелёк для приёма
+                
+                const transaction = {
+                    validUntil: Math.floor(Date.now() / 1000) + 300, // 5 минут
+                    messages: [
+                        {
+                            address: recipientAddress,
+                            amount: (currentDepositAmount * 1000000000).toString(), // TON в наноТОНах
+                        }
+                    ]
+                };
+
+                progressFill.style.width = '50%';
+                showNotification('Подтвердите транзакцию в кошельке...', 'info');
+
+                // Отправляем транзакцию
+                const result = await tonConnectUI.sendTransaction(transaction);
+                
+                progressFill.style.width = '75%';
+                showNotification('Транзакция отправлена, ожидаем подтверждения...', 'info');
+                
+                // Симуляция ожидания подтверждения (в реальном приложении нужно проверять статус)
+                setTimeout(() => {
+                    progressFill.style.width = '100%';
+                    
+                    // Обновляем баланс
+                    const oldBalance = balance;
+                    balance += currentDepositAmount;
+                    updateBalanceDisplay();
+                    saveToLocalStorage();
+                    
+                    showNotification(`✅ Баланс пополнен на ${currentDepositAmount} TON!`, 'info');
+                    
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        progressFill.style.width = '0%';
+                    }, 1000);
+                    
+                }, 3000);
+
+            } catch (error) {
+                console.error('Ошибка транзакции:', error);
+                showNotification('Ошибка при отправке транзакции', 'lose');
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }
         });
 
-        // Выбор ставки
-        betButtons.forEach(button => {
+        // Игра: выбор ставки
+        document.querySelectorAll('.bet-button').forEach(button => {
             button.addEventListener('click', () => {
                 if (isRolling) return;
-                
-                betButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.bet-button').forEach(b => b.classList.remove('active'));
                 button.classList.add('active');
                 currentBet = parseInt(button.dataset.bet);
-                
-                // Анимация нажатия
-                button.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    button.style.transform = '';
-                }, 150);
             });
         });
 
-        // Функция броска кости
-        function rollDice() {
-            return Math.floor(Math.random() * 6) + 1;
-        }
+        // Игра: бросок кости
+        document.getElementById('playButton').addEventListener('click', async () => {
+            if (isRolling) return;
+            if (balance < currentBet) {
+                showNotification('Недостаточно средств!', 'lose');
+                return;
+            }
 
-        // Анимация броска
-        function animateDice(result, callback) {
             isRolling = true;
-            playButton.disabled = true;
-            
-            dice.style.transform = 'rotateX(0) rotateY(0)';
+            const result = Math.floor(Math.random() * 6) + 1;
+            const win = result >= 4;
+
+            // Анимация
+            const dice = document.getElementById('dice');
             dice.style.setProperty('--final-rotation', rotationMap[result]);
             dice.classList.add('rolling');
-            
-            playButton.style.transform = 'scale(0.98)';
-            
+
             setTimeout(() => {
                 dice.classList.remove('rolling');
                 dice.style.transform = rotationMap[result];
-                playButton.style.transform = '';
                 
-                if (callback) callback();
+                // Обновляем баланс
+                if (win) {
+                    balance += currentBet * 2;
+                    showNotification(`🎉 Вы выиграли ${currentBet * 2} TON!`, 'win');
+                } else {
+                    balance -= currentBet;
+                    showNotification(`Выпало ${result}. Повезёт в следующий раз!`, 'lose');
+                }
                 
-                setTimeout(() => {
-                    isRolling = false;
-                    playButton.disabled = false;
-                }, 300);
-                
-            }, 1500);
+                updateBalanceDisplay();
+                addToHistory(result, win);
+                saveToLocalStorage();
+                isRolling = false;
+            }, 1200);
+        });
+
+        // Вспомогательные функции
+        function updateBalanceDisplay() {
+            balanceAmount.innerHTML = `${balance} <span>TON</span>`;
         }
 
-        // Добавление в историю
         function addToHistory(result, win) {
-            const historyItem = document.createElement('div');
-            historyItem.className = `history-item ${win ? 'win' : 'lose'}`;
-            historyItem.textContent = result;
-            
-            historyItems.prepend(historyItem);
+            const historyItems = document.getElementById('historyItems');
+            const item = document.createElement('div');
+            item.className = `history-item ${win ? 'win' : 'lose'}`;
+            item.textContent = result;
+            historyItems.prepend(item);
             history.unshift({ result, win, timestamp: Date.now() });
             
-            if (history.length > 12) {
+            if (historyItems.children.length > 10) {
+                historyItems.removeChild(historyItems.lastChild);
                 history.pop();
-                if (historyItems.children.length > 12) {
-                    historyItems.removeChild(historyItems.lastChild);
-                }
             }
-            
-            historyItem.style.opacity = '0';
-            historyItem.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                historyItem.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                historyItem.style.opacity = '1';
-                historyItem.style.transform = 'translateY(0)';
-            }, 10);
-            
-            saveToLocalStorage();
         }
 
-        // Обновление баланса
-        function updateBalance() {
-            balanceAmount.style.transform = 'scale(1.05)';
-            balanceAmount.style.color = '#2aabee';
-            
-            setTimeout(() => {
-                balanceAmount.style.transition = 'all 0.3s';
-                balanceAmount.style.transform = 'scale(1)';
-                balanceAmount.style.color = '#1a1a1a';
-                updateBalanceDisplay();
-            }, 300);
-            
-            saveToLocalStorage();
-        }
-
-        function updateBalanceDisplay() {
-            balanceAmount.innerHTML = `${balance.toLocaleString()} <span>TON</span>`;
-        }
-
-        // Сохранение в localStorage
-        function saveToLocalStorage() {
-            localStorage.setItem('balance', balance);
-            localStorage.setItem('history', JSON.stringify(history));
-        }
-
-        // Показать уведомление
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.textContent = message;
-            
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -1207,84 +579,46 @@
             }, 3000);
         }
 
-        // Обработчик игры
-        playButton.addEventListener('click', () => {
-            if (isRolling) return;
-            
-            if (balance < currentBet) {
-                showNotification('💰 Недостаточно средств! Пополните баланс.', 'info');
-                return;
-            }
+        function saveToLocalStorage() {
+            localStorage.setItem('balance', balance);
+            localStorage.setItem('history', JSON.stringify(history));
+        }
 
-            const result = rollDice();
-            const win = result >= 4;
-
-            animateDice(result, () => {
-                if (win) {
-                    balance += currentBet * 2;
-                } else {
-                    balance -= currentBet;
-                }
-                
-                updateBalance();
-                addToHistory(result, win);
-                
-                setTimeout(() => {
-                    const message = win ? 
-                        `🎉 Вы выиграли ${currentBet * 2} TON!` : 
-                        `Выпало ${result}. Повезет в следующий раз!`;
-                    
-                    showNotification(message, win ? 'win' : 'lose');
-                }, 500);
-            });
-        });
-
-        // Обновление истории
-        refreshHistoryBtn.addEventListener('click', () => {
-            refreshHistoryBtn.style.transform = 'rotate(360deg)';
-            refreshHistoryBtn.style.transition = 'transform 0.5s';
-            
-            historyItems.innerHTML = '';
-            history.forEach(item => {
-                addToHistory(item.result, item.win);
-            });
-            
-            setTimeout(() => {
-                refreshHistoryBtn.style.transform = '';
-            }, 500);
-        });
-
-        // Инициализация начальной истории
+        // Инициализация истории
         function initHistory() {
+            const historyItems = document.getElementById('historyItems');
             if (history.length === 0) {
-                const initialResults = [
-                    { result: 6, win: true },
-                    { result: 2, win: false },
-                    { result: 4, win: true },
-                    { result: 1, win: false },
-                    { result: 5, win: true },
-                    { result: 3, win: false },
-                    { result: 6, win: true },
-                    { result: 4, win: true }
-                ];
-                
-                initialResults.forEach(item => {
-                    addToHistory(item.result, item.win);
+                const initialResults = [6, 2, 4, 1, 5, 3, 6, 4];
+                initialResults.forEach(result => {
+                    addToHistory(result, result >= 4);
                 });
             } else {
-                // Восстанавливаем историю из localStorage
                 historyItems.innerHTML = '';
                 history.forEach(item => {
-                    addToHistory(item.result, item.win);
+                    const div = document.createElement('div');
+                    div.className = `history-item ${item.win ? 'win' : 'lose'}`;
+                    div.textContent = item.result;
+                    historyItems.appendChild(div);
                 });
             }
         }
 
-        // Установка начального положения кубика
-        dice.style.transform = rotationMap[1];
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            initTonConnect();
+            initHistory();
+            updateBalanceDisplay();
+            
+            // Восстанавливаем состояние кошелька
+            setTimeout(() => {
+                tonConnectUI.connectionRestored.then(() => {
+                    console.log('Состояние кошелька восстановлено');
+                });
+            }, 100);
+        });
 
-        // Запуск при загрузке
-        initHistory();
+        // Устанавливаем начальное положение кубика
+        document.getElementById('dice').style.transform = rotationMap[1];
     </script>
 </body>
 </html>
