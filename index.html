@@ -31,59 +31,63 @@
             border: 1px solid rgba(42, 171, 238, 0.1);
         }
 
-        /* Header стиль как в Telegram Wallet */
-        .header {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            padding: 28px 24px;
-            position: relative;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
+        /* НОВАЯ ВЕРХНЯЯ ПАНЕЛЬ */
+        .top-panel {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e6f4ff;
+            background: white;
         }
 
-        .header-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-        }
-
-        .balance-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 24px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .balance-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .balance-amount {
-            font-size: 36px;
-            font-weight: 800;
+        .user-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .username {
+            font-size: 14px;
+            font-weight: 600;
             color: #1a1a1a;
         }
 
-        .balance-amount span {
-            font-size: 18px;
-            color: #2aabee;
-            font-weight: 700;
+        .balance-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .balance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .balance-btn:active {
+            transform: translateY(0);
         }
 
         /* Основной контент */
@@ -370,26 +374,6 @@
             border-color: rgba(255, 107, 107, 0.3);
         }
 
-        /* Кнопка депозита */
-        .deposit-button {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 28px;
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
-            cursor: pointer;
-            border: none;
-            z-index: 100;
-        }
-
         /* Модальное окно депозита */
         .modal-overlay {
             position: fixed;
@@ -551,21 +535,62 @@
             color: white;
             border-color: rgba(42, 171, 238, 0.3);
         }
+
+        /* Нижнее меню */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e6f4ff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            font-size: 12px;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 16px;
+        }
+
+        .nav-item:hover {
+            background: rgba(42, 171, 238, 0.08);
+            color: #2aabee;
+        }
+
+        .nav-item.active {
+            color: #2aabee;
+            background: rgba(42, 171, 238, 0.12);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
     <!-- Главная страница игры -->
     <div class="container">
-        <div class="header">
-            <div class="header-title">🎲 Dice Casino</div>
-            <div class="header-subtitle">Играйте в реальном времени</div>
-            
-            <div class="balance-card">
-                <div class="balance-label">Ваш баланс</div>
-                <div class="balance-amount" id="balanceAmount">
-                    1,500 <span>TON</span>
-                </div>
+        <!-- НОВАЯ ВЕРХНЯЯ ПАНЕЛЬ -->
+        <div class="top-panel">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">👤</div>
+                <div class="username" id="username">Гость</div>
             </div>
+            <button class="balance-btn" id="openDepositModal">
+                💰 <span id="balanceAmount">1,500 TON</span>
+            </button>
         </div>
 
         <div class="content">
@@ -602,9 +627,6 @@
         </div>
     </div>
 
-    <!-- Кнопка депозита -->
-    <button class="deposit-button" id="openDepositModal">💰</button>
-
     <!-- Модальное окно депозита -->
     <div class="modal-overlay" id="depositModal">
         <div class="modal">
@@ -637,9 +659,24 @@
         </div>
     </div>
 
+    <!-- Нижнее меню -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <div class="nav-icon">🎲</div>
+            <div>Играть</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">📊</div>
+            <div>Статистика</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div>Профиль</div>
+        </div>
+    </div>
+
     <script>
         // ==================== КОНФИГУРАЦИЯ ====================
-        // ВАШ АДРЕС КОШЕЛЬКА ДЛЯ ПОЛУЧЕНИЯ ПЛАТЕЖЕЙ
         const YOUR_WALLET_ADDRESS = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh';
         
         // ==================== ПЕРЕМЕННЫЕ ====================
@@ -650,6 +687,7 @@
         let history = JSON.parse(localStorage.getItem('history')) || [];
         let isRolling = false;
         let currentDepositAmount = 10;
+        let username = localStorage.getItem('username') || 'Игрок #' + Math.floor(Math.random() * 10000);
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const dice = document.getElementById('dice');
@@ -657,7 +695,7 @@
         const balanceAmount = document.getElementById('balanceAmount');
         const historyItems = document.getElementById('historyItems');
         const depositModal = document.getElementById('depositModal');
-        const openDepositModal = document.getElementById('openDepositModal');
+        const openDepositModalBtn = document.getElementById('openDepositModal');
         const closeModal = document.getElementById('closeModal');
         const walletInfo = document.getElementById('walletInfo');
         const walletAddress = document.getElementById('walletAddress');
@@ -665,40 +703,57 @@
         const selectedAmount = document.getElementById('selectedAmount');
         const amountButtons = document.querySelectorAll('.amount-button');
         const betButtons = document.querySelectorAll('.bet-button');
+        const usernameElement = document.getElementById('username');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        function init() {
+            // Устанавливаем имя пользователя
+            usernameElement.textContent = username;
+            userAvatar.textContent = username.charAt(0);
+            
+            // Обновляем баланс
+            updateBalanceDisplay();
+            
+            // Инициализируем TON Connect
+            initTonConnect();
+            
+            // Восстанавливаем историю
+            initHistory();
+        }
         
         // ==================== ИНИЦИАЛИЗАЦИЯ TON CONNECT ====================
         function initTonConnect() {
-            // URL вашего манифеста (он должен быть доступен по этому адресу)
             const manifestUrl = 'https://smswork34-art.github.io/dice-casino/tonconnect-manifest.json';
             
             tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
                 manifestUrl: manifestUrl,
                 buttonRootId: 'tonconnect-button',
                 actionsConfiguration: {
-                    twaReturnUrl: 'https://t.me/DiceCasinoMini_bot' // Замените на вашего бота
+                    twaReturnUrl: 'https://t.me/DiceCasinoBot'
                 }
             });
             
             // Слушаем изменения статуса кошелька
             tonConnectUI.onStatusChange(wallet => {
                 if (wallet) {
-                    // Кошелёк подключен
                     isWalletConnected = true;
                     walletInfo.style.display = 'block';
                     walletAddress.textContent = shortenAddress(wallet.account.address);
                     sendDeposit.disabled = false;
                     sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
                     
-                    console.log('Кошелёк подключен:', wallet.account.address);
+                    // Обновляем имя пользователя на адрес кошелька
+                    username = shortenAddress(wallet.account.address);
+                    usernameElement.textContent = username;
+                    userAvatar.textContent = '👛';
+                    
                     showNotification('✅ Кошелёк подключен!', 'info');
                 } else {
-                    // Кошелёк отключен
                     isWalletConnected = false;
                     walletInfo.style.display = 'none';
                     sendDeposit.disabled = true;
                     sendDeposit.textContent = 'Подключите кошелёк';
-                    
-                    console.log('Кошелёк отключен');
                 }
             });
         }
@@ -725,7 +780,7 @@
         }
         
         function updateBalanceDisplay() {
-            balanceAmount.innerHTML = `${balance} <span>TON</span>`;
+            balanceAmount.textContent = balance + ' TON';
             localStorage.setItem('balance', balance);
         }
         
@@ -767,7 +822,6 @@
             const result = Math.floor(Math.random() * 6) + 1;
             const win = result >= 4;
             
-            // Маппинг вращений для кубика
             const rotationMap = {
                 1: 'rotateX(0deg) rotateY(0deg)',
                 2: 'rotateY(-90deg)',
@@ -777,7 +831,6 @@
                 6: 'rotateY(180deg)'
             };
             
-            // Анимация
             dice.style.setProperty('--final-rotation', rotationMap[result]);
             dice.classList.add('rolling');
             
@@ -785,7 +838,6 @@
                 dice.classList.remove('rolling');
                 dice.style.transform = rotationMap[result];
                 
-                // Обновляем баланс
                 if (win) {
                     balance += currentBet * 2;
                     showNotification(`🎉 Вы выиграли ${currentBet * 2} TON!`, 'win');
@@ -801,8 +853,8 @@
         });
         
         // ==================== ДЕПОЗИТ ====================
-        // Открытие модального окна
-        openDepositModal.addEventListener('click', () => {
+        // Открытие модального окна по клику на баланс
+        openDepositModalBtn.addEventListener('click', () => {
             depositModal.style.display = 'flex';
         });
         
@@ -811,7 +863,6 @@
             depositModal.style.display = 'none';
         });
         
-        // Клик по оверлею
         depositModal.addEventListener('click', (e) => {
             if (e.target === depositModal) {
                 depositModal.style.display = 'none';
@@ -841,27 +892,23 @@
             try {
                 showNotification('Подготовка транзакции...', 'info');
                 
-                // Создаём транзакцию
                 const transaction = {
-                    validUntil: Math.floor(Date.now() / 1000) + 300, // 5 минут
+                    validUntil: Math.floor(Date.now() / 1000) + 300,
                     messages: [
                         {
-                            address: UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh,
-                            amount: (currentDepositAmount * 1000000000).toString(), // TON в наноТОНах
-                            payload: '' // Можно добавить комментарий
+                            address: YOUR_WALLET_ADDRESS,
+                            amount: (currentDepositAmount * 1000000000).toString(),
+                            payload: ''
                         }
                     ]
                 };
                 
                 showNotification('Подтвердите транзакцию в кошельке...', 'info');
                 
-                // Отправляем транзакцию
                 const result = await tonConnectUI.sendTransaction(transaction);
                 
                 showNotification('Транзакция отправлена! Ожидаем подтверждения...', 'info');
                 
-                // В реальном приложении здесь нужно проверять статус транзакции
-                // Но для демо добавим баланс сразу
                 setTimeout(() => {
                     balance += currentDepositAmount;
                     updateBalanceDisplay();
@@ -875,12 +922,8 @@
             }
         });
         
-        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Инициализация TON Connect
-            initTonConnect();
-            
-            // Восстановление истории
+        // ==================== ИНИЦИАЛИЗАЦИЯ ИСТОРИИ ====================
+        function initHistory() {
             if (history.length > 0) {
                 historyItems.innerHTML = '';
                 history.forEach(item => {
@@ -890,14 +933,16 @@
                     historyItems.appendChild(div);
                 });
             } else {
-                // Демо-история
                 const demoHistory = [6, 2, 4, 1, 5, 3, 6, 4];
                 demoHistory.forEach(result => {
                     addToHistory(result, result >= 4);
                 });
             }
-            
-            updateBalanceDisplay();
+        }
+        
+        // ==================== ЗАПУСК ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
             
             // Восстановление состояния кошелька
             setTimeout(() => {
