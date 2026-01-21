@@ -573,6 +573,219 @@
             margin: 0 auto 16px;
         }
 
+        /* Страница вывода */
+        .withdraw-page {
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(42, 171, 238, 0.15);
+        }
+
+        .withdraw-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .withdraw-icon {
+            width: 24px;
+            height: 24px;
+            background: #2aabee;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-6-7h3v-2h-3V8l-4 4 4 4v-3z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .withdraw-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .withdraw-info {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e6f4ff;
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.1);
+        }
+
+        .withdraw-balance {
+            font-size: 32px;
+            font-weight: 800;
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .withdraw-label {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .withdraw-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .form-input {
+            padding: 16px;
+            border: 2px solid #e6f4ff;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2aabee;
+            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
+        }
+
+        .withdraw-amounts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .withdraw-amount-btn {
+            background: white;
+            border: 2px solid #e6f4ff;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2aabee;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .withdraw-amount-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
+            border-color: #2aabee;
+        }
+
+        .withdraw-amount-btn.active {
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            border-color: #2aabee;
+            color: white;
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+
+        .withdraw-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .withdraw-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .withdraw-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .withdraw-note {
+            background: #fff8e1;
+            border: 1px solid #ffd54f;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #5d4037;
+        }
+
+        .withdraw-note strong {
+            color: #d84315;
+        }
+
+        .withdraw-history {
+            margin-top: 32px;
+        }
+
+        .withdraw-history-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .withdraw-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .withdraw-history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e6f4ff;
+        }
+
+        .withdraw-history-amount {
+            font-weight: 600;
+            font-size: 16px;
+            color: #ff6b6b;
+        }
+
+        .withdraw-history-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .withdraw-history-status {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+
+        .withdraw-history-status.pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ff9800;
+        }
+
+        .withdraw-history-status.completed {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
         /* Модальное окно депозита */
         .modal-overlay {
             position: fixed;
@@ -801,8 +1014,8 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>');
         }
 
-        .nav-icon.profile {
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+        .nav-icon.withdraw {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23888" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-6-7h3v-2h-3V8l-4 4 4 4v-3z"/></svg>');
         }
 
         .nav-item.active .nav-icon {
@@ -909,6 +1122,60 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Страница вывода -->
+            <div class="page withdraw-page hidden" id="withdrawPage">
+                <div class="withdraw-header">
+                    <span class="withdraw-icon"></span>
+                    <h2 class="withdraw-title">Вывод средств</h2>
+                </div>
+
+                <div class="withdraw-info">
+                    <div class="withdraw-balance" id="withdrawBalance">1,500 TON</div>
+                    <div class="withdraw-label">Доступно для вывода</div>
+
+                    <div class="withdraw-form">
+                        <div class="form-group">
+                            <label class="form-label">Сумма вывода (TON)</label>
+                            <input type="number" class="form-input" id="withdrawAmount" placeholder="Введите сумму" min="10" max="1500" value="100">
+                            
+                            <div class="withdraw-amounts">
+                                <button class="withdraw-amount-btn" data-amount="50">50 TON</button>
+                                <button class="withdraw-amount-btn" data-amount="100">100 TON</button>
+                                <button class="withdraw-amount-btn" data-amount="250">250 TON</button>
+                                <button class="withdraw-amount-btn active" data-amount="500">500 TON</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Адрес TON кошелька</label>
+                            <input type="text" class="form-input" id="withdrawAddress" placeholder="UQ... или EQ...">
+                        </div>
+
+                        <button class="withdraw-button" id="requestWithdraw">
+                            Запросить вывод
+                        </button>
+                    </div>
+                </div>
+
+                <div class="withdraw-note">
+                    <strong>⚠️ Внимание:</strong> Вывод средств обрабатывается вручную администрацией. 
+                    Минимальная сумма вывода: 10 TON. Комиссия: 5%. 
+                    Обычное время обработки: 1-24 часа.
+                </div>
+
+                <div class="withdraw-history">
+                    <div class="withdraw-history-title">История выводов</div>
+                    <div class="withdraw-history-list" id="withdrawHistoryList">
+                        <!-- История выводов будет здесь -->
+                    </div>
+                    <div class="empty-stats" id="emptyWithdrawHistory">
+                        <p style="text-align: center; color: #666; padding: 20px;">
+                            История выводов пока пуста
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -955,9 +1222,9 @@
             <div class="nav-icon stats"></div>
             <div>Статистика</div>
         </div>
-        <div class="nav-item" data-page="profile">
-            <div class="nav-icon profile"></div>
-            <div>Профиль</div>
+        <div class="nav-item" data-page="withdraw">
+            <div class="nav-icon withdraw"></div>
+            <div>Вывод</div>
         </div>
     </div>
 
@@ -975,6 +1242,8 @@
         let currentDepositAmount = 10;
         let username = localStorage.getItem('username') || 'Игрок #' + Math.floor(Math.random() * 10000);
         let betsHistory = JSON.parse(localStorage.getItem('betsHistory')) || [];
+        let withdrawHistory = JSON.parse(localStorage.getItem('withdrawHistory')) || [];
+        let currentWithdrawAmount = 500;
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const dice = document.getElementById('dice');
@@ -994,6 +1263,7 @@
         const userAvatar = document.getElementById('userAvatar');
         const gamePage = document.getElementById('gamePage');
         const statsPage = document.getElementById('statsPage');
+        const withdrawPage = document.getElementById('withdrawPage');
         const navItems = document.querySelectorAll('.nav-item');
         const totalGamesEl = document.getElementById('totalGames');
         const totalProfitEl = document.getElementById('totalProfit');
@@ -1001,6 +1271,13 @@
         const totalLossEl = document.getElementById('totalLoss');
         const betsListEl = document.getElementById('betsList');
         const emptyStatsEl = document.getElementById('emptyStats');
+        const withdrawBalanceEl = document.getElementById('withdrawBalance');
+        const withdrawAmountInput = document.getElementById('withdrawAmount');
+        const withdrawAddressInput = document.getElementById('withdrawAddress');
+        const requestWithdrawBtn = document.getElementById('requestWithdraw');
+        const withdrawAmountBtns = document.querySelectorAll('.withdraw-amount-btn');
+        const withdrawHistoryList = document.getElementById('withdrawHistoryList');
+        const emptyWithdrawHistoryEl = document.getElementById('emptyWithdrawHistory');
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
@@ -1020,8 +1297,179 @@
             // Восстанавливаем статистику
             updateStats();
             
+            // Инициализируем страницу вывода
+            initWithdrawPage();
+            
             // Навигация
             setupNavigation();
+        }
+        
+        // ==================== СТРАНИЦА ВЫВОДА ====================
+        function initWithdrawPage() {
+            // Обновляем доступный баланс
+            withdrawBalanceEl.textContent = balance + ' TON';
+            
+            // Устанавливаем максимальное значение ввода
+            withdrawAmountInput.max = balance;
+            
+            // Обработчик выбора суммы
+            withdrawAmountBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    withdrawAmountBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentWithdrawAmount = parseInt(btn.dataset.amount);
+                    
+                    // Проверяем, что сумма не превышает баланс
+                    if (currentWithdrawAmount > balance) {
+                        currentWithdrawAmount = balance;
+                    }
+                    
+                    withdrawAmountInput.value = currentWithdrawAmount;
+                });
+            });
+            
+            // Обработчик изменения ввода
+            withdrawAmountInput.addEventListener('input', () => {
+                const amount = parseInt(withdrawAmountInput.value) || 0;
+                
+                // Проверяем лимиты
+                if (amount < 10) {
+                    withdrawAmountInput.value = 10;
+                } else if (amount > balance) {
+                    withdrawAmountInput.value = balance;
+                }
+                
+                // Снимаем активные кнопки если сумма не совпадает
+                let hasActive = false;
+                withdrawAmountBtns.forEach(btn => {
+                    if (parseInt(btn.dataset.amount) === parseInt(withdrawAmountInput.value)) {
+                        btn.classList.add('active');
+                        hasActive = true;
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Если нет совпадения с кнопками, снимаем все активные
+                if (!hasActive) {
+                    withdrawAmountBtns.forEach(btn => btn.classList.remove('active'));
+                }
+            });
+            
+            // Обработчик запроса вывода
+            requestWithdrawBtn.addEventListener('click', () => {
+                requestWithdraw();
+            });
+            
+            // Загружаем историю выводов
+            updateWithdrawHistory();
+        }
+        
+        function requestWithdraw() {
+            const amount = parseInt(withdrawAmountInput.value) || 0;
+            const address = withdrawAddressInput.value.trim();
+            
+            // Валидация
+            if (amount < 10) {
+                showNotification('Минимальная сумма вывода: 10 TON', 'lose');
+                return;
+            }
+            
+            if (amount > balance) {
+                showNotification('Недостаточно средств на балансе', 'lose');
+                return;
+            }
+            
+            if (!address || (!address.startsWith('UQ') && !address.startsWith('EQ'))) {
+                showNotification('Введите корректный TON адрес (начинается с UQ... или EQ...)', 'lose');
+                return;
+            }
+            
+            if (address.length < 48) {
+                showNotification('Адрес слишком короткий', 'lose');
+                return;
+            }
+            
+            // Расчет комиссии (5%)
+            const fee = Math.ceil(amount * 0.05);
+            const netAmount = amount - fee;
+            
+            // Создаем заявку на вывод
+            const withdrawRequest = {
+                id: Date.now(),
+                amount: amount,
+                netAmount: netAmount,
+                fee: fee,
+                address: address,
+                timestamp: Date.now(),
+                status: 'pending' // pending, completed, rejected
+            };
+            
+            // Добавляем в историю
+            withdrawHistory.push(withdrawRequest);
+            localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
+            
+            // Списываем с баланса
+            balance -= amount;
+            updateBalanceDisplay();
+            withdrawBalanceEl.textContent = balance + ' TON';
+            withdrawAmountInput.max = balance;
+            
+            // Обновляем историю
+            updateWithdrawHistory();
+            
+            // Показываем уведомление
+            showNotification(`Заявка на вывод ${amount} TON отправлена! Вы получите ${netAmount} TON (комиссия: ${fee} TON).`, 'info');
+            
+            // Очищаем форму
+            withdrawAmountInput.value = Math.min(100, balance);
+            withdrawAddressInput.value = '';
+            
+            // В реальном приложении здесь должна быть отправка запроса на сервер
+            // или уведомление администратору через Telegram бота
+            console.log('Заявка на вывод:', withdrawRequest);
+            console.log('Администратор должен отправить', netAmount, 'TON на адрес:', address);
+        }
+        
+        function updateWithdrawHistory() {
+            // Очищаем список
+            withdrawHistoryList.innerHTML = '';
+            
+            if (withdrawHistory.length === 0) {
+                emptyWithdrawHistoryEl.style.display = 'block';
+                withdrawHistoryList.style.display = 'none';
+                return;
+            }
+            
+            emptyWithdrawHistoryEl.style.display = 'none';
+            withdrawHistoryList.style.display = 'flex';
+            
+            // Сортируем по дате (новые сверху)
+            const sortedHistory = [...withdrawHistory].reverse();
+            
+            sortedHistory.forEach(withdraw => {
+                const item = document.createElement('div');
+                item.className = 'withdraw-history-item';
+                
+                const date = new Date(withdraw.timestamp).toLocaleDateString();
+                const time = new Date(withdraw.timestamp).toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                item.innerHTML = `
+                    <div>
+                        <div class="withdraw-history-amount">-${withdraw.amount} TON</div>
+                        <div class="withdraw-history-date">${date} ${time}</div>
+                    </div>
+                    <div class="withdraw-history-status ${withdraw.status}">
+                        ${withdraw.status === 'pending' ? 'Ожидание' : 
+                          withdraw.status === 'completed' ? 'Выполнен' : 'Отклонен'}
+                    </div>
+                `;
+                
+                withdrawHistoryList.appendChild(item);
+            });
         }
         
         // ==================== НАВИГАЦИЯ ====================
@@ -1038,13 +1486,20 @@
                     item.classList.add('active');
                     
                     // Показываем соответствующую страницу
+                    gamePage.classList.add('hidden');
+                    statsPage.classList.add('hidden');
+                    withdrawPage.classList.add('hidden');
+                    
                     if (page === 'game') {
                         gamePage.classList.remove('hidden');
-                        statsPage.classList.add('hidden');
                     } else if (page === 'stats') {
-                        gamePage.classList.add('hidden');
                         statsPage.classList.remove('hidden');
                         updateStats();
+                    } else if (page === 'withdraw') {
+                        withdrawPage.classList.remove('hidden');
+                        withdrawBalanceEl.textContent = balance + ' TON';
+                        withdrawAmountInput.max = balance;
+                        updateWithdrawHistory();
                     }
                 });
             });
@@ -1056,13 +1511,12 @@
             const totalWins = betsHistory.filter(bet => bet.win).length;
             const totalLosses = totalGames - totalWins;
             
-            // Рассчитываем прибыль/убыток
             let totalProfit = 0;
             let totalLoss = 0;
             
             betsHistory.forEach(bet => {
                 if (bet.win) {
-                    totalProfit += bet.bet * 2; // Выигрыш 2x ставки
+                    totalProfit += bet.bet * 2;
                 } else {
                     totalLoss += bet.bet;
                 }
@@ -1071,16 +1525,13 @@
             const netProfit = totalProfit - totalLoss;
             const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
             
-            // Обновляем элементы
             totalGamesEl.textContent = totalGames;
             totalProfitEl.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
             winRateEl.textContent = winRate + '%';
             totalLossEl.textContent = totalLoss + ' TON';
             
-            // Обновляем список ставок
             updateBetsList();
             
-            // Показываем/скрываем сообщение о пустой статистике
             if (totalGames === 0) {
                 emptyStatsEl.style.display = 'block';
                 betsListEl.style.display = 'none';
@@ -1091,10 +1542,7 @@
         }
         
         function updateBetsList() {
-            // Очищаем список
             betsListEl.innerHTML = '';
-            
-            // Берем последние 10 ставок
             const lastBets = betsHistory.slice(-10).reverse();
             
             lastBets.forEach(bet => {
@@ -1131,11 +1579,7 @@
             };
             
             betsHistory.push(betRecord);
-            
-            // Сохраняем в localStorage
             localStorage.setItem('betsHistory', JSON.stringify(betsHistory));
-            
-            // Обновляем статистику
             updateStats();
         }
         
@@ -1151,7 +1595,6 @@
                 }
             });
             
-            // Слушаем изменения статуса кошелька
             tonConnectUI.onStatusChange(wallet => {
                 if (wallet) {
                     isWalletConnected = true;
@@ -1160,7 +1603,6 @@
                     sendDeposit.disabled = false;
                     sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
                     
-                    // Обновляем имя пользователя на адрес кошелька
                     username = shortenAddress(wallet.account.address);
                     usernameElement.textContent = username;
                     userAvatar.textContent = '👛';
@@ -1217,7 +1659,6 @@
         }
         
         // ==================== ИГРА ====================
-        // Выбор ставки
         betButtons.forEach(button => {
             button.addEventListener('click', () => {
                 if (isRolling) return;
@@ -1227,7 +1668,6 @@
             });
         });
         
-        // Бросок кости
         playButton.addEventListener('click', () => {
             if (isRolling) return;
             if (balance < currentBet) {
@@ -1271,12 +1711,10 @@
         });
         
         // ==================== ДЕПОЗИТ ====================
-        // Открытие модального окна по клику на баланс
         openDepositModalBtn.addEventListener('click', () => {
             depositModal.style.display = 'flex';
         });
         
-        // Закрытие модального окна
         closeModal.addEventListener('click', () => {
             depositModal.style.display = 'none';
         });
@@ -1287,7 +1725,6 @@
             }
         });
         
-        // Выбор суммы депозита
         amountButtons.forEach(button => {
             button.addEventListener('click', () => {
                 amountButtons.forEach(b => b.classList.remove('active'));
@@ -1300,7 +1737,6 @@
             });
         });
         
-        // Отправка депозита
         sendDeposit.addEventListener('click', async () => {
             if (!isWalletConnected) {
                 showNotification('Сначала подключите кошелёк', 'info');
@@ -1362,14 +1798,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             init();
             
-            // Восстановление состояния кошелька
             setTimeout(() => {
                 tonConnectUI.connectionRestored.then(() => {
                     console.log('Состояние кошелька восстановлено');
                 });
             }, 100);
             
-            // Устанавливаем начальное положение кубика
             dice.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
     </script>
