@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dice Casino - TON Game</title>
-    <!-- Подключаем TonConnect UI -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         * {
@@ -1025,6 +1025,21 @@
         .nav-item:hover .nav-icon {
             background: #2aabee;
         }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -1229,8 +1244,11 @@
     </div>
 
     <script>
-        // ==================== КОНФИГУРАЦИЯ ====================
+        // ==================== КОНСТАНТЫ ====================
+        const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
+        const ADMIN_CHAT_ID = '8155919358';
         const YOUR_WALLET_ADDRESS = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh';
+        const WITHDRAW_FEE_PERCENT = 5; // 5% комиссия
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let tonConnectUI;
@@ -1240,10 +1258,11 @@
         let history = JSON.parse(localStorage.getItem('history')) || [];
         let isRolling = false;
         let currentDepositAmount = 10;
-        let username = localStorage.getItem('username') || 'Игрок #' + Math.floor(Math.random() * 10000);
+        let username = localStorage.getItem('username') || 'Гость';
         let betsHistory = JSON.parse(localStorage.getItem('betsHistory')) || [];
         let withdrawHistory = JSON.parse(localStorage.getItem('withdrawHistory')) || [];
         let currentWithdrawAmount = 500;
+        let tg = null;
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const dice = document.getElementById('dice');
@@ -1281,6 +1300,24 @@
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
+            // Инициализация Telegram Web App
+            if (window.Telegram && window.Telegram.WebApp) {
+                tg = window.Telegram.WebApp;
+                tg.expand();
+                tg.enableClosingConfirmation();
+                
+                // Получаем данные пользователя из Telegram
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    username = user.username ? '@' + user.username : user.first_name || 'Telegram User';
+                    usernameElement.textContent = username;
+                    userAvatar.textContent = user.first_name ? user.first_name.charAt(0) : 'T';
+                    
+                    // Сохраняем в localStorage
+                    localStorage.setItem('username', username);
+                }
+            }
+            
             // Устанавливаем имя пользователя
             usernameElement.textContent = username;
             userAvatar.textContent = username.charAt(0);
@@ -1302,6 +1339,110 @@
             
             // Навигация
             setupNavigation();
+        }
+        
+        // ==================== ТЕЛЕГРАМ БОТ ИНТЕГРАЦИЯ ====================
+        async function sendWithdrawToTelegramBot(withdrawData) {
+            try {
+                const message = `
+🎰 *НОВАЯ ЗАЯВКА НА ВЫВОД #${withdrawData.id}*
+
+👤 *Пользователь:* ${username}
+💰 *Сумма:* ${withdrawData.amount} TON
+💸 *К выплате:* ${withdrawData.netAmount} TON
+📝 *Комиссия:* ${withdrawData.fee} TON (${WITHDRAW_FEE_PERCENT}%)
+📍 *Адрес:* \`${withdrawData.address}\`
+📊 *Баланс до:* ${balance + withdrawData.amount} TON
+📊 *Баланс после:* ${balance} TON
+⏰ *Время:* ${new Date(withdrawData.timestamp).toLocaleString('ru-RU')}
+
+🆔 *ID заявки:* ${withdrawData.id}
+                `.trim();
+                
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: ADMIN_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: '✅ Выплачено',
+                                        callback_data: `withdraw_approve_${withdrawData.id}`
+                                    },
+                                    {
+                                        text: '❌ Отклонить',
+                                        callback_data: `withdraw_reject_${withdrawData.id}`
+                                    }
+                                ]
+                            ]
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.ok) {
+                    showNotification('✅ Заявка отправлена администратору!', 'info');
+                    return true;
+                } else {
+                    console.error('Ошибка отправки в Telegram:', data);
+                    showNotification('⚠️ Заявка создана, но не отправлена админу', 'info');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Ошибка отправки в Telegram:', error);
+                showNotification('⚠️ Заявка создана, но не отправлена админу', 'info');
+                return false;
+            }
+        }
+        
+        async function checkWithdrawStatus() {
+            try {
+                // Запрашиваем обновления у бота
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=-10`);
+                const data = await response.json();
+                
+                if (data.ok && data.result) {
+                    data.result.forEach(update => {
+                        if (update.callback_query) {
+                            const callback = update.callback_query;
+                            const callbackData = callback.data;
+                            
+                            if (callbackData.startsWith('withdraw_approve_') || callbackData.startsWith('withdraw_reject_')) {
+                                const withdrawId = callbackData.split('_')[2];
+                                const status = callbackData.includes('approve') ? 'completed' : 'rejected';
+                                
+                                // Обновляем статус в истории
+                                const withdrawIndex = withdrawHistory.findIndex(w => w.id == withdrawId);
+                                if (withdrawIndex !== -1) {
+                                    withdrawHistory[withdrawIndex].status = status;
+                                    localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
+                                    
+                                    // Если отклонено, возвращаем баланс
+                                    if (status === 'rejected') {
+                                        balance += withdrawHistory[withdrawIndex].amount;
+                                        updateBalanceDisplay();
+                                        showNotification(`❌ Заявка #${withdrawId} отклонена. Баланс возвращен.`, 'info');
+                                    } else {
+                                        showNotification(`✅ Заявка #${withdrawId} выплачена!`, 'info');
+                                    }
+                                    
+                                    // Обновляем отображение
+                                    updateWithdrawHistory();
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка проверки статуса:', error);
+            }
         }
         
         // ==================== СТРАНИЦА ВЫВОДА ====================
@@ -1363,9 +1504,12 @@
             
             // Загружаем историю выводов
             updateWithdrawHistory();
+            
+            // Периодически проверяем статус выводов
+            setInterval(checkWithdrawStatus, 30000); // Каждые 30 секунд
         }
         
-        function requestWithdraw() {
+        async function requestWithdraw() {
             const amount = parseInt(withdrawAmountInput.value) || 0;
             const address = withdrawAddressInput.value.trim();
             
@@ -1390,45 +1534,64 @@
                 return;
             }
             
-            // Расчет комиссии (5%)
-            const fee = Math.ceil(amount * 0.05);
+            // Расчет комиссии
+            const fee = Math.ceil(amount * (WITHDRAW_FEE_PERCENT / 100));
             const netAmount = amount - fee;
             
             // Создаем заявку на вывод
+            const withdrawId = Date.now();
             const withdrawRequest = {
-                id: Date.now(),
+                id: withdrawId,
                 amount: amount,
                 netAmount: netAmount,
                 fee: fee,
                 address: address,
                 timestamp: Date.now(),
-                status: 'pending' // pending, completed, rejected
+                status: 'pending'
             };
             
-            // Добавляем в историю
-            withdrawHistory.push(withdrawRequest);
-            localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
+            // Показываем загрузку
+            const originalText = requestWithdrawBtn.innerHTML;
+            requestWithdrawBtn.innerHTML = '<span class="loading"></span>Обработка...';
+            requestWithdrawBtn.disabled = true;
             
-            // Списываем с баланса
-            balance -= amount;
-            updateBalanceDisplay();
-            withdrawBalanceEl.textContent = balance + ' TON';
-            withdrawAmountInput.max = balance;
-            
-            // Обновляем историю
-            updateWithdrawHistory();
-            
-            // Показываем уведомление
-            showNotification(`Заявка на вывод ${amount} TON отправлена! Вы получите ${netAmount} TON (комиссия: ${fee} TON).`, 'info');
-            
-            // Очищаем форму
-            withdrawAmountInput.value = Math.min(100, balance);
-            withdrawAddressInput.value = '';
-            
-            // В реальном приложении здесь должна быть отправка запроса на сервер
-            // или уведомление администратору через Telegram бота
-            console.log('Заявка на вывод:', withdrawRequest);
-            console.log('Администратор должен отправить', netAmount, 'TON на адрес:', address);
+            try {
+                // Списываем с баланса
+                balance -= amount;
+                updateBalanceDisplay();
+                
+                // Добавляем в историю
+                withdrawHistory.push(withdrawRequest);
+                localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
+                
+                // Обновляем интерфейс
+                withdrawBalanceEl.textContent = balance + ' TON';
+                withdrawAmountInput.max = balance;
+                
+                // Отправляем уведомление админу в Telegram
+                await sendWithdrawToTelegramBot(withdrawRequest);
+                
+                // Обновляем историю
+                updateWithdrawHistory();
+                
+                // Очищаем форму
+                withdrawAmountInput.value = Math.min(100, balance);
+                withdrawAddressInput.value = '';
+                
+                showNotification(`✅ Заявка #${withdrawId} создана! Вы получите ${netAmount} TON (комиссия: ${fee} TON).`, 'info');
+                
+            } catch (error) {
+                console.error('Ошибка создания заявки:', error);
+                showNotification('❌ Ошибка при создании заявки', 'lose');
+                
+                // Возвращаем баланс в случае ошибки
+                balance += amount;
+                updateBalanceDisplay();
+            } finally {
+                // Восстанавливаем кнопку
+                requestWithdrawBtn.innerHTML = originalText;
+                requestWithdrawBtn.disabled = false;
+            }
         }
         
         function updateWithdrawHistory() {
@@ -1457,14 +1620,17 @@
                     minute: '2-digit' 
                 });
                 
+                let statusText = 'Ожидание';
+                if (withdraw.status === 'completed') statusText = 'Выполнен';
+                if (withdraw.status === 'rejected') statusText = 'Отклонен';
+                
                 item.innerHTML = `
                     <div>
                         <div class="withdraw-history-amount">-${withdraw.amount} TON</div>
                         <div class="withdraw-history-date">${date} ${time}</div>
                     </div>
                     <div class="withdraw-history-status ${withdraw.status}">
-                        ${withdraw.status === 'pending' ? 'Ожидание' : 
-                          withdraw.status === 'completed' ? 'Выполнен' : 'Отклонен'}
+                        ${statusText}
                     </div>
                 `;
                 
@@ -1479,10 +1645,7 @@
                     const page = item.dataset.page;
                     
                     // Обновляем активный элемент навигации
-                    navItems.forEach(nav => {
-                        nav.classList.remove('active');
-                        nav.classList.remove('active');
-                    });
+                    navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
                     
                     // Показываем соответствующую страницу
@@ -1585,7 +1748,7 @@
         
         // ==================== ИНИЦИАЛИЗАЦИЯ TON CONNECT ====================
         function initTonConnect() {
-            const manifestUrl = 'https://smswork34-art.github.io/dice-casino/tonconnect-manifest.json';
+            const manifestUrl = window.location.origin + '/tonconnect-manifest.json';
             
             tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
                 manifestUrl: manifestUrl,
@@ -1603,9 +1766,11 @@
                     sendDeposit.disabled = false;
                     sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
                     
-                    username = shortenAddress(wallet.account.address);
-                    usernameElement.textContent = username;
+                    // Обновляем имя пользователя
+                    const walletUsername = shortenAddress(wallet.account.address);
+                    usernameElement.textContent = walletUsername;
                     userAvatar.textContent = '👛';
+                    localStorage.setItem('username', walletUsername);
                     
                     showNotification('✅ Кошелёк подключен!', 'info');
                 } else {
@@ -1799,9 +1964,11 @@
             init();
             
             setTimeout(() => {
-                tonConnectUI.connectionRestored.then(() => {
-                    console.log('Состояние кошелька восстановлено');
-                });
+                if (tonConnectUI) {
+                    tonConnectUI.connectionRestored.then(() => {
+                        console.log('Состояние кошелька восстановлено');
+                    });
+                }
             }, 100);
             
             dice.style.transform = 'rotateX(0deg) rotateY(0deg)';
