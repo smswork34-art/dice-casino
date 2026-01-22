@@ -140,6 +140,12 @@
             gap: 10px;
         }
 
+        .icon-svg {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+
         .games-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -491,7 +497,7 @@
             cursor: not-allowed;
         }
 
-        /* Игра Dice */
+        /* Игра Dice - Улучшенный 3D кубик */
         .dice-page {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             border-radius: 20px;
@@ -503,7 +509,7 @@
             width: 120px;
             height: 120px;
             margin: 0 auto 32px;
-            perspective: 1000px;
+            perspective: 1200px;
             position: relative;
         }
 
@@ -514,7 +520,7 @@
             top: 0;
             left: 0;
             transform-style: preserve-3d;
-            transition: transform 1s ease-out;
+            transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform: rotateX(15deg) rotateY(15deg);
         }
 
@@ -528,6 +534,8 @@
             justify-content: center;
             align-items: center;
             backface-visibility: hidden;
+            border: 3px solid #60a5fa;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
         .face-1 { transform: translateZ(60px); }
@@ -546,12 +554,13 @@
         }
 
         .dot {
-            width: 18px;
-            height: 18px;
-            background: white;
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle at 30% 30%, white, #f0f0f0);
             border-radius: 50%;
             justify-self: center;
             align-self: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         /* Конфигурации точек по центру */
@@ -869,6 +878,37 @@
             margin-bottom: 20px;
         }
 
+        .ton-connect-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .ton-connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .wallet-connected {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
         .deposit-amounts {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -896,6 +936,91 @@
         .send-deposit-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        /* История выводов */
+        .withdraw-history {
+            margin-top: 24px;
+        }
+
+        .history-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .history-tab {
+            flex: 1;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #94a3b8;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .history-tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .withdraw-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .withdraw-history-item {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #334155;
+        }
+
+        .withdraw-history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .withdraw-amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .withdraw-date {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .withdraw-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
         }
 
         /* Нижнее меню */
@@ -982,7 +1107,14 @@
             </div>
             <div class="ton-connect-section">
                 <div style="font-weight: 600; margin-bottom: 12px; color: #60a5fa;">Подключите TON кошелёк</div>
-                <div id="tonconnect-button"></div>
+                <button class="ton-connect-btn" id="connectTonWallet">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 6V18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 12H18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Войти в кошелек
+                </button>
             </div>
             <div style="margin-bottom: 20px;">
                 <div style="font-weight: 600; margin-bottom: 12px; color: #f8fafc;">Сумма пополнения:</div>
@@ -1022,16 +1154,39 @@
                     
                     <div class="menu-section">
                         <div class="section-title">
-                            <span>🎮 Игры</span>
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 7L12 2L4 7V19L12 22L20 19V7Z" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 22V12" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4 7L12 12" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20 7L12 12" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Игры</span>
                         </div>
                         <div class="games-grid">
                             <div class="game-card" id="openDiceGame">
-                                <div class="game-icon">🎲</div>
+                                <div class="game-icon">
+                                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="3" y="3" width="18" height="18" rx="3" fill="white"/>
+                                        <circle cx="8" cy="8" r="1.5" fill="#1d4ed8"/>
+                                        <circle cx="16" cy="16" r="1.5" fill="#1d4ed8"/>
+                                        <circle cx="8" cy="16" r="1.5" fill="#1d4ed8"/>
+                                        <circle cx="16" cy="8" r="1.5" fill="#1d4ed8"/>
+                                        <circle cx="12" cy="12" r="1.5" fill="#1d4ed8"/>
+                                    </svg>
+                                </div>
                                 <div class="game-title">Dice</div>
                                 <div class="game-description">Классическая игра в кости</div>
                             </div>
                             <div class="game-card" id="openBlackjackGame">
-                                <div class="game-icon">♠️</div>
+                                <div class="game-icon">
+                                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" fill="white"/>
+                                        <rect x="6" y="8" width="12" height="8" rx="1" fill="#dc2626"/>
+                                        <path d="M12 11L12 13" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                        <circle cx="9" cy="12" r="1" fill="white"/>
+                                        <circle cx="15" cy="12" r="1" fill="white"/>
+                                    </svg>
+                                </div>
                                 <div class="game-title">Blackjack</div>
                                 <div class="game-description">21 очко с красивыми картами</div>
                             </div>
@@ -1040,12 +1195,25 @@
                     
                     <div class="menu-section">
                         <div class="section-title">
-                            <span>🎁 Акции и бонусы</span>
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 13V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V13" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 15V3" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 7L12 3L8 7" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Акции и бонусы</span>
                         </div>
                         <div class="promo-items">
                             <div class="promo-card">
                                 <div class="promo-header">
-                                    <div class="promo-icon">🎉</div>
+                                    <div class="promo-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20 12V22H4V12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M22 7H2V12H22V7Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 22V7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
                                     <div class="promo-title">Приветственный бонус</div>
                                     <div class="bonus-badge">+10 TON</div>
                                 </div>
@@ -1070,7 +1238,16 @@
                             
                             <div class="promo-card">
                                 <div class="promo-header">
-                                    <div class="promo-icon">📅</div>
+                                    <div class="promo-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="3" y="4" width="18" height="16" rx="2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M16 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M3 10H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="12" cy="15" r="1" fill="white"/>
+                                            <path d="M12 15V18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
                                     <div class="promo-title">Ежедневный бонус</div>
                                     <div class="bonus-badge">+0.1 TON/день</div>
                                 </div>
@@ -1100,7 +1277,11 @@
             <!-- Статистика -->
             <div class="page stats-page hidden" id="statsPage">
                 <button class="back-button" id="backFromStats">
-                    ← Назад
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 19L5 12L12 5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Назад
                 </button>
                 <h2 class="page-title">Статистика</h2>
                 <p class="page-subtitle">Ваша игровая статистика</p>
@@ -1135,7 +1316,11 @@
             <!-- Вывод средств -->
             <div class="page withdraw-page hidden" id="withdrawPage">
                 <button class="back-button" id="backFromWithdraw">
-                    ← Назад
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 19L5 12L12 5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Назад
                 </button>
                 <h2 class="page-title">Вывод средств</h2>
                 <p class="page-subtitle">Вывод TON на ваш кошелёк</p>
@@ -1177,12 +1362,29 @@
                         Вывести <span id="withdrawBtnAmount">100</span> TON
                     </button>
                 </div>
+                
+                <!-- История выводов -->
+                <div class="withdraw-history">
+                    <h3 class="history-title">История выводов</h3>
+                    <div class="history-tabs">
+                        <div class="history-tab active" data-tab="all">Все</div>
+                        <div class="history-tab" data-tab="pending">В обработке</div>
+                        <div class="history-tab" data-tab="completed">Завершенные</div>
+                    </div>
+                    <div class="withdraw-history-list" id="withdrawHistoryList">
+                        <!-- История выводов будет загружена сюда -->
+                    </div>
+                </div>
             </div>
 
             <!-- Игра Dice -->
             <div class="page dice-page hidden" id="dicePage">
                 <button class="back-button" id="backFromDice">
-                    ← Назад
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 19L5 12L12 5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Назад
                 </button>
                 <h2 class="page-title">Dice Game</h2>
                 
@@ -1199,7 +1401,14 @@
                 </div>
                 
                 <div class="game-rules">
-                    <div class="rules-title">📋 Правила игры</div>
+                    <div class="rules-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 8V12" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 16H12.01" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Правила игры
+                    </div>
                     <ul class="rules-list">
                         <li>• Ставка умножается на 2x при выигрыше</li>
                         <li>• Выигрыш: если выпадает 4, 5 или 6</li>
@@ -1222,12 +1431,23 @@
             <!-- Игра Blackjack -->
             <div class="page blackjack-page hidden" id="blackjackPage">
                 <button class="back-button" id="backFromBlackjack">
-                    ← Назад
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 19L5 12L12 5" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Назад
                 </button>
                 <h2 class="page-title">Blackjack</h2>
                 
                 <div class="game-rules">
-                    <div class="rules-title">📋 Правила игры</div>
+                    <div class="rules-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 8V12" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 16H12.01" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Правила игры
+                    </div>
                     <ul class="rules-list">
                         <li>• Цель: набрать 21 очко или ближе к 21, чем дилер</li>
                         <li>• Карты 2-10 = по номиналу, J/Q/K = 10, A = 1 или 11</li>
@@ -1290,15 +1510,27 @@
     <!-- Нижнее меню -->
     <div class="bottom-nav">
         <div class="nav-item active" data-page="main">
-            <span>🎮</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.5l8.5 8.5v10h-4v-8h-9v8h-4v-10L12 2.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <div>Главная</div>
         </div>
         <div class="nav-item" data-page="stats">
-            <span>📊</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <div>Статистика</div>
         </div>
         <div class="nav-item" data-page="withdraw">
-            <span>💰</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 7L12 3L8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 21H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 21V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 21V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <div>Вывод</div>
         </div>
     </div>
@@ -1313,6 +1545,31 @@
         let currentDepositAmount = 10;
         let isRolling = false;
         let isWalletConnected = false;
+        
+        // История выводов
+        let withdrawHistory = [
+            {
+                id: 1,
+                amount: 100,
+                date: '2024-01-15 14:30',
+                status: 'completed', // pending, completed, rejected
+                wallet: 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh'
+            },
+            {
+                id: 2,
+                amount: 250,
+                date: '2024-01-18 16:45',
+                status: 'pending',
+                wallet: 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh'
+            },
+            {
+                id: 3,
+                amount: 500,
+                date: '2024-01-10 11:20',
+                status: 'rejected',
+                wallet: 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh'
+            }
+        ];
         
         // Blackjack переменные
         let blackjackGameActive = false;
@@ -1359,6 +1616,8 @@
         const withdrawBtnAmount = document.getElementById('withdrawBtnAmount');
         const amountButtons = document.querySelectorAll('.amount-btn');
         const sendWithdrawBtn = document.getElementById('sendWithdraw');
+        const withdrawHistoryList = document.getElementById('withdrawHistoryList');
+        const historyTabs = document.querySelectorAll('.history-tab');
 
         // Dice
         const dice = document.getElementById('dice');
@@ -1384,6 +1643,7 @@
         const sendDepositBtn = document.getElementById('sendDeposit');
         const selectedAmountElement = document.getElementById('selectedAmount');
         const depositAmountButtons = document.querySelectorAll('#depositModal .amount-btn');
+        const connectTonWalletBtn = document.getElementById('connectTonWallet');
 
         // ==================== ФУНКЦИИ ====================
         function showNotification(message, type = 'info') {
@@ -1459,6 +1719,57 @@
             }
         }
 
+        function updateWithdrawHistory(filter = 'all') {
+            withdrawHistoryList.innerHTML = '';
+            
+            let filteredHistory = withdrawHistory;
+            
+            if (filter !== 'all') {
+                filteredHistory = withdrawHistory.filter(item => item.status === filter);
+            }
+            
+            if (filteredHistory.length === 0) {
+                withdrawHistoryList.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 20px;">История выводов пуста</div>';
+                return;
+            }
+            
+            filteredHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'withdraw-history-item';
+                
+                let statusText = '';
+                let statusClass = '';
+                
+                switch(item.status) {
+                    case 'pending':
+                        statusText = 'В обработке';
+                        statusClass = 'status-pending';
+                        break;
+                    case 'completed':
+                        statusText = 'Завершен';
+                        statusClass = 'status-completed';
+                        break;
+                    case 'rejected':
+                        statusText = 'Отклонен';
+                        statusClass = 'status-rejected';
+                        break;
+                }
+                
+                historyItem.innerHTML = `
+                    <div class="withdraw-history-header">
+                        <div class="withdraw-amount">${item.amount} TON</div>
+                        <div class="withdraw-date">${item.date}</div>
+                    </div>
+                    <div class="withdraw-history-header">
+                        <div style="font-size: 12px; color: #94a3b8;">${item.wallet.substring(0, 12)}...${item.wallet.substring(item.wallet.length - 6)}</div>
+                        <div class="withdraw-status ${statusClass}">${statusText}</div>
+                    </div>
+                `;
+                
+                withdrawHistoryList.appendChild(historyItem);
+            });
+        }
+
         function showPage(pageName) {
             mainMenu.classList.add('hidden');
             statsPage.classList.add('hidden');
@@ -1480,6 +1791,7 @@
                 withdrawPage.classList.remove('hidden');
                 document.querySelector('.nav-item[data-page="withdraw"]').classList.add('active');
                 updateWithdrawCalculations();
+                updateWithdrawHistory('all');
             } else if (pageName === 'dice') {
                 dicePage.classList.remove('hidden');
             } else if (pageName === 'blackjack') {
@@ -1554,6 +1866,20 @@
                 }
             });
             
+            // Кнопка подключения TON кошелька
+            connectTonWalletBtn.addEventListener('click', function() {
+                // В реальном приложении здесь будет интеграция с TON Connect
+                showNotification('TON Connect временно недоступен. Пополнение работает в тестовом режиме.', 'info');
+                isWalletConnected = true;
+                connectTonWalletBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Кошелек подключен
+                `;
+                connectTonWalletBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            });
+            
             // Выбор суммы депозита
             depositAmountButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1566,11 +1892,29 @@
             
             // Кнопка отправки депозита
             sendDepositBtn.addEventListener('click', function() {
+                if (!isWalletConnected) {
+                    showNotification('Сначала подключите TON кошелек', 'lose');
+                    return;
+                }
+                
                 balance += currentDepositAmount;
                 updateBalance();
                 showNotification(`Баланс пополнен на ${currentDepositAmount} TON!`, 'win');
                 depositModal.style.display = 'none';
+                
+                // Отправка уведомления в Telegram (заглушка)
+                sendTelegramNotificationToAdmin(`💳 Новый депозит\nСумма: ${currentDepositAmount} TON\nПользователь: ${username}`);
             });
+        }
+
+        function sendTelegramNotificationToAdmin(message) {
+            // В реальном приложении здесь будет отправка на бэкенд
+            console.log('Уведомление админу:', message);
+            
+            // Симуляция отправки
+            setTimeout(() => {
+                console.log('Уведомление отправлено админу в Telegram');
+            }, 1000);
         }
 
         function setupWithdraw() {
@@ -1581,6 +1925,16 @@
                     this.classList.add('active');
                     currentWithdrawAmount = parseInt(this.getAttribute('data-amount'));
                     updateWithdrawCalculations();
+                });
+            });
+            
+            // Табы истории выводов
+            historyTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    historyTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const filter = this.getAttribute('data-tab');
+                    updateWithdrawHistory(filter);
                 });
             });
             
@@ -1601,33 +1955,47 @@
                 const fee = Math.floor(currentWithdrawAmount * 0.05);
                 const receive = currentWithdrawAmount - fee;
                 
+                // Добавляем в историю выводов
+                const newWithdraw = {
+                    id: Date.now(),
+                    amount: currentWithdrawAmount,
+                    date: new Date().toLocaleString('ru-RU'),
+                    status: 'pending',
+                    wallet: walletAddress
+                };
+                
+                withdrawHistory.unshift(newWithdraw);
+                updateWithdrawHistory('all');
+                
                 balance -= currentWithdrawAmount;
                 updateBalance();
                 
-                showNotification(`Заявка на вывод ${receive} TON отправлена! Комиссия: ${fee} TON`, 'win');
+                showNotification(`Заявка на вывод ${receive} TON отправлена на модерацию!`, 'info');
                 
-                // Отправить уведомление в Telegram бот
-                sendTelegramNotification(`📤 Новая заявка на вывод\nСумма: ${receive} TON\nКошелек: ${walletAddress}`);
+                // Отправка уведомления админу с кнопками подтверждения/отклонения
+                sendWithdrawRequestToAdmin(newWithdraw);
             });
         }
 
-        function sendTelegramNotification(message) {
-            const botToken = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
-            const chatId = '8155919358';
+        function sendWithdrawRequestToAdmin(withdrawData) {
+            // В реальном приложении здесь будет отправка на бэкенд
+            // с кнопками для админа: "Подтвердить" и "Отклонить"
+            console.log('Запрос на вывод админу:', withdrawData);
             
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
-            }).catch(error => {
-                console.error('Error sending Telegram notification:', error);
-            });
+            // Симуляция ответа админа (в реальном приложении будет через WebSocket или polling)
+            setTimeout(() => {
+                // Пример: 70% шанс что админ подтвердит
+                if (Math.random() > 0.3) {
+                    withdrawData.status = 'completed';
+                    showNotification(`Вывод ${withdrawData.amount} TON подтвержден! Средства отправлены.`, 'win');
+                } else {
+                    withdrawData.status = 'rejected';
+                    balance += withdrawData.amount;
+                    updateBalance();
+                    showNotification(`Вывод ${withdrawData.amount} TON отклонен. Средства возвращены на баланс.`, 'lose');
+                }
+                updateWithdrawHistory('all');
+            }, 5000);
         }
 
         // ==================== ИГРА DICE ====================
@@ -1680,15 +2048,38 @@
             balance -= currentBet;
             updateBalance();
             
+            // Анимация вращения кубика
+            const randomRotations = [];
+            for (let i = 0; i < 5; i++) {
+                randomRotations.push(
+                    `rotateX(${Math.random() * 360}deg) rotateY(${Math.random() * 360}deg)`
+                );
+            }
+            
+            let currentRotation = 0;
+            const animateRotation = () => {
+                if (currentRotation < randomRotations.length) {
+                    dice.style.transform = randomRotations[currentRotation];
+                    currentRotation++;
+                    setTimeout(animateRotation, 200);
+                } else {
+                    showResult();
+                }
+            };
+            
+            animateRotation();
+        }
+
+        function showResult() {
             const result = Math.floor(Math.random() * 6) + 1;
             
             const rotations = {
-                1: 'rotateX(0deg) rotateY(0deg)',
-                2: 'rotateX(0deg) rotateY(-90deg)',
-                3: 'rotateX(-90deg) rotateY(0deg)',
-                4: 'rotateX(90deg) rotateY(0deg)',
-                5: 'rotateX(0deg) rotateY(90deg)',
-                6: 'rotateX(180deg) rotateY(0deg)'
+                1: 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
+                2: 'rotateX(0deg) rotateY(-90deg) rotateZ(0deg)',
+                3: 'rotateX(-90deg) rotateY(0deg) rotateZ(0deg)',
+                4: 'rotateX(90deg) rotateY(0deg) rotateZ(0deg)',
+                5: 'rotateX(0deg) rotateY(90deg) rotateZ(0deg)',
+                6: 'rotateX(180deg) rotateY(0deg) rotateZ(0deg)'
             };
             
             dice.style.transform = rotations[result];
@@ -1969,9 +2360,11 @@
             
             switch (result) {
                 case 'win':
-                    winAmount = blackjackCurrentBet * 2;
+                    // Проверка на блэкджек
+                    const isBlackjack = blackjackPlayerCards.length === 2 && blackjackPlayerScore === 21;
+                    winAmount = isBlackjack ? blackjackCurrentBet * 2.5 : blackjackCurrentBet * 2;
                     balance += winAmount;
-                    message = `Вы выиграли ${winAmount} TON!`;
+                    message = `${isBlackjack ? 'BLACKJACK! ' : ''}Вы выиграли ${winAmount} TON!`;
                     gameStatusElement.style.color = '#10b981';
                     addToHistory('Blackjack', blackjackCurrentBet, true, winAmount);
                     break;
@@ -2038,7 +2431,7 @@
             showPage('main');
             
             // Инициализировать кубик
-            dice.style.transform = 'rotateX(15deg) rotateY(15deg)';
+            dice.style.transform = 'rotateX(15deg) rotateY(15deg) rotateZ(0deg)';
         }
 
         // Запуск при загрузке страницы
