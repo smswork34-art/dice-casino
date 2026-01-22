@@ -31,6 +31,7 @@
             border: 1px solid rgba(42, 171, 238, 0.1);
         }
 
+        /* ВЕРХНЯЯ ПАНЕЛЬ С SVG ИКОНКОЙ ПРОФИЛЯ */
         .top-panel {
             padding: 12px 16px;
             display: flex;
@@ -136,6 +137,7 @@
             display: none;
         }
 
+        /* СТРАНИЦА ПРОФИЛЯ */
         .profile-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -308,6 +310,10 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>');
         }
 
+        .history-icon {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>');
+        }
+
         .settings-icon {
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>');
         }
@@ -336,6 +342,7 @@
             border: 1px solid #e6f4ff;
         }
 
+        /* ГЛАВНОЕ МЕНЮ */
         .main-menu {
             text-align: center;
         }
@@ -383,6 +390,7 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35L12 4l-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/></svg>');
         }
 
+        /* ОБНОВЛЕННЫЙ GRID - ТОЛЬКО ОДНА КНОПКА ПО ЦЕНТРУ */
         .games-grid {
             display: flex;
             justify-content: center;
@@ -407,6 +415,7 @@
             border-color: #2aabee;
         }
 
+        /* ОБНОВЛЕННАЯ ИКОНКА - SVG ДЖОЙСТИК */
         .game-icon {
             width: 60px;
             height: 60px;
@@ -447,6 +456,7 @@
             line-height: 1.4;
         }
 
+        /* ОБНОВЛЕННЫЙ СТИЛЬ ДЛЯ АКЦИЙ И БОНУСОВ */
         .promo-items {
             display: flex;
             flex-direction: column;
@@ -561,6 +571,7 @@
             margin: 8px 0;
         }
 
+        /* СТРАНИЦА ВЫБОРА ИГР */
         .games-menu-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -644,16 +655,6 @@
             mask-size: 24px;
         }
 
-        .blackjack-list-icon::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: white;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM17.99 9l-1.41-1.42-6.59 6.59-2.58-2.57-1.42 1.41 4 3.99z"/></svg>') no-repeat center;
-            mask-size: 24px;
-        }
-
         .game-list-info {
             flex: 1;
         }
@@ -678,6 +679,7 @@
             mask-size: contain;
         }
 
+        /* СТРАНИЦА ИГРЫ DICE */
         .dice-game-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -924,265 +926,7 @@
             animation: roll 1.2s linear forwards;
         }
 
-        /* BLACKJACK СТИЛИ */
-        .blackjack-game-page {
-            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid rgba(42, 171, 238, 0.15);
-        }
-
-        .blackjack-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .blackjack-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1a1a1a;
-        }
-
-        .cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .player-section, .dealer-section {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            border: 2px solid #e6f4ff;
-        }
-
-        .cards-hand {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            min-height: 100px;
-            margin-bottom: 16px;
-        }
-
-        .card {
-            width: 60px;
-            height: 90px;
-            background: white;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 2px solid #e6f4ff;
-            position: relative;
-            transition: all 0.3s ease;
-            animation: dealCard 0.5s ease-out;
-        }
-
-        @keyframes dealCard {
-            0% { transform: translateY(-50px) rotateY(90deg); opacity: 0; }
-            100% { transform: translateY(0) rotateY(0); opacity: 1; }
-        }
-
-        .card.red {
-            color: #ff4444;
-        }
-
-        .card.black {
-            color: #1a1a1a;
-        }
-
-        .card-value {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .card-suit {
-            font-size: 20px;
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            color: white;
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .hand-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2aabee;
-            text-align: center;
-        }
-
-        .blackjack-bet-controls {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
-            border: 2px solid #e6f4ff;
-        }
-
-        .bet-input-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .bet-input {
-            flex: 1;
-            padding: 16px;
-            border: 2px solid #e6f4ff;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            color: #2aabee;
-            text-align: center;
-        }
-
-        .bet-input:focus {
-            outline: none;
-            border-color: #2aabee;
-            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
-        }
-
-        .quick-bets {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
-
-        .quick-bet {
-            background: white;
-            border: 2px solid #e6f4ff;
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #2aabee;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .quick-bet:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
-        }
-
-        .quick-bet.active {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-color: #2aabee;
-            color: white;
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
-        }
-
-        .blackjack-controls {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .blackjack-button {
-            padding: 18px;
-            border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .blackjack-button.hit {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-        }
-
-        .blackjack-button.stand {
-            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-            color: white;
-        }
-
-        .blackjack-button.double {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-            color: white;
-        }
-
-        .blackjack-button.split {
-            background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
-            color: white;
-        }
-
-        .blackjack-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .blackjack-button:not(:disabled):hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        .game-result {
-            text-align: center;
-            padding: 20px;
-            background: white;
-            border-radius: 16px;
-            margin-top: 20px;
-            border: 2px solid #e6f4ff;
-            font-size: 20px;
-            font-weight: 800;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .game-result.win {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            border-color: #4CAF50;
-        }
-
-        .game-result.lose {
-            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
-            color: white;
-            border-color: #ff4444;
-        }
-
-        .game-result.tie {
-            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-            color: white;
-            border-color: #ff9800;
-        }
-
-        .blackjack-status {
-            text-align: center;
-            padding: 12px;
-            background: #f8fbff;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-weight: 600;
-            color: #2aabee;
-            border: 1px solid #e6f4ff;
-        }
-
+        /* СТРАНИЦА СТАТИСТИКИ */
         .stats-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -1333,6 +1077,7 @@
             color: #666;
         }
 
+        /* СТРАНИЦА ВЫВОДА */
         .withdraw-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -1545,6 +1290,7 @@
             color: #4CAF50;
         }
 
+        /* МОДАЛЬНОЕ ОКНО ДЕПОЗИТА */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1665,6 +1411,7 @@
             margin-right: 8px;
         }
 
+        /* УВЕДОМЛЕНИЕ */
         .notification {
             position: fixed;
             top: 20px;
@@ -1703,6 +1450,7 @@
             border-color: rgba(42, 171, 238, 0.3);
         }
 
+        /* НИЖНЕЕ МЕНЮ - ВОЗВРАЩАЮ ИСХОДНЫЙ ДИЗАЙН */
         .bottom-nav {
             position: fixed;
             bottom: 20px;
@@ -1854,6 +1602,16 @@
                     
                     <div class="profile-section">
                         <div class="section-header">
+                            <div class="section-icon history-icon"></div>
+                            <div class="section-title">История игр</div>
+                        </div>
+                        <div class="section-description">
+                            Последние 100 игр, статистика по дням и ставкам
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <div class="section-header">
                             <div class="section-icon settings-icon"></div>
                             <div class="section-title">Настройки</div>
                         </div>
@@ -1969,15 +1727,6 @@
                         </div>
                         <div class="arrow-icon"></div>
                     </div>
-                    
-                    <div class="game-list-item" id="playBlackjackGame">
-                        <div class="game-list-icon blackjack-list-icon"></div>
-                        <div class="game-list-info">
-                            <div class="game-list-title">BlackJack</div>
-                            <div class="game-list-description">Классическая карточная игра 21. Обыграйте дилера</div>
-                        </div>
-                        <div class="arrow-icon"></div>
-                    </div>
                 </div>
             </div>
 
@@ -1989,6 +1738,19 @@
                         Назад
                     </button>
                     <h2 class="dice-title">Dice Game</h2>
+                </div>
+
+                <div class="game-rules">
+                    <div class="rules-title">
+                        <span class="rules-icon"></span>
+                        Правила игры
+                    </div>
+                    <ul class="rules-list">
+                        <li>Ставка умножается на 2x при выигрыше</li>
+                        <li>Выигрыш: если выпадает 4, 5 или 6</li>
+                        <li>Проигрыш: если выпадает 1, 2 или 3</li>
+                        <li>Минимальная ставка: 10 TON</li>
+                    </ul>
                 </div>
 
                 <div class="dice-container">
@@ -2012,77 +1774,6 @@
                     <span class="play-icon"></span>
                     Крутить кость
                 </button>
-            </div>
-
-            <!-- СТРАНИЦА ИГРЫ BLACKJACK -->
-            <div class="page blackjack-game-page hidden" id="blackjackGamePage">
-                <div class="blackjack-header">
-                    <button class="back-button" id="backToGamesMenu2">
-                        <span class="back-icon"></span>
-                        Назад
-                    </button>
-                    <h2 class="blackjack-title">BlackJack</h2>
-                </div>
-
-                <div class="blackjack-status" id="blackjackStatus">
-                    Сделайте ставку и нажмите "Начать игру"
-                </div>
-
-                <div class="cards-container">
-                    <div class="dealer-section">
-                        <div class="section-title">
-                            <span>Дилер</span>
-                            <span id="dealerValue">Счёт: 0</span>
-                        </div>
-                        <div class="cards-hand" id="dealerHand">
-                            <!-- Карты дилера -->
-                        </div>
-                    </div>
-                    
-                    <div class="player-section">
-                        <div class="section-title">
-                            <span>Игрок</span>
-                            <span id="playerValue">Счёт: 0</span>
-                        </div>
-                        <div class="cards-hand" id="playerHand">
-                            <!-- Карты игрока -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="blackjack-bet-controls">
-                    <div class="bet-input-group">
-                        <input type="number" class="bet-input" id="blackjackBetAmount" value="10" min="1" max="100">
-                        <span style="font-weight: 700; color: #2aabee;">TON</span>
-                    </div>
-                    <div class="quick-bets">
-                        <button class="quick-bet" data-bet="10">10 TON</button>
-                        <button class="quick-bet" data-bet="50">50 TON</button>
-                        <button class="quick-bet" data-bet="100">100 TON</button>
-                    </div>
-                </div>
-
-                <div class="blackjack-controls" id="blackjackControls">
-                    <button class="blackjack-button hit" id="hitButton" disabled>
-                        Взять карту
-                    </button>
-                    <button class="blackjack-button stand" id="standButton" disabled>
-                        Хватит
-                    </button>
-                    <button class="blackjack-button double" id="doubleButton" disabled>
-                        Удвоить
-                    </button>
-                    <button class="blackjack-button split" id="splitButton" disabled>
-                        Разделить
-                    </button>
-                </div>
-
-                <button class="play-button" id="startBlackjackGame">
-                    <span class="play-icon"></span>
-                    Начать игру
-                </button>
-
-                <div class="game-result hidden" id="gameResult"></div>
             </div>
 
             <!-- СТРАНИЦА СТАТИСТИКИ -->
@@ -2161,7 +1852,7 @@
                 </div>
 
                 <div class="withdraw-note">
-                    <strong>⚠️ Внимание:</strong> Вывод средств обрабатывается вручную администрацией через Telegram бота. 
+                    <strong>⚠️ Внимание:</strong> Вывод средств обрабатывается вручную администрацией. 
                     Минимальная сумма вывода: 10 TON. Комиссия: 5%. 
                     Обычное время обработки: 1-24 часа.
                 </div>
@@ -2249,14 +1940,6 @@
         let tg = null;
         let connectedWalletAddress = null;
         
-        // BlackJack переменные
-        let blackjackDeck = [];
-        let playerCards = [];
-        let dealerCards = [];
-        let gameActive = false;
-        let currentBlackjackBet = 10;
-        let blackjackGameState = 'betting';
-        
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const dice = document.getElementById('dice');
         const playButton = document.getElementById('playButton');
@@ -2271,11 +1954,11 @@
         const amountButtons = document.querySelectorAll('.amount-button');
         const betButtons = document.querySelectorAll('.bet-button');
         const usernameElement = document.getElementById('username');
+        const userAvatar = document.getElementById('userAvatar');
         
         const mainMenu = document.getElementById('mainMenu');
         const gamesMenuPage = document.getElementById('gamesMenuPage');
         const diceGamePage = document.getElementById('diceGamePage');
-        const blackjackGamePage = document.getElementById('blackjackGamePage');
         const statsPage = document.getElementById('statsPage');
         const withdrawPage = document.getElementById('withdrawPage');
         const profilePage = document.getElementById('profilePage');
@@ -2284,50 +1967,18 @@
         const openGamesMenuBtn = document.getElementById('openGamesMenu');
         const backToMainMenuBtn = document.getElementById('backToMainMenu');
         const playDiceGameBtn = document.getElementById('playDiceGame');
-        const playBlackjackGameBtn = document.getElementById('playBlackjackGame');
         const backToGamesMenuBtn = document.getElementById('backToGamesMenu');
-        const backToGamesMenuBtn2 = document.getElementById('backToGamesMenu2');
         const openProfileBtn = document.getElementById('openProfile');
         const backFromProfileBtn = document.getElementById('backFromProfile');
         
-        // BlackJack элементы
-        const blackjackBetAmount = document.getElementById('blackjackBetAmount');
-        const quickBets = document.querySelectorAll('.quick-bet');
-        const startBlackjackGameBtn = document.getElementById('startBlackjackGame');
-        const hitButton = document.getElementById('hitButton');
-        const standButton = document.getElementById('standButton');
-        const doubleButton = document.getElementById('doubleButton');
-        const splitButton = document.getElementById('splitButton');
-        const playerHand = document.getElementById('playerHand');
-        const dealerHand = document.getElementById('dealerHand');
-        const playerValue = document.getElementById('playerValue');
-        const dealerValue = document.getElementById('dealerValue');
-        const gameResult = document.getElementById('gameResult');
-        const blackjackStatus = document.getElementById('blackjackStatus');
-        
-        // Статистика элементы
-        const totalGamesElement = document.getElementById('totalGames');
-        const totalProfitElement = document.getElementById('totalProfit');
-        const winRateElement = document.getElementById('winRate');
-        const totalLossElement = document.getElementById('totalLoss');
-        const betsListElement = document.getElementById('betsList');
-        const emptyStatsElement = document.getElementById('emptyStats');
-        
-        // Профиль элементы
         const profileNameElement = document.getElementById('profileName');
+        const profileAvatarLarge = document.getElementById('profileAvatarLarge');
         const profileBalanceElement = document.getElementById('profileBalance');
         const profileGamesElement = document.getElementById('profileGames');
         const profileWinsElement = document.getElementById('profileWins');
         const profileProfitElement = document.getElementById('profileProfit');
         const profileWalletAddressElement = document.getElementById('profileWalletAddress');
         const userRoleElement = document.getElementById('userRole');
-        
-        // Вывод элементы
-        const withdrawAmountInput = document.getElementById('withdrawAmount');
-        const withdrawAddressInput = document.getElementById('withdrawAddress');
-        const withdrawAmountButtons = document.querySelectorAll('.withdraw-amount-btn');
-        const requestWithdrawBtn = document.getElementById('requestWithdraw');
-        const withdrawHistoryList = document.getElementById('withdrawHistoryList');
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
@@ -2350,16 +2001,12 @@
             
             updateBalanceDisplay();
             updateProfileStats();
-            updateStats();
-            updateWithdrawHistory();
             
             initTonConnect();
             setupDiceGame();
-            setupBlackjackGame();
             setupNavigation();
             setupGameNavigation();
             setupProfileNavigation();
-            setupWithdraw();
             
             showPage('main');
         }
@@ -2389,16 +2036,7 @@
                 showPage('diceGame');
             });
             
-            playBlackjackGameBtn.addEventListener('click', () => {
-                showPage('blackjack');
-                resetBlackjackGame();
-            });
-            
             backToGamesMenuBtn.addEventListener('click', () => {
-                showPage('gamesMenu');
-            });
-            
-            backToGamesMenuBtn2.addEventListener('click', () => {
                 showPage('gamesMenu');
             });
         }
@@ -2407,7 +2045,6 @@
             mainMenu.classList.add('hidden');
             gamesMenuPage.classList.add('hidden');
             diceGamePage.classList.add('hidden');
-            blackjackGamePage.classList.add('hidden');
             statsPage.classList.add('hidden');
             withdrawPage.classList.add('hidden');
             profilePage.classList.add('hidden');
@@ -2421,12 +2058,9 @@
                 gamesMenuPage.classList.remove('hidden');
             } else if (pageName === 'diceGame') {
                 diceGamePage.classList.remove('hidden');
-            } else if (pageName === 'blackjack') {
-                blackjackGamePage.classList.remove('hidden');
             } else if (pageName === 'stats') {
                 statsPage.classList.remove('hidden');
                 document.querySelector('.nav-item[data-page="stats"]').classList.add('active');
-                updateStats();
             } else if (pageName === 'withdraw') {
                 withdrawPage.classList.remove('hidden');
                 document.querySelector('.nav-item[data-page="withdraw"]').classList.add('active');
@@ -2437,80 +2071,123 @@
         }
         
         function setupNavigation() {
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const page = item.dataset.page;
-                    showPage(page);
-                });
-            });
-        }
-        
-        // ==================== СТАТИСТИКА ====================
-        function updateStats() {
-            const totalGames = betsHistory.length;
-            const totalWins = betsHistory.filter(bet => bet.win).length;
-            const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const page = item.dataset.page;
             
-            let totalProfit = 0;
-            let totalLoss = 0;
-            
-            betsHistory.forEach(bet => {
-                if (bet.win) {
-                    totalProfit += bet.bet * (bet.multiplier || 2);
-                } else {
-                    totalLoss += bet.bet;
-                }
-            });
-            
-            const netProfit = totalProfit - totalLoss;
-            
-            totalGamesElement.textContent = totalGames;
-            totalProfitElement.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
-            winRateElement.textContent = winRate + '%';
-            totalLossElement.textContent = totalLoss + ' TON';
-            
-            updateBetsList();
-        }
-        
-        function updateBetsList() {
-            if (betsHistory.length === 0) {
-                emptyStatsElement.style.display = 'block';
-                betsListElement.innerHTML = '';
-                return;
+            // Исправление: добавляем обработку всех страниц
+            if (page === 'stats') {
+                showPage('stats');
+                loadStatsData(); // Эта функция будет загружать данные статистики
+            } else if (page === 'main') {
+                showPage('main');
+            } else if (page === 'withdraw') {
+                showPage('withdraw');
+                updateWithdrawPage(); // Обновляем страницу вывода
             }
             
-            emptyStatsElement.style.display = 'none';
-            betsListElement.innerHTML = '';
-            
-            const recentBets = betsHistory.slice(-10).reverse();
-            
-            recentBets.forEach(bet => {
-                const betItem = document.createElement('div');
-                betItem.className = 'bet-item';
-                
-                const betInfo = document.createElement('div');
-                betInfo.className = 'bet-info';
-                
-                const betAmount = document.createElement('div');
-                betAmount.className = 'bet-amount';
-                betAmount.textContent = bet.bet + ' TON';
-                
-                const betResult = document.createElement('div');
-                betResult.className = `bet-result ${bet.win ? 'bet-win' : 'bet-lose'}`;
-                betResult.textContent = bet.gameType === 'blackjack' ? 'BlackJack' : 'Dice';
-                
-                betInfo.appendChild(betAmount);
-                betInfo.appendChild(betResult);
-                
-                const betOutcome = document.createElement('div');
-                betOutcome.className = `bet-outcome ${bet.win ? 'win' : 'lose'}`;
-                betOutcome.textContent = bet.win ? 'Выигрыш' : 'Проигрыш';
-                
-                betItem.appendChild(betInfo);
-                betItem.appendChild(betOutcome);
-                betsListElement.appendChild(betItem);
-            });
+            // Убираем активный класс у всех и добавляем текущему
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+        });
+    });
+}
+        function loadStatsData() {
+    const totalGames = betsHistory.length;
+    const totalWins = betsHistory.filter(bet => bet.win).length;
+    const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+    
+    let totalProfit = 0;
+    let totalLoss = 0;
+    
+    betsHistory.forEach(bet => {
+        if (bet.win) {
+            totalProfit += bet.bet * 2;
+        } else {
+            totalLoss += bet.bet;
         }
+    });
+    
+    const netProfit = totalProfit - totalLoss;
+    
+    // Обновляем элементы на странице статистики
+    document.getElementById('totalGames').textContent = totalGames;
+    document.getElementById('totalProfit').textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
+    document.getElementById('winRate').textContent = winRate + '%';
+    document.getElementById('totalLoss').textContent = totalLoss + ' TON';
+    
+    // Обновляем список ставок
+    const betsList = document.getElementById('betsList');
+    const emptyStats = document.getElementById('emptyStats');
+    
+    if (betsHistory.length > 0) {
+        emptyStats.style.display = 'none';
+        betsList.innerHTML = '';
+        
+        // Показываем последние 10 ставок
+        const recentBets = betsHistory.slice(-10).reverse();
+        
+        recentBets.forEach(bet => {
+            const betItem = document.createElement('div');
+            betItem.className = 'bet-item';
+            
+            betItem.innerHTML = `
+                <div class="bet-info">
+                    <div class="bet-amount">${bet.bet} TON</div>
+                    <div class="bet-result ${bet.win ? 'bet-win' : 'bet-lose'}">
+                        ${bet.win ? 'Выигрыш' : 'Проигрыш'} • Выпало ${bet.result}
+                    </div>
+                </div>
+                <div class="bet-outcome ${bet.win ? 'win' : 'lose'}">
+                    ${bet.win ? '×2' : '×0'}
+                </div>
+            `;
+            
+            betsList.appendChild(betItem);
+        });
+    } else {
+        emptyStats.style.display = 'block';
+        betsList.innerHTML = '';
+    }
+}
+        function updateWithdrawPage() {
+    // Обновляем баланс на странице вывода
+    document.getElementById('withdrawBalance').textContent = balance + ' TON';
+    
+    // Обновляем историю выводов
+    const withdrawHistoryList = document.getElementById('withdrawHistoryList');
+    const emptyWithdrawHistory = document.getElementById('emptyWithdrawHistory');
+    
+    if (withdrawHistory.length > 0) {
+        emptyWithdrawHistory.style.display = 'none';
+        withdrawHistoryList.innerHTML = '';
+        
+        const recentWithdrawals = withdrawHistory.slice(-5).reverse();
+        
+        recentWithdrawals.forEach(withdrawal => {
+            const item = document.createElement('div');
+            item.className = 'withdraw-history-item';
+            
+            const date = new Date(withdrawal.timestamp).toLocaleDateString('ru-RU');
+            
+            item.innerHTML = `
+                <div>
+                    <div class="withdraw-history-amount">-${withdrawal.amount} TON</div>
+                    <div class="withdraw-history-date">${date}</div>
+                </div>
+                <div class="withdraw-history-status ${withdrawal.status}">
+                    ${withdrawal.status === 'pending' ? 'В обработке' : 
+                      withdrawal.status === 'completed' ? 'Завершен' : 'Ошибка'}
+                </div>
+            `;
+            
+            withdrawHistoryList.appendChild(item);
+        });
+    } else {
+        emptyWithdrawHistory.style.display = 'block';
+        withdrawHistoryList.innerHTML = '';
+    }
+}
         
         function updateProfileStats() {
             const totalGames = betsHistory.length;
@@ -2522,7 +2199,7 @@
             
             betsHistory.forEach(bet => {
                 if (bet.win) {
-                    totalProfit += bet.bet * (bet.multiplier || 2);
+                    totalProfit += bet.bet * 2;
                 } else {
                     totalLoss += bet.bet;
                 }
@@ -2592,570 +2269,70 @@
                     if (win) {
                         balance += currentBet * 2;
                         showNotification(`🎉 Вы выиграли ${currentBet * 2} TON!`, 'win');
-                        addToBetsHistory(currentBet, true, 'dice', 2);
                     } else {
                         balance -= currentBet;
                         showNotification(`Выпало ${result}. Повезёт в следующий раз!`, 'lose');
-                        addToBetsHistory(currentBet, false, 'dice');
                     }
                     
                     updateBalanceDisplay();
+                    addToBetsHistory(currentBet, win);
                     updateProfileStats();
-                    updateStats();
                     isRolling = false;
                 }, 1200);
             });
         }
         
-        function addToBetsHistory(bet, win, gameType = 'dice', multiplier = 2) {
+        function addToBetsHistory(bet, win) {
             const betRecord = {
                 bet: bet,
                 win: win,
-                gameType: gameType,
-                multiplier: multiplier,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                result: Math.floor(Math.random() * 6) + 1
             };
             
             betsHistory.push(betRecord);
             localStorage.setItem('betsHistory', JSON.stringify(betsHistory));
         }
         
-        // ==================== ИГРА BLACKJACK ====================
-        function setupBlackjackGame() {
-            quickBets.forEach(button => {
-                button.addEventListener('click', () => {
-                    quickBets.forEach(b => b.classList.remove('active'));
-                    button.classList.add('active');
-                    currentBlackjackBet = parseInt(button.dataset.bet);
-                    blackjackBetAmount.value = currentBlackjackBet;
-                });
-            });
-            
-            blackjackBetAmount.addEventListener('input', () => {
-    const value = parseInt(blackjackBetAmount.value) || 0;
-    if (value >= 1 && value <= 100) { // ИЗМЕНИТЕ 500 на 100
-        currentBlackjackBet = value;
-        quickBets.forEach(b => b.classList.remove('active'));
-    } else if (value > 100) {
-        // Автоматически ставим максимум 100
-        blackjackBetAmount.value = 100;
-        currentBlackjackBet = 100;
-        quickBets.forEach(b => b.classList.remove('active'));
-        showNotification('Максимальная ставка: 100 TON', 'info');
-    }
-});
-                }
-            });
-            
-            startBlackjackGameBtn.addEventListener('click', startBlackjackGame);
-            hitButton.addEventListener('click', playerHit);
-            standButton.addEventListener('click', playerStand);
-            doubleButton.addEventListener('click', playerDouble);
-            splitButton.addEventListener('click', playerSplit);
-            
-            resetBlackjackGame();
-        }
-        
-        function createDeck() {
-            const suits = ['♠', '♥', '♦', '♣'];
-            const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-            const deck = [];
-            
-            for (let suit of suits) {
-                for (let value of values) {
-                    deck.push({ suit, value });
-                }
-            }
-            
-            // Перемешиваем колоду
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
-            
-            return deck;
-        }
-        
-        function getCardValue(card) {
-            if (['J', 'Q', 'K'].includes(card.value)) return 10;
-            if (card.value === 'A') return 11;
-            return parseInt(card.value);
-        }
-        
-        function calculateHandValue(hand) {
-            let value = 0;
-            let aces = 0;
-            
-            for (let card of hand) {
-                if (card.value === 'A') {
-                    aces++;
-                    value += 11;
-                } else {
-                    value += getCardValue(card);
-                }
-            }
-            
-            while (value > 21 && aces > 0) {
-                value -= 10;
-                aces--;
-            }
-            
-            return value;
-        }
-        
-        function createCardElement(card, isHidden = false) {
-            const cardElement = document.createElement('div');
-            cardElement.className = 'card';
-            
-            if (isHidden) {
-                cardElement.className += ' card-back';
-                cardElement.innerHTML = 'BJ';
-                return cardElement;
-            }
-            
-            const isRed = card.suit === '♥' || card.suit === '♦';
-            cardElement.className += isRed ? ' red' : ' black';
-            
-            cardElement.innerHTML = `
-                <div class="card-value">${card.value}</div>
-                <div class="card-suit">${card.suit}</div>
-            `;
-            
-            return cardElement;
-        }
-        
-        function resetBlackjackGame() {
-            playerCards = [];
-            dealerCards = [];
-            blackjackDeck = createDeck();
-            gameActive = false;
-            blackjackGameState = 'betting';
-            
-            playerHand.innerHTML = '';
-            dealerHand.innerHTML = '';
-            playerValue.textContent = 'Счёт: 0';
-            dealerValue.textContent = 'Счёт: 0';
-            gameResult.classList.add('hidden');
-            blackjackStatus.textContent = 'Сделайте ставку и нажмите "Начать игру"';
-            
-            hitButton.disabled = true;
-            standButton.disabled = true;
-            doubleButton.disabled = true;
-            splitButton.disabled = true;
-            startBlackjackGameBtn.disabled = false;
-            
-            updateBlackjackControls();
-        }
-        
-        function updateBlackjackControls() {
-            const playerTotal = calculateHandValue(playerCards);
-            const canDouble = balance >= currentBlackjackBet && playerCards.length === 2;
-            const canSplit = playerCards.length === 2 && 
-                            playerCards[0].value === playerCards[1].value &&
-                            balance >= currentBlackjackBet;
-            
-            doubleButton.disabled = !canDouble || !gameActive || blackjackGameState !== 'player-turn';
-            splitButton.disabled = !canSplit || !gameActive || blackjackGameState !== 'player-turn';
-        }
-        
-        function startBlackjackGame() {
-    if (balance < currentBlackjackBet) {
-        showNotification('Недостаточно средств!', 'lose');
-        return;
-    }
-    
-    // ДОБАВЬТЕ ЭТУ ПРОВЕРКУ
-    if (currentBlackjackBet > 100) {
-        showNotification('Максимальная ставка: 100 TON', 'lose');
-        return;
-    }
-    
-    if (currentBlackjackBet < 1 || currentBlackjackBet > 100) { // ИЗМЕНИТЕ 500 на 100
-        showNotification('Ставка должна быть от 1 до 100 TON', 'lose');
-        return;
-    }
-            
-            balance -= currentBlackjackBet;
-            updateBalanceDisplay();
-            
-            playerCards = [];
-            dealerCards = [];
-            playerHand.innerHTML = '';
-            dealerHand.innerHTML = '';
-            
-            // Раздача карт
-            playerCards.push(blackjackDeck.pop());
-            dealerCards.push(blackjackDeck.pop());
-            playerCards.push(blackjackDeck.pop());
-            dealerCards.push(blackjackDeck.pop());
-            
-            // Отображение карт
-            playerHand.appendChild(createCardElement(playerCards[0]));
-            playerHand.appendChild(createCardElement(playerCards[1]));
-            
-            dealerHand.appendChild(createCardElement(dealerCards[0], true));
-            dealerHand.appendChild(createCardElement(dealerCards[1]));
-            
-            const playerTotal = calculateHandValue(playerCards);
-            const dealerVisibleTotal = calculateHandValue([dealerCards[1]]);
-            
-            playerValue.textContent = `Счёт: ${playerTotal}`;
-            dealerValue.textContent = `Счёт: ${dealerVisibleTotal}`;
-            
-            gameActive = true;
-            blackjackGameState = 'player-turn';
-            blackjackStatus.textContent = 'Ваш ход. Выберите действие';
-            
-            hitButton.disabled = false;
-            standButton.disabled = false;
-            startBlackjackGameBtn.disabled = true;
-            
-            updateBlackjackControls();
-            checkBlackjack();
-        }
-        
-        function checkBlackjack() {
-            const playerTotal = calculateHandValue(playerCards);
-            const dealerTotal = calculateHandValue(dealerCards);
-            
-            if (playerTotal === 21 && dealerTotal === 21) {
-                endBlackjackGame('tie', 1);
-            } else if (playerTotal === 21) {
-                endBlackjackGame('blackjack', 2.5);
-            } else if (dealerTotal === 21) {
-                endBlackjackGame('lose', 0);
-            }
-        }
-        
-        function playerHit() {
-            if (!gameActive || blackjackGameState !== 'player-turn') return;
-            
-            playerCards.push(blackjackDeck.pop());
-            playerHand.appendChild(createCardElement(playerCards[playerCards.length - 1]));
-            
-            const playerTotal = calculateHandValue(playerCards);
-            playerValue.textContent = `Счёт: ${playerTotal}`;
-            
-            updateBlackjackControls();
-            
-            if (playerTotal > 21) {
-                endBlackjackGame('lose', 0);
-            }
-        }
-        
-        function playerStand() {
-            if (!gameActive || blackjackGameState !== 'player-turn') return;
-            
-            blackjackGameState = 'dealer-turn';
-            hitButton.disabled = true;
-            standButton.disabled = true;
-            doubleButton.disabled = true;
-            splitButton.disabled = true;
-            
-            dealerTurn();
-        }
-        
-        function playerDouble() {
-            if (!gameActive || blackjackGameState !== 'player-turn' || balance < currentBlackjackBet) return;
-            
-            balance -= currentBlackjackBet;
-            updateBalanceDisplay();
-            currentBlackjackBet *= 2;
-            
-            playerCards.push(blackjackDeck.pop());
-            playerHand.appendChild(createCardElement(playerCards[playerCards.length - 1]));
-            
-            const playerTotal = calculateHandValue(playerCards);
-            playerValue.textContent = `Счёт: ${playerTotal}`;
-            
-            if (playerTotal > 21) {
-                endBlackjackGame('lose', 0);
-            } else {
-                playerStand();
-            }
-        }
-        
-        function playerSplit() {
-            // Упрощенная версия - просто удвоение
-            playerDouble();
-        }
-        
-        function dealerTurn() {
-            // Открываем скрытую карту дилера
-            dealerHand.innerHTML = '';
-            dealerHand.appendChild(createCardElement(dealerCards[0]));
-            dealerHand.appendChild(createCardElement(dealerCards[1]));
-            
-            let dealerTotal = calculateHandValue(dealerCards);
-            dealerValue.textContent = `Счёт: ${dealerTotal}`;
-            
-            // Дилер берет карты пока не наберет 17 или больше
-            setTimeout(() => {
-                const interval = setInterval(() => {
-                    if (dealerTotal < 17) {
-                        dealerCards.push(blackjackDeck.pop());
-                        dealerHand.appendChild(createCardElement(dealerCards[dealerCards.length - 1]));
-                        dealerTotal = calculateHandValue(dealerCards);
-                        dealerValue.textContent = `Счёт: ${dealerTotal}`;
-                    } else {
-                        clearInterval(interval);
-                        determineWinner();
-                    }
-                }, 1000);
-            }, 1000);
-        }
-        
-        function determineWinner() {
-            const playerTotal = calculateHandValue(playerCards);
-            const dealerTotal = calculateHandValue(dealerCards);
-            
-            if (dealerTotal > 21) {
-                endBlackjackGame('win', 2);
-            } else if (playerTotal > dealerTotal) {
-                endBlackjackGame('win', 2);
-            } else if (playerTotal < dealerTotal) {
-                endBlackjackGame('lose', 0);
-            } else {
-                endBlackjackGame('tie', 1);
-            }
-        }
-        
-        function endBlackjackGame(result, multiplier) {
-            gameActive = false;
-            blackjackGameState = 'game-over';
-            
-            hitButton.disabled = true;
-            standButton.disabled = true;
-            doubleButton.disabled = true;
-            splitButton.disabled = true;
-            startBlackjackGameBtn.disabled = false;
-            
-            const winnings = Math.floor(currentBlackjackBet * multiplier);
-            let message = '';
-            
-            switch (result) {
-                case 'win':
-                    balance += winnings;
-                    message = `🎉 Вы выиграли ${winnings} TON!`;
-                    gameResult.className = 'game-result win';
-                    gameResult.textContent = 'ПОБЕДА!';
-                    addToBetsHistory(currentBlackjackBet, true, 'blackjack', 2);
-                    break;
-                case 'blackjack':
-                    balance += winnings;
-                    message = `🎉 Блэкджек! Вы выиграли ${winnings} TON!`;
-                    gameResult.className = 'game-result win';
-                    gameResult.textContent = 'БЛЭКДЖЕК!';
-                    addToBetsHistory(currentBlackjackBet, true, 'blackjack', 2.5);
-                    break;
-                case 'lose':
-                    message = 'Вы проиграли. Попробуйте еще раз!';
-                    gameResult.className = 'game-result lose';
-                    gameResult.textContent = 'ПРОИГРЫШ';
-                    addToBetsHistory(currentBlackjackBet, false, 'blackjack');
-                    break;
-                case 'tie':
-                    balance += winnings;
-                    message = 'Ничья! Ваша ставка возвращена.';
-                    gameResult.className = 'game-result tie';
-                    gameResult.textContent = 'НИЧЬЯ';
-                    addToBetsHistory(currentBlackjackBet, false, 'blackjack', 1);
-                    break;
-            }
-            
-            gameResult.classList.remove('hidden');
-            blackjackStatus.textContent = message;
-            showNotification(message, result === 'lose' ? 'lose' : 'win');
-            
-            updateBalanceDisplay();
-            updateProfileStats();
-            updateStats();
-        }
-        
-        // ==================== TON КОШЕЛЕК ====================
         function initTonConnect() {
             const manifestUrl = window.location.origin + '/tonconnect-manifest.json';
             
-            try {
-                tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-                    manifestUrl: manifestUrl,
-                    buttonRootId: 'tonconnect-button',
-                    actionsConfiguration: {
-                        twaReturnUrl: 'https://t.me/DiceCasinoBot'
-                    }
-                });
-                
-                tonConnectUI.onStatusChange(wallet => {
-                    if (wallet) {
-                        isWalletConnected = true;
-                        walletInfo.style.display = 'block';
-                        const address = wallet.account.address;
-                        walletAddress.textContent = shortenAddress(address);
-                        connectedWalletAddress = address;
-                        profileWalletAddressElement.textContent = address;
-                        sendDeposit.disabled = false;
-                        sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
-                        
-                        const walletUsername = shortenAddress(address);
-                        usernameElement.textContent = walletUsername;
-                        profileNameElement.textContent = walletUsername;
-                        localStorage.setItem('username', walletUsername);
-                        
-                        showNotification('✅ Кошелёк подключен!', 'info');
-                    } else {
-                        isWalletConnected = false;
-                        walletInfo.style.display = 'none';
-                        connectedWalletAddress = null;
-                        profileWalletAddressElement.textContent = 'Не подключен';
-                        sendDeposit.disabled = true;
-                        sendDeposit.textContent = 'Подключите кошелёк';
-                    }
-                });
-            } catch (error) {
-                console.error('Ошибка инициализации TonConnect:', error);
-                showNotification('Ошибка подключения кошелька', 'lose');
-            }
-        }
-        
-        // ==================== ВЫВОД СРЕДСТВ ====================
-        function setupWithdraw() {
-            withdrawAmountButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    withdrawAmountButtons.forEach(b => b.classList.remove('active'));
-                    button.classList.add('active');
-                    currentWithdrawAmount = parseInt(button.dataset.amount);
-                    withdrawAmountInput.value = currentWithdrawAmount;
-                });
-            });
-            
-            withdrawAmountInput.addEventListener('input', () => {
-                const value = parseInt(withdrawAmountInput.value) || 0;
-                if (value >= 10 && value <= balance) {
-                    currentWithdrawAmount = value;
-                    withdrawAmountButtons.forEach(b => b.classList.remove('active'));
+            tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+                manifestUrl: manifestUrl,
+                buttonRootId: 'tonconnect-button',
+                actionsConfiguration: {
+                    twaReturnUrl: 'https://t.me/DiceCasinoBot'
                 }
             });
             
-            requestWithdrawBtn.addEventListener('click', requestWithdrawal);
-        }
-        
-        function requestWithdrawal() {
-            const amount = parseInt(withdrawAmountInput.value) || 0;
-            const address = withdrawAddressInput.value.trim();
-            
-            if (!amount || amount < 10) {
-                showNotification('Минимальная сумма вывода: 10 TON', 'lose');
-                return;
-            }
-            
-            if (amount > balance) {
-                showNotification('Недостаточно средств на балансе', 'lose');
-                return;
-            }
-            
-            if (!address || !address.startsWith('UQ') && !address.startsWith('EQ')) {
-                showNotification('Введите корректный адрес TON кошелька', 'lose');
-                return;
-            }
-            
-            const fee = Math.floor(amount * (WITHDRAW_FEE_PERCENT / 100));
-            const netAmount = amount - fee;
-            
-            // Отправляем запрос в Telegram бота
-            sendWithdrawRequestToBot(amount, netAmount, fee, address);
-        }
-        
-        async function sendWithdrawRequestToBot(amount, netAmount, fee, address) {
-            try {
-                showNotification('Отправка запроса на вывод...', 'info');
-                
-                // Формируем сообщение для бота
-                const message = `📤 НОВЫЙ ЗАПРОС НА ВЫВОД\n\n` +
-                               `👤 Пользователь: ${username}\n` +
-                               `💰 Сумма: ${amount} TON\n` +
-                               `💸 Комиссия (${WITHDRAW_FEE_PERCENT}%): ${fee} TON\n` +
-                               `📤 К выплате: ${netAmount} TON\n` +
-                               `📍 Адрес: ${address}\n` +
-                               `🆔 ID: ${Date.now()}`;
-                
-                // Отправляем запрос в Telegram бот
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: ADMIN_CHAT_ID,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
-                });
-                
-                if (response.ok) {
-                    // Списываем средства с баланса
-                    balance -= amount;
-                    updateBalanceDisplay();
-                    updateProfileStats();
+            tonConnectUI.onStatusChange(wallet => {
+                if (wallet) {
+                    isWalletConnected = true;
+                    walletInfo.style.display = 'block';
+                    const address = wallet.account.address;
+                    walletAddress.textContent = shortenAddress(address);
+                    connectedWalletAddress = address;
+                    profileWalletAddressElement.textContent = address;
+                    sendDeposit.disabled = false;
+                    sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
                     
-                    // Добавляем в историю выводов
-                    const withdrawRecord = {
-                        amount: amount,
-                        netAmount: netAmount,
-                        fee: fee,
-                        address: address,
-                        status: 'pending',
-                        timestamp: Date.now(),
-                        date: new Date().toLocaleDateString('ru-RU')
-                    };
+                    const walletUsername = shortenAddress(address);
+                    usernameElement.textContent = walletUsername;
+                    profileNameElement.textContent = walletUsername;
+                    localStorage.setItem('username', walletUsername);
                     
-                    withdrawHistory.push(withdrawRecord);
-                    localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
-                    
-                    showNotification(`✅ Запрос на вывод ${amount} TON отправлен! Ожидайте обработки.`, 'info');
-                    updateWithdrawHistory();
-                    
-                    // Очищаем поля
-                    withdrawAmountInput.value = '100';
-                    withdrawAddressInput.value = '';
+                    showNotification('✅ Кошелёк подключен!', 'info');
                 } else {
-                    showNotification('Ошибка при отправке запроса. Попробуйте позже.', 'lose');
+                    isWalletConnected = false;
+                    walletInfo.style.display = 'none';
+                    connectedWalletAddress = null;
+                    profileWalletAddressElement.textContent = 'Не подключен';
+                    sendDeposit.disabled = true;
+                    sendDeposit.textContent = 'Подключите кошелёк';
                 }
-                
-            } catch (error) {
-                console.error('Ошибка при отправке запроса:', error);
-                showNotification('Ошибка соединения. Проверьте интернет.', 'lose');
-            }
-        }
-        
-        function updateWithdrawHistory() {
-            withdrawHistoryList.innerHTML = '';
-            
-            if (withdrawHistory.length === 0) {
-                return;
-            }
-            
-            const recentWithdrawals = withdrawHistory.slice(-5).reverse();
-            
-            recentWithdrawals.forEach(withdrawal => {
-                const item = document.createElement('div');
-                item.className = 'withdraw-history-item';
-                
-                item.innerHTML = `
-                    <div>
-                        <div class="withdraw-history-amount">${withdrawal.amount} TON</div>
-                        <div class="withdraw-history-date">${withdrawal.date}</div>
-                    </div>
-                    <div class="withdraw-history-status ${withdrawal.status}">
-                        ${withdrawal.status === 'pending' ? 'Ожидание' : 
-                          withdrawal.status === 'completed' ? 'Выполнен' : 'Отменен'}
-                    </div>
-                `;
-                
-                withdrawHistoryList.appendChild(item);
             });
         }
         
-        // ==================== ОБЩИЕ ФУНКЦИИ ====================
         function updateBalanceDisplay() {
             balanceAmount.textContent = balance + ' TON';
             localStorage.setItem('balance', balance);
