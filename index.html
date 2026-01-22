@@ -2807,6 +2807,550 @@
             
             dice.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
+
+    // ==================== BLACKJACK ЛОГИКА ====================
+const blackjackPage = document.getElementById('blackjackPage');
+const backToGamesMenuFromBJ = document.getElementById('backToGamesMenuFromBJ');
+const playBlackjackGameBtn = document.getElementById('playBlackjackGame');
+const startBlackjackGameBtn = document.getElementById('startBlackjackGame');
+const hitButton = document.getElementById('hitButton');
+const standButton = document.getElementById('standButton');
+const doubleButton = document.getElementById('doubleButton');
+const dealerCards = document.getElementById('dealerCards');
+const playerCards = document.getElementById('playerCards');
+const dealerScore = document.getElementById('dealerScore');
+const playerScore = document.getElementById('playerScore');
+const gameResult = document.getElementById('gameResult');
+const gameControls = document.getElementById('gameControls');
+const betControls = document.getElementById('betControls');
+const blackjackBetButtons = document.querySelectorAll('.blackjack-bet-button');
+
+// Переменные для игры
+let blackjackCurrentBet = 10;
+let blackjackGameActive = false;
+let blackjackPlayerHand = [];
+let blackjackDealerHand = [];
+let blackjackDeck = [];
+let blackjackGameOver = false;
+
+// Навигация для BlackJack
+playBlackjackGameBtn.addEventListener('click', () => {
+    showPage('blackjack');
+    resetBlackjackGame();
+});
+
+backToGamesMenuFromBJ.addEventListener('click', () => {
+    showPage('gamesMenu');
+});
+
+// Кнопки ставок для BlackJack
+blackjackBetButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        if (blackjackGameActive) return;
+        blackjackBetButtons.forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        blackjackCurrentBet = parseInt(button.dataset.bet);
+    });
+});
+
+// Создание колоды
+function createDeck() {
+    const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    const deck = [];
+    
+    for (let suit of suits) {
+        for (let value of values) {
+            deck.push({
+                suit: suit,
+                value: value,
+                displayValue: value,
+                numericValue: getCardValue(value)
+            });
+        }
+    }
+    
+    // Тасуем колоду
+    return shuffleDeck(deck);
+}
+
+// Тасовка колоды
+function shuffleDeck(deck) {
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck;
+}
+
+// Получить значение карты
+function getCardValue(value) {
+    if (['J', 'Q', 'K'].includes(value)) return 10;
+    if (value === 'A') return 11; // Вначале считаем как 11
+    return parseInt(value);
+}
+
+// Получить символ масти
+function getSuitSymbol(suit) {
+    switch(suit) {
+        case 'hearts': return '♥';
+        case 'diamonds': return '♦';
+        case 'clubs': return '♣';
+        case 'spades': return '♠';
+        default: return '?';
+    }
+}
+
+// Создать элемент карты
+function createCardElement(card, isHidden = false) {
+    const cardElement = document.createElement('div');
+    cardElement.className = 'card dealing';
+    
+    if (isHidden) {
+        cardElement.classList.add('card-back');
+        cardElement.innerHTML = '';
+    } else {
+        const suitSymbol = getSuitSymbol(card.suit);
+        const suitClass = `suit-${card.suit}`;
+        
+        cardElement.innerHTML = `
+            <div class="card-top">
+                <div class="card-value">${card.displayValue}</div>
+                <div class="card-suit ${suitClass}">${suitSymbol}</div>
+            </div>
+            <div class="card-bottom">
+                <div class="card-value">${card.displayValue}</div>
+                <div class="card-suit ${suitClass}">${suitSymbol}</div>
+            </div>
+        `;
+    }
+    
+    // Убираем анимацию после завершения
+    setTimeout(() => {
+        cardElement.classList.remove('dealing');
+    }, 500);
+    
+    return cardElement;
+}
+
+// Расчет счета руки
+function calculateHandScore(hand) {
+    let score = 0;
+    let aces = 0;
+    
+    for (let card of hand) {
+        score += card.numericValue;
+        if (card.value === 'A') aces++;
+    }
+    
+    // Обработка тузов (если перебор и есть тузы, считаем их как 1 вместо 11)
+    while (score > 21 && aces > 0) {
+        score -= 10; // меняем туз с 11 на 1
+        aces--;
+    }
+    
+    return score;
+}
+
+// Обновление отображения счета
+function updateScores() {
+    const playerScoreValue = calculateHandScore(blackjackPlayerHand);
+    let dealerScoreValue = calculateHandScore(blackjackDealerHand);
+    
+    playerScore.textContent = `Очки: ${playerScoreValue}`;
+    
+    // Показываем только первую карту дилера, если игра не окончена
+    if (!blackjackGameOver) {
+        dealerScore.textContent = `Очки: ${getCardValue(blackjackDealerHand[0].value)}+`;
+    } else {
+        dealerScore.textContent = `Очки: ${dealerScoreValue}`;
+    }
+    
+    return { playerScore: playerScoreValue, dealerScore: dealerScoreValue };
+}
+
+// Раздача начальных карт
+function dealInitialCards() {
+    // Очищаем карты
+    dealerCards.innerHTML = '';
+    playerCards.innerHTML = '';
+    
+    // Раздаем 2 карты игроку
+    for (let i = 0; i < 2; i++) {
+        const playerCard = blackjackDeck.pop();
+        blackjackPlayerHand.push(playerCard);
+        
+        setTimeout(() => {
+            playerCards.appendChild(createCardElement(playerCard));
+        }, i * 300);
+    }
+    
+    // Раздаем 2 карты дилеру (одна скрыта)
+    for (let i = 0; i < 2; i++) {
+        const dealerCard = blackjackDeck.pop();
+        blackjackDealerHand.push(dealerCard);
+        
+        setTimeout(() => {
+            if (i === 0) {
+                // Первая карта дилера открыта
+                dealerCards.appendChild(createCardElement(dealerCard));
+            } else {
+                // Вторая карта дилера скрыта
+                dealerCards.appendChild(createCardElement(dealerCard, true));
+            }
+        }, (i + 2) * 300);
+    }
+    
+    // Обновляем счет после раздачи
+    setTimeout(() => {
+        updateScores();
+        checkInitialBlackjack();
+    }, 1200);
+}
+
+// Проверка на BlackJack с первых карт
+function checkInitialBlackjack() {
+    const playerScore = calculateHandScore(blackjackPlayerHand);
+    
+    // BlackJack у игрока (туз + 10)
+    if (playerScore === 21) {
+        // Показываем карту дилера
+        showDealerCard();
+        
+        setTimeout(() => {
+            const dealerScore = calculateHandScore(blackjackDealerHand);
+            
+            if (dealerScore === 21) {
+                // Ничья (оба BlackJack)
+                endGame('tie', 'Ничья! Оба имеют BlackJack');
+            } else {
+                // Игрок выигрывает 3:2
+                const winnings = Math.floor(blackjackCurrentBet * 1.5);
+                balance += winnings;
+                updateBalanceDisplay();
+                updateProfileStats();
+                
+                endGame('win', `BlackJack! Вы выиграли ${winnings} TON (3:2)`);
+                showNotification(`🎉 BlackJack! +${winnings} TON`, 'win');
+            }
+        }, 1000);
+    } else {
+        // Нет BlackJack, игра продолжается
+        gameControls.classList.remove('hidden');
+        betControls.classList.add('hidden');
+        startBlackjackGameBtn.disabled = true;
+        startBlackjackGameBtn.textContent = 'Игра идет...';
+        
+        // Проверяем возможность удвоения
+        doubleButton.disabled = (balance < blackjackCurrentBet * 2);
+    }
+}
+
+// Показать скрытую карту дилера
+function showDealerCard() {
+    if (dealerCards.children.length > 1) {
+        const hiddenCard = dealerCards.children[1];
+        const actualCard = blackjackDealerHand[1];
+        
+        hiddenCard.classList.remove('card-back');
+        hiddenCard.innerHTML = `
+            <div class="card-top">
+                <div class="card-value">${actualCard.displayValue}</div>
+                <div class="card-suit suit-${actualCard.suit}">${getSuitSymbol(actualCard.suit)}</div>
+            </div>
+            <div class="card-bottom">
+                <div class="card-value">${actualCard.displayValue}</div>
+                <div class="card-suit suit-${actualCard.suit}">${getSuitSymbol(actualCard.suit)}</div>
+            </div>
+        `;
+        hiddenCard.classList.add('dealing');
+    }
+}
+
+// Игрок берет карту
+hitButton.addEventListener('click', () => {
+    if (!blackjackGameActive || blackjackGameOver) return;
+    
+    // Игрок берет карту
+    const newCard = blackjackDeck.pop();
+    blackjackPlayerHand.push(newCard);
+    
+    playerCards.appendChild(createCardElement(newCard));
+    
+    // Обновляем счет
+    const scores = updateScores();
+    
+    // Проверяем на перебор
+    if (scores.playerScore > 21) {
+        // Игрок перебрал
+        endGame('lose', 'Перебор! Вы проиграли');
+        showNotification(`Перебор! -${blackjackCurrentBet} TON`, 'lose');
+    }
+    
+    // После взятия карты нельзя удваивать
+    doubleButton.disabled = true;
+});
+
+// Игрок останавливается
+standButton.addEventListener('click', () => {
+    if (!blackjackGameActive || blackjackGameOver) return;
+    
+    blackjackGameOver = true;
+    gameControls.classList.add('hidden');
+    
+    // Показываем карту дилера
+    showDealerCard();
+    
+    // Дилер берет карты
+    dealerPlay();
+});
+
+// Удвоение ставки
+doubleButton.addEventListener('click', () => {
+    if (!blackjackGameActive || blackjackGameOver) return;
+    if (balance < blackjackCurrentBet * 2) {
+        showNotification('Недостаточно средств для удвоения', 'lose');
+        return;
+    }
+    
+    // Удваиваем ставку
+    blackjackCurrentBet *= 2;
+    
+    // Игрок берет одну карту
+    const newCard = blackjackDeck.pop();
+    blackjackPlayerHand.push(newCard);
+    playerCards.appendChild(createCardElement(newCard));
+    
+    // Обновляем счет
+    const scores = updateScores();
+    
+    if (scores.playerScore > 21) {
+        // Перебор после удвоения
+        balance -= blackjackCurrentBet;
+        updateBalanceDisplay();
+        updateProfileStats();
+        
+        endGame('lose', `Перебор после удвоения! Вы проиграли ${blackjackCurrentBet} TON`);
+        showNotification(`Перебор! -${blackjackCurrentBet} TON`, 'lose');
+    } else {
+        // Игрок останавливается после удвоения
+        blackjackGameOver = true;
+        gameControls.classList.add('hidden');
+        
+        showDealerCard();
+        dealerPlay();
+    }
+});
+
+// Ход дилера
+function dealerPlay() {
+    const scores = updateScores();
+    
+    // Дилер берет карты пока у него меньше 17
+    if (scores.dealerScore < 17) {
+        setTimeout(() => {
+            const newCard = blackjackDeck.pop();
+            blackjackDealerHand.push(newCard);
+            dealerCards.appendChild(createCardElement(newCard));
+            
+            // Обновляем счет
+            const newScores = updateScores();
+            
+            if (newScores.dealerScore > 21) {
+                // Дилер перебрал
+                endGame('win', `Дилер перебрал! Вы выиграли ${blackjackCurrentBet * 2} TON`);
+                showNotification(`🎉 Дилер перебрал! +${blackjackCurrentBet * 2} TON`, 'win');
+            } else if (newScores.dealerScore < 17) {
+                // Дилер продолжает брать карты
+                dealerPlay();
+            } else {
+                // Дилер остановился
+                determineWinner();
+            }
+        }, 1000);
+    } else {
+        // Дилер уже имеет 17 или больше
+        determineWinner();
+    }
+}
+
+// Определение победителя
+function determineWinner() {
+    const scores = updateScores();
+    
+    setTimeout(() => {
+        if (scores.playerScore > 21) {
+            // Игрок уже проиграл (перебор)
+            // Ничего не делаем, так как уже обработано
+        } else if (scores.dealerScore > 21) {
+            // Дилер перебрал
+            const winnings = blackjackCurrentBet * 2;
+            balance += winnings;
+            updateBalanceDisplay();
+            updateProfileStats();
+            
+            endGame('win', `Дилер перебрал! Вы выиграли ${winnings} TON`);
+            showNotification(`🎉 Дилер перебрал! +${winnings} TON`, 'win');
+        } else if (scores.playerScore > scores.dealerScore) {
+            // Игрок победил
+            const winnings = blackjackCurrentBet * 2;
+            balance += winnings;
+            updateBalanceDisplay();
+            updateProfileStats();
+            
+            endGame('win', `Вы победили! Выигрыш ${winnings} TON`);
+            showNotification(`🎉 Вы победили! +${winnings} TON`, 'win');
+        } else if (scores.playerScore < scores.dealerScore) {
+            // Дилер победил
+            balance -= blackjackCurrentBet;
+            updateBalanceDisplay();
+            updateProfileStats();
+            
+            endGame('lose', `Дилер победил! Вы проиграли ${blackjackCurrentBet} TON`);
+            showNotification(`Дилер победил! -${blackjackCurrentBet} TON`, 'lose');
+        } else {
+            // Ничья
+            endGame('tie', `Ничья! Ставка возвращена`);
+            showNotification(`Ничья! Ставка возвращена`, 'info');
+        }
+    }, 500);
+}
+
+// Завершение игры
+function endGame(result, message) {
+    blackjackGameActive = false;
+    blackjackGameOver = true;
+    
+    // Обновляем полный счет дилера
+    const scores = updateScores();
+    dealerScore.textContent = `Очки: ${scores.dealerScore}`;
+    
+    // Показываем результат
+    gameResult.textContent = message;
+    gameResult.className = `game-result ${result}-result`;
+    gameResult.classList.remove('hidden');
+    
+    // Добавляем запись в историю
+    addToBlackjackHistory(blackjackCurrentBet, result, message);
+    
+    // Активируем кнопку начала новой игры
+    setTimeout(() => {
+        startBlackjackGameBtn.disabled = false;
+        startBlackjackGameBtn.textContent = 'Играть снова';
+    }, 2000);
+}
+
+// Добавление в историю BlackJack
+function addToBlackjackHistory(bet, result, message) {
+    const blackjackRecord = {
+        game: 'blackjack',
+        bet: bet,
+        result: result,
+        message: message,
+        timestamp: Date.now(),
+        playerScore: calculateHandScore(blackjackPlayerHand),
+        dealerScore: calculateHandScore(blackjackDealerHand)
+    };
+    
+    // Сохраняем в общую историю ставок
+    betsHistory.push({
+        bet: bet,
+        win: result === 'win',
+        timestamp: Date.now(),
+        game: 'blackjack'
+    });
+    
+    localStorage.setItem('betsHistory', JSON.stringify(betsHistory));
+}
+
+// Сброс игры
+function resetBlackjackGame() {
+    blackjackGameActive = false;
+    blackjackGameOver = false;
+    blackjackPlayerHand = [];
+    blackjackDealerHand = [];
+    blackjackDeck = createDeck();
+    
+    // Очищаем отображение
+    dealerCards.innerHTML = '';
+    playerCards.innerHTML = '';
+    dealerScore.textContent = 'Очки: -';
+    playerScore.textContent = 'Очки: -';
+    gameResult.classList.add('hidden');
+    gameControls.classList.add('hidden');
+    betControls.classList.remove('hidden');
+    
+    // Сбрасываем кнопки
+    startBlackjackGameBtn.disabled = false;
+    startBlackjackGameBtn.textContent = 'Начать игру';
+    hitButton.disabled = false;
+    standButton.disabled = false;
+    doubleButton.disabled = false;
+}
+
+// Начало игры
+startBlackjackGameBtn.addEventListener('click', () => {
+    if (blackjackGameActive) return;
+    
+    // Проверяем баланс
+    if (balance < blackjackCurrentBet) {
+        showNotification('Недостаточно средств!', 'lose');
+        return;
+    }
+    
+    // Снимаем ставку
+    balance -= blackjackCurrentBet;
+    updateBalanceDisplay();
+    updateProfileStats();
+    
+    // Начинаем игру
+    blackjackGameActive = true;
+    blackjackGameOver = false;
+    gameResult.classList.add('hidden');
+    
+    // Сбрасываем руки
+    blackjackPlayerHand = [];
+    blackjackDealerHand = [];
+    blackjackDeck = createDeck();
+    
+    // Раздаем карты
+    dealInitialCards();
+});
+
+// Добавляем обработку страницы BlackJack в функцию showPage
+// НАЙДИТЕ функцию showPage и добавьте обработку blackjack:
+function showPage(pageName) {
+    mainMenu.classList.add('hidden');
+    gamesMenuPage.classList.add('hidden');
+    diceGamePage.classList.add('hidden');
+    statsPage.classList.add('hidden');
+    withdrawPage.classList.add('hidden');
+    profilePage.classList.add('hidden');
+    blackjackPage.classList.add('hidden'); // ДОБАВЬТЕ ЭТУ СТРОЧКУ
+    
+    navItems.forEach(nav => nav.classList.remove('active'));
+    
+    if (pageName === 'main') {
+        mainMenu.classList.remove('hidden');
+        document.querySelector('.nav-item[data-page="main"]').classList.add('active');
+    } else if (pageName === 'gamesMenu') {
+        gamesMenuPage.classList.remove('hidden');
+    } else if (pageName === 'diceGame') {
+        diceGamePage.classList.remove('hidden');
+    } else if (pageName === 'stats') {
+        statsPage.classList.remove('hidden');
+        document.querySelector('.nav-item[data-page="stats"]').classList.add('active');
+    } else if (pageName === 'withdraw') {
+        withdrawPage.classList.remove('hidden');
+        document.querySelector('.nav-item[data-page="withdraw"]').classList.add('active');
+    } else if (pageName === 'profile') {
+        profilePage.classList.remove('hidden');
+        updateProfileStats();
+    } else if (pageName === 'blackjack') { // ДОБАВЬТЕ ЭТОТ БЛОК
+        blackjackPage.classList.remove('hidden');
+        resetBlackjackGame();
+    }
+}
     </script>
 </body>
 </html>
