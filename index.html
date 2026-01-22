@@ -202,6 +202,18 @@
             margin: 0 auto 20px;
             border: 4px solid white;
             box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar-large::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
+            mask-size: 40px;
         }
 
         .profile-name {
@@ -460,6 +472,14 @@
             margin-top: 2px;
         }
 
+        .welcome-bonus-icon {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>');
+        }
+
+        .daily-bonus-icon {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>');
+        }
+
         .promo-content {
             flex: 1;
         }
@@ -516,7 +536,7 @@
             margin-left: 8px;
         }
 
-        .daily-bonus {
+        .daily-bonus-badge {
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             color: white;
             font-size: 12px;
@@ -602,6 +622,38 @@
             color: white;
             font-size: 20px;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dice-list-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>') no-repeat center;
+            mask-size: 24px;
+        }
+
+        .blackjack-list-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>') no-repeat center;
+            mask-size: 24px;
+        }
+
+        .slots-list-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 5H2v14h5V5zm15 0H10v14h12V5zM17 7h4v10h-4V7zM3 7h4v10H3V7z"/></svg>') no-repeat center;
+            mask-size: 24px;
         }
 
         .game-list-info {
@@ -1491,7 +1543,7 @@
         <!-- ОБНОВЛЕННАЯ ВЕРХНЯЯ ПАНЕЛЬ С ПРОФИЛЕМ -->
         <div class="top-panel">
             <div class="user-info" id="openProfile">
-                <div class="user-avatar" id="userAvatar">👤</div>
+                <div class="user-avatar" id="userAvatar"></div>
                 <div class="username" id="username">Гость</div>
             </div>
             <button class="balance-btn" id="openDepositModal">
@@ -1512,7 +1564,7 @@
                 </div>
 
                 <div class="profile-info">
-                    <div class="profile-avatar-large" id="profileAvatarLarge">👤</div>
+                    <div class="profile-avatar-large" id="profileAvatarLarge"></div>
                     <h3 class="profile-name" id="profileName">Гость</h3>
                     <div class="profile-role" id="userRole">Игрок</div>
                     
@@ -1604,11 +1656,11 @@
                         </div>
                         <div class="promo-items">
                             <div class="promo-card">
-                                <div class="promo-icon-small"></div>
+                                <div class="promo-icon-small welcome-bonus-icon"></div>
                                 <div class="promo-content">
                                     <div class="promo-title">
                                         Приветственный бонус 
-                                        <span class="bonus-badge">100 TON</span>
+                                        <span class="bonus-badge">+10 TON</span>
                                     </div>
                                     <div class="promo-description">
                                         Получите бонус при первом депозите от 50 TON
@@ -1633,11 +1685,11 @@
                             <div class="promo-separator"></div>
                             
                             <div class="promo-card">
-                                <div class="promo-icon-small"></div>
+                                <div class="promo-icon-small daily-bonus-icon"></div>
                                 <div class="promo-content">
                                     <div class="promo-title">
                                         Ежедневный бонус 
-                                        <span class="daily-bonus">+10 TON</span>
+                                        <span class="daily-bonus-badge">+0.1 TON/день</span>
                                     </div>
                                     <div class="promo-description">
                                         Заходите каждый день за наградой
@@ -1649,7 +1701,7 @@
                                         </div>
                                         <div class="promo-detail-item">
                                             <div class="promo-detail-icon"></div>
-                                            Получайте 10 TON за ежедневный вход
+                                            Получайте 0.1 TON за ежедневный вход
                                         </div>
                                         <div class="promo-detail-item">
                                             <div class="promo-detail-icon"></div>
@@ -1675,7 +1727,7 @@
                 
                 <div class="games-list">
                     <div class="game-list-item" id="playDiceGame">
-                        <div class="game-list-icon">🎲</div>
+                        <div class="game-list-icon dice-list-icon"></div>
                         <div class="game-list-info">
                             <div class="game-list-title">Dice</div>
                             <div class="game-list-description">Классическая игра в кости. Выигрывайте если выпадет 4, 5 или 6</div>
@@ -1683,7 +1735,7 @@
                         <div class="arrow-icon"></div>
                     </div>
                     <div class="game-list-item" style="opacity: 0.6;">
-                        <div class="game-list-icon">🃏</div>
+                        <div class="game-list-icon blackjack-list-icon"></div>
                         <div class="game-list-info">
                             <div class="game-list-title">Blackjack</div>
                             <div class="game-list-description">Скоро будет доступно</div>
@@ -1691,7 +1743,7 @@
                         <div class="arrow-icon"></div>
                     </div>
                     <div class="game-list-item" style="opacity: 0.6;">
-                        <div class="game-list-icon">🎰</div>
+                        <div class="game-list-icon slots-list-icon"></div>
                         <div class="game-list-info">
                             <div class="game-list-title">Slots</div>
                             <div class="game-list-description">Скоро будет доступно</div>
@@ -1979,9 +2031,12 @@
                 if (user) {
                     username = user.username ? '@' + user.username : user.first_name || 'Telegram User';
                     usernameElement.textContent = username;
-                    userAvatar.textContent = user.first_name ? user.first_name.charAt(0) : 'T';
+                    // Добавляем SVG иконку профиля
+                    userAvatar.style.background = '#2aabee';
+                    userAvatar.style.position = 'relative';
+                    userAvatar.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>\') no-repeat center; mask-size: 24px;"></div>';
+                    
                     profileNameElement.textContent = username;
-                    profileAvatarLarge.textContent = user.first_name ? user.first_name.charAt(0) : 'T';
                     
                     // Сохраняем в localStorage
                     localStorage.setItem('username', username);
@@ -1990,9 +2045,13 @@
             
             // Устанавливаем имя пользователя
             usernameElement.textContent = username;
-            userAvatar.textContent = username.charAt(0);
+            // Устанавливаем SVG иконку профиля
+            if (userAvatar.innerHTML === '') {
+                userAvatar.style.position = 'relative';
+                userAvatar.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>\') no-repeat center; mask-size: 24px;"></div>';
+            }
+            
             profileNameElement.textContent = username;
-            profileAvatarLarge.textContent = username.charAt(0);
             
             // Обновляем баланс
             updateBalanceDisplay();
@@ -2307,9 +2366,11 @@
                     // Обновляем имя пользователя
                     const walletUsername = shortenAddress(address);
                     usernameElement.textContent = walletUsername;
-                    userAvatar.textContent = '👛';
+                    // Меняем иконку на кошелёк при подключении
+                    userAvatar.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>\') no-repeat center; mask-size: 24px;"></div>';
+                    
                     profileNameElement.textContent = walletUsername;
-                    profileAvatarLarge.textContent = '👛';
+                    profileAvatarLarge.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>\') no-repeat center; mask-size: 40px;"></div>';
                     localStorage.setItem('username', walletUsername);
                     
                     showNotification('✅ Кошелёк подключен!', 'info');
