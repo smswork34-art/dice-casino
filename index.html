@@ -172,6 +172,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
+            margin-bottom: 0;
         }
 
         .game-card {
@@ -222,21 +223,23 @@
             line-height: 1.4;
         }
 
+        /* ОБНОВЛЕННЫЙ СТИЛЬ ДЛЯ АКЦИЙ И БОНУСОВ */
         .promo-items {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
 
         .promo-card {
             background: white;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 20px;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            align-items: flex-start;
+            gap: 16px;
             border: 2px solid #e6f4ff;
             transition: all 0.3s;
+            text-align: left;
         }
 
         .promo-card:hover {
@@ -245,23 +248,86 @@
         }
 
         .promo-icon-small {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             background: #2aabee;
             mask-size: contain;
             mask-repeat: no-repeat;
             mask-position: center;
+            flex-shrink: 0;
+            margin-top: 2px;
         }
 
-        .promo-text {
-            font-size: 14px;
-            font-weight: 600;
+        .promo-content {
+            flex: 1;
+        }
+
+        .promo-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
             color: #1a1a1a;
         }
 
-        .promo-subtext {
-            font-size: 12px;
+        .promo-description {
+            font-size: 14px;
             color: #666;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .promo-details {
+            background: rgba(42, 171, 238, 0.05);
+            border-radius: 12px;
+            padding: 12px;
+            border-left: 3px solid #2aabee;
+        }
+
+        .promo-detail-item {
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .promo-detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .promo-detail-icon {
+            width: 14px;
+            height: 14px;
+            background: #2aabee;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .bonus-badge {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        .daily-bonus {
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        .promo-separator {
+            height: 1px;
+            background: #e6f4ff;
+            margin: 8px 0;
         }
 
         /* СТРАНИЦА ВЫБОРА ИГР */
@@ -1274,16 +1340,57 @@
                         <div class="promo-items">
                             <div class="promo-card">
                                 <div class="promo-icon-small"></div>
-                                <div>
-                                    <div class="promo-text">Приветственный бонус 100 TON</div>
-                                    <div class="promo-subtext">При первом депозите от 50 TON</div>
+                                <div class="promo-content">
+                                    <div class="promo-title">
+                                        Приветственный бонус 
+                                        <span class="bonus-badge">100 TON</span>
+                                    </div>
+                                    <div class="promo-description">
+                                        Получите бонус при первом депозите от 50 TON
+                                    </div>
+                                    <div class="promo-details">
+                                        <div class="promo-detail-item">
+                                            <div class="promo-detail-icon"></div>
+                                            Бонус начисляется автоматически
+                                        </div>
+                                        <div class="promo-detail-item">
+                                            <div class="promo-detail-icon"></div>
+                                            Минимальный депозит: 50 TON
+                                        </div>
+                                        <div class="promo-detail-item">
+                                            <div class="promo-detail-icon"></div>
+                                            Для новых игроков
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            <div class="promo-separator"></div>
+                            
                             <div class="promo-card">
                                 <div class="promo-icon-small"></div>
-                                <div>
-                                    <div class="promo-text">Ежедневный бонус</div>
-                                    <div class="promo-subtext">Заходите каждый день за наградой</div>
+                                <div class="promo-content">
+                                    <div class="promo-title">
+                                        Ежедневный бонус 
+                                        <span class="daily-bonus">+10 TON</span>
+                                    </div>
+                                    <div class="promo-description">
+                                        Заходите каждый день за наградой
+                                    </div>
+                                    <div class="promo-details">
+                                        <div class="promo-detail-item">
+                                            <div class="promo-detail-icon"></div>
+                                            Награда доступна каждый день
+                                        </div>
+                                        <div class="promo-detail-item">
+                                            <div class="promo-detail-icon"></div>
+                                            Получайте 10 TON за ежедневный вход
+                                        </div>
+                                        <div class="promo-detail-item">
+                                            <div class="promo-detail-icon"></div>
+                                            Бонус увеличивается с каждым днем
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1523,6 +1630,7 @@
         </div>
     </div>
 
+    <!-- JavaScript код остается без изменений, так как он уже правильный -->
     <script>
         // ==================== КОНСТАНТЫ ====================
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
