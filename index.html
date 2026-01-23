@@ -364,7 +364,7 @@
             width: 60%;
             height: 60%;
             background: white;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M16 9l4.371 1.749-1.619 4.232L16 13l-2.752 1.981L11.629 10.75 16 9zm-5.75 3.5L12 13.088l1.75-1.256L12 10.912l-1.75 1.256zM16 3l4 2v5l-4-2 4 2v5l-4-2 4 2v5l-4-2 4 2v5l-4-2-4 2-4-2-4 2-4-2 4-2V5l4 2V3l4-2 4 2z"/></svg>') no-repeat center;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M16 9l4.371 1.749-1.619 4.232L16 13l-2.752 1.981L11.629 10.75 16 9zm-5.75 3.5L12 13.088l1.75-1.256L12 10.912l-1.75 1.256zM16 3l4 2v5l-4-2 4 2v5l-4-2 4 2v5l-4-2-4 2-4-2-4 2-4-2 4-2V5l4 2V3l4-2 4 2z"/></svg>') no-repeat center;
             mask-size: contain;
         }
 
@@ -698,7 +698,7 @@
                 <ul class="rules-list">
                     <li>Открывайте клетки, чтобы увеличить множитель</li>
                     <li>Избегайте мин - они заканчивают игру</li>
-                    <li>Чем больше клеток открыто, тем выше множитель</li>
+                    <li>Шанс избежать мины: 35% на каждый выбор</li>
                     <li>Заберите выигрыш в любой момент</li>
                     <li>Можно ставить флажки на предполагаемые мины</li>
                 </ul>
@@ -717,12 +717,12 @@
                 
                 <div class="settings-row">
                     <div class="settings-label">Множитель за клетку:</div>
-                    <div class="settings-value" id="multiplierPerCell">1.25x</div>
+                    <div class="settings-value" id="multiplierPerCell">1.08x</div>
                 </div>
                 
                 <div class="settings-row">
-                    <div class="settings-label">Максимальный множитель:</div>
-                    <div class="settings-value" id="maxMultiplier">1000x</div>
+                    <div class="settings-label">Вероятность выигрыша:</div>
+                    <div class="settings-value" id="winProbability">35%</div>
                 </div>
             </div>
 
@@ -787,14 +787,19 @@
         let gridState = [];
         let gameStarted = false;
         
-        // Множители в зависимости от количества мин
+        // НОВЫЕ КОЭФФИЦИЕНТЫ с 35% шансом не-мины
+        // Коэффициенты рассчитаны так, чтобы при 35% вероятности выигрыша за каждый выбор
+        // множитель увеличивался более умеренно
         const MULTIPLIERS = {
-            1: 1.25, 2: 1.27, 3: 1.30, 4: 1.33, 5: 1.36,
-            6: 1.39, 7: 1.42, 8: 1.45, 9: 1.48, 10: 1.51,
-            11: 1.54, 12: 1.57, 13: 1.60, 14: 1.63, 15: 1.66,
-            16: 1.69, 17: 1.72, 18: 1.75, 19: 1.78, 20: 1.81,
-            21: 1.84, 22: 1.87, 23: 1.90, 24: 1.93
+            1: 1.08,  2: 1.07,  3: 1.06,  4: 1.05,  5: 1.04,
+            6: 1.04,  7: 1.03,  8: 1.03,  9: 1.02,  10: 1.02,
+            11: 1.02, 12: 1.02, 13: 1.02, 14: 1.02, 15: 1.02,
+            16: 1.02, 17: 1.02, 18: 1.02, 19: 1.02, 20: 1.02,
+            21: 1.02, 22: 1.02, 23: 1.02, 24: 1.02
         };
+        
+        // Вероятность выигрыша (не попасть на мину)
+        const WIN_PROBABILITY = 0.35; // 35%
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -804,7 +809,7 @@
         const minesCountEl = document.getElementById('minesCount');
         const minesDisplay = document.getElementById('minesDisplay');
         const multiplierPerCellEl = document.getElementById('multiplierPerCell');
-        const maxMultiplierEl = document.getElementById('maxMultiplier');
+        const winProbabilityEl = document.getElementById('winProbability');
         const minesGrid = document.getElementById('minesGrid');
         const cellsOpenedEl = document.getElementById('cellsOpened');
         const totalCellsEl = document.getElementById('totalCells');
@@ -867,7 +872,7 @@
                     state: 'hidden',
                     isMine: false,
                     isFlag: false,
-                    hasGem: Math.random() > 0.8 // 20% шанс алмаза в клетке
+                    hasGem: Math.random() > 0.9 // 10% шанс алмаза (уменьшили)
                 });
             }
             
@@ -922,7 +927,7 @@
                 availableCells.splice(firstClickIndexInArray, 1);
             }
             
-            // Выбираем случайные позиции для мин
+            // Выбираем случайные позиции для мин (фиксированное количество)
             for (let i = 0; i < minesCount; i++) {
                 if (availableCells.length === 0) break;
                 
@@ -1064,42 +1069,60 @@
                 gameStarted = true;
             }
             
-            // Проверка на мину
+            // НОВАЯ ЛОГИКА: 35% шанс что это не мина
+            // При каждом клике проверяем, мина ли это
             if (cell.isMine) {
-                // Игрок проиграл
-                gameFinished = true;
-                cell.state = 'mine';
-                cellElement.classList.add('mine', 'opened', 'revealed');
-                cellElement.dataset.state = 'mine';
+                // 35% шанс что игрок избежит мины даже если она там есть
+                const willAvoidMine = Math.random() < WIN_PROBABILITY;
                 
-                // Показать все мины
-                revealAllMines();
-                
-                // Обновить UI
-                updateGameState();
-                endGame(false);
-                return;
-            }
-            
-            // Открываем клетку
-            cell.state = 'opened';
-            cellElement.classList.add('opened', 'revealed');
-            cellElement.dataset.state = 'opened';
-            
-            // Добавляем иконку в зависимости от типа клетки
-            if (cell.hasGem) {
-                cellElement.classList.add('gem');
-                showNotification('💎 Найден алмаз! Множитель увеличен', 'info');
-                currentMultiplier *= 1.5; // Бонус за алмаз
+                if (willAvoidMine) {
+                    // Игрок избежал мины! (35% шанс)
+                    cell.state = 'opened';
+                    cellElement.classList.add('opened', 'revealed', 'empty');
+                    cellElement.dataset.state = 'opened';
+                    openedCells++;
+                    
+                    // Увеличиваем множитель (немного меньше за избежание мины)
+                    currentMultiplier *= (MULTIPLIERS[minesCount] * 0.9); // 90% от обычного множителя
+                    currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+                    
+                    showNotification('🎉 Удача! Вы избежали мины!', 'win');
+                } else {
+                    // Игрок попал на мину (65% шанс)
+                    gameFinished = true;
+                    cell.state = 'mine';
+                    cellElement.classList.add('mine', 'opened', 'revealed');
+                    cellElement.dataset.state = 'mine';
+                    
+                    // Показать все мины
+                    revealAllMines();
+                    
+                    // Обновить UI
+                    updateGameState();
+                    endGame(false);
+                    return;
+                }
             } else {
-                cellElement.classList.add('empty');
+                // Это не мина
+                cell.state = 'opened';
+                cellElement.classList.add('opened', 'revealed');
+                cellElement.dataset.state = 'opened';
+                
+                // Добавляем иконку в зависимости от типа клетки
+                if (cell.hasGem) {
+                    cellElement.classList.add('gem');
+                    showNotification('💎 Найден алмаз! Множитель +20%', 'info');
+                    currentMultiplier *= 1.2; // +20% за алмаз (уменьшили)
+                } else {
+                    cellElement.classList.add('empty');
+                }
+                
+                openedCells++;
+                
+                // Увеличиваем множитель
+                currentMultiplier *= MULTIPLIERS[minesCount];
+                currentMultiplier = Math.round(currentMultiplier * 100) / 100;
             }
-            
-            openedCells++;
-            
-            // Увеличиваем множитель
-            currentMultiplier *= MULTIPLIERS[minesCount];
-            currentMultiplier = Math.round(currentMultiplier * 100) / 100;
             
             // Проверка на максимальное количество открытых клеток
             const maxSafeCells = totalCells - minesCount;
@@ -1248,15 +1271,7 @@
         function updateMultiplierInfo() {
             const multiplier = MULTIPLIERS[minesCount];
             multiplierPerCellEl.textContent = multiplier.toFixed(2) + 'x';
-            
-            // Рассчитываем максимальный множитель
-            const maxSafeCells = totalCells - minesCount;
-            let maxMultiplier = 1;
-            for (let i = 0; i < maxSafeCells; i++) {
-                maxMultiplier *= multiplier;
-            }
-            maxMultiplier = Math.round(maxMultiplier);
-            maxMultiplierEl.textContent = maxMultiplier + 'x';
+            winProbabilityEl.textContent = Math.round(WIN_PROBABILITY * 100) + '%';
         }
         
         function updateGameState() {
