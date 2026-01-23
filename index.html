@@ -201,50 +201,28 @@
             border: 1px solid #e6f4ff;
         }
 
-        .chart-graph {
+        .chart-line {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - 20px);
-            overflow: hidden;
+            height: 4px;
+            background: linear-gradient(90deg, #2aabee 0%, #4CAF50 100%);
+            z-index: 2;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.1s linear;
         }
 
-        .graph-path {
+        .chart-fill {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            fill: none;
-            stroke: #2aabee;
-            stroke-width: 3;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            filter: drop-shadow(0 2px 4px rgba(42, 171, 238, 0.3));
-        }
-
-        .chart-point {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #4CAF50;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px #4CAF50, 0 2px 8px rgba(76, 175, 80, 0.5);
-            transform: translate(-50%, 50%);
-            z-index: 10;
-            transition: all 0.3s ease;
-        }
-
-        .chart-point.pulsing {
-            animation: pointPulse 1.5s infinite;
-        }
-
-        @keyframes pointPulse {
-            0% { box-shadow: 0 0 0 2px #4CAF50, 0 2px 8px rgba(76, 175, 80, 0.5); }
-            50% { box-shadow: 0 0 0 4px #4CAF50, 0 2px 12px rgba(76, 175, 80, 0.8); }
-            100% { box-shadow: 0 0 0 2px #4CAF50, 0 2px 8px rgba(76, 175, 80, 0.5); }
+            background: linear-gradient(to top, rgba(42, 171, 238, 0.1) 0%, rgba(42, 171, 238, 0) 100%);
+            clip-path: polygon(0% 100%, var(--progress, 0%) 100%, var(--progress, 0%) 0%, 0% 0%);
+            transition: clip-path 0.1s linear;
         }
 
         .chart-grid {
@@ -260,6 +238,19 @@
         .grid-line {
             width: 1px;
             background: rgba(42, 171, 238, 0.1);
+        }
+
+        .chart-multipliers {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 600;
         }
 
         /* СТАВКА */
@@ -468,8 +459,25 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
+        @keyframes crashExplosion {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
         .crash-animation {
             animation: crashEffect 0.5s ease-in-out;
+        }
+
+        .explosion {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,107,107,0.8) 0%, rgba(255,82,82,0) 70%);
+            z-index: 100;
+            pointer-events: none;
+            animation: crashExplosion 0.8s ease-out forwards;
         }
 
         .notification {
@@ -607,7 +615,7 @@
         const INITIAL_BALANCE = 1000;
         const MIN_BET = 1;
         const BET_TIME = 10000; // 10 секунд чтобы поставить ставку
-        const TIME_PER_X = 8000; // 8 секунд на каждый +1x
+        const MAX_MULTIPLIER = 100;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let balance = parseInt(localStorage.getItem('crashBalance')) || INITIAL_BALANCE;
@@ -622,11 +630,6 @@
         let timeToNextGame = BET_TIME;
         let animationStartTime = 0;
         let timeSinceLastX = 0;
-        let incrementProgress = 0; // Прогресс от 0 до 1 между иксами
-        let targetMultiplier = 2.0; // К какому множителю идем
-        let lastMultiplier = 1.0; // С какого множителя начали
-        let chartPoints = []; // Точки графика
-        let currentSegment = 0; // Текущий сегмент графика (0, 1, 2...)
 
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -708,14 +711,10 @@
             
             isGameActive = true;
             currentMultiplier = 1.0;
-            lastMultiplier = 1.0;
-            targetMultiplier = 2.0;
-            incrementProgress = 0;
-            currentSegment = 0;
-            chartPoints = [{x: 0, y: 0}];
             
-            // Генерируем точку краша
+            // Генерируем точку краша с подкруткой
             crashPoint = generateCrashPoint();
+            console.log("Краш будет на:", crashPoint.toFixed(2) + "x");
             
             // Сбрасываем UI
             currentMultiplierEl.textContent = '1.00x';
@@ -727,57 +726,75 @@
             
             // Запускаем игру
             animationStartTime = Date.now();
-            timeSinceLastX = Date.now();
             gameInterval = setInterval(updateGame, 100);
         }
 
         function generateCrashPoint() {
             const random = Math.random();
             
-            // Шансы краша
-            if (random < 0.40) return 1.5; // 40% до 1.5x
-            if (random < 0.65) return 2.5; // 25% до 2.5x  
-            if (random < 0.80) return 5.0; // 15% до 5.0x
-            if (random < 0.90) return 10.0; // 10% до 10.0x
-            if (random < 0.97) return 25.0; // 7% до 25.0x
-            return 50.0; // 3% до 50.0x
+            // Подкрутка: 35% шанс краша до 2x
+            if (random < 0.35) {
+                // Краш до 2x
+                return 1.0 + Math.random(); // от 1.0 до 2.0
+            } else {
+                // Рандом от 2x до 100x
+                const remainingChance = 1 - 0.35;
+                const adjustedRandom = (random - 0.35) / remainingChance;
+                
+                // Экспоненциальное распределение - чаще маленькие множители
+                const base = Math.pow(adjustedRandom, 2);
+                return 2.0 + base * 98; // от 2.0 до 100.0
+            }
         }
 
         function updateGame() {
             if (!isGameActive) return;
             
-            const now = Date.now();
-            const timeSinceX = now - timeSinceLastX;
+            const elapsedTime = Date.now() - animationStartTime;
+            const timeProgress = Math.min(elapsedTime / 30000, 1); // Максимум 30 секунд игры
             
-            // Плавное увеличение множителя в течение 8 секунд
-            if (timeSinceX <= TIME_PER_X) {
-                // Вычисляем прогресс от 0 до 1 за 8 секунд
-                incrementProgress = Math.min(timeSinceX / TIME_PER_X, 1);
-                
-                // Плавно интерполируем между lastMultiplier и targetMultiplier
-                currentMultiplier = lastMultiplier + (targetMultiplier - lastMultiplier) * incrementProgress;
+            // Всегда одинаковая анимация роста
+            // Сначала быстрый рост, потом медленнее
+            let visualProgress;
+            if (timeProgress < 0.3) {
+                // Быстрый рост первые 30%
+                visualProgress = timeProgress * 1.5;
+            } else if (timeProgress < 0.7) {
+                // Средний рост
+                visualProgress = 0.45 + (timeProgress - 0.3) * 0.8;
+            } else {
+                // Медленный рост в конце
+                visualProgress = 0.77 + (timeProgress - 0.7) * 0.23;
+            }
+            
+            // Рассчитываем текущий множитель на основе прогресса и точки краша
+            // График всегда растёт одинаково, но краш может быть в любой момент
+            const maxVisualMultiplier = 50; // Максимум для отображения
+            let visualMultiplier;
+            
+            if (timeProgress < (crashPoint / maxVisualMultiplier)) {
+                // Если ещё не достигли точки краша
+                visualMultiplier = 1.0 + (maxVisualMultiplier - 1.0) * visualProgress;
                 
                 // Ограничиваем точкой краша
-                currentMultiplier = Math.min(currentMultiplier, crashPoint);
-            } else {
-                // Когда прошло больше 8 секунд - переходим к следующему иксу
-                incrementProgress = 1;
-                currentMultiplier = targetMultiplier;
-                
-                // Проверяем не пора ли увеличить target
-                if (currentMultiplier >= targetMultiplier) {
-                    lastMultiplier = targetMultiplier;
-                    targetMultiplier = lastMultiplier + 1.0;
-                    incrementProgress = 0;
-                    timeSinceLastX = now;
-                    currentSegment++;
+                if (visualMultiplier >= crashPoint) {
+                    currentMultiplier = crashPoint;
+                    endGame();
+                    return;
+                } else {
+                    currentMultiplier = visualMultiplier;
                 }
+            } else {
+                // Достигли точки краша
+                currentMultiplier = crashPoint;
+                endGame();
+                return;
             }
             
             // Обновляем отображение
             currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
             updatePotentialWin();
-            updateChart();
+            updateChart(visualProgress);
             
             // Если игрок сделал ставку
             if (hasPlacedBet) {
@@ -791,11 +808,6 @@
                     currentMultiplierEl.style.color = '#FF9800';
                 }
             }
-            
-            // Проверка на краш
-            if (currentMultiplier >= crashPoint) {
-                endGame();
-            }
         }
 
         function endGame() {
@@ -807,6 +819,9 @@
             // Анимация краша
             currentMultiplierEl.classList.add('crash-animation');
             currentMultiplierEl.style.color = '#ff6b6b';
+            
+            // Создаем эффект взрыва на графике
+            createExplosion();
             
             // Проигрыш для тех, кто не забрал
             if (hasPlacedBet) {
@@ -823,6 +838,20 @@
                 currentMultiplierEl.classList.remove('crash-animation');
                 startBetTimer();
             }, 2000);
+        }
+
+        function createExplosion() {
+            const chartRect = crashChart.getBoundingClientRect();
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.left = '100%';
+            explosion.style.top = '50%';
+            explosion.style.transform = 'translate(-50%, -50%)';
+            crashChart.appendChild(explosion);
+            
+            setTimeout(() => {
+                explosion.remove();
+            }, 1000);
         }
 
         // ==================== ДЕЙСТВИЯ ИГРОКА ====================
@@ -900,87 +929,41 @@
             
             crashChart.appendChild(grid);
             
-            // График
-            const graph = document.createElement('div');
-            graph.className = 'chart-graph';
-            graph.id = 'chartGraph';
-            crashChart.appendChild(graph);
+            // Заливка графика
+            const fill = document.createElement('div');
+            fill.className = 'chart-fill';
+            fill.id = 'chartFill';
+            crashChart.appendChild(fill);
             
-            // Точка на графике
-            const point = document.createElement('div');
-            point.className = 'chart-point';
-            point.id = 'chartPoint';
-            crashChart.appendChild(point);
+            // Линия графика
+            const line = document.createElement('div');
+            line.className = 'chart-line';
+            line.id = 'chartLine';
+            crashChart.appendChild(line);
+            
+            // Подписи множителей
+            const multipliers = document.createElement('div');
+            multipliers.className = 'chart-multipliers';
+            
+            for (let i = 0; i <= 5; i++) {
+                const multiplier = document.createElement('div');
+                multiplier.textContent = (i * 10) + 'x';
+                multipliers.appendChild(multiplier);
+            }
+            
+            crashChart.appendChild(multipliers);
         }
 
-        function updateChart() {
-            const graph = document.getElementById('chartGraph');
-            const point = document.getElementById('chartPoint');
+        function updateChart(progress) {
+            const line = document.getElementById('chartLine');
+            const fill = document.getElementById('chartFill');
             
-            if (!graph || !point) return;
-            
-            // Добавляем новую точку в массив
-            const timeProgress = (Date.now() - animationStartTime) / 30000; // 30 секунд максимум
-            const x = Math.min(timeProgress, 1);
-            const y = (currentMultiplier - 1) / (crashPoint - 1); // Нормализуем от 0 до 1
-            
-            chartPoints.push({x, y});
-            
-            // Ограничиваем количество точек
-            if (chartPoints.length > 50) {
-                chartPoints.shift();
+            if (line) {
+                line.style.transform = `scaleX(${progress})`;
             }
             
-            // Создаем SVG путь
-            let pathData = 'M ';
-            chartPoints.forEach((pt, i) => {
-                const px = pt.x * 100;
-                const py = (1 - pt.y) * 100; // Инвертируем Y (0 внизу, 100 вверху)
-                
-                if (i === 0) {
-                    pathData += `${px} ${py}`;
-                } else {
-                    // Плавная кривая
-                    const prevPt = chartPoints[i - 1];
-                    const cpx1 = prevPt.x * 100 + (px - prevPt.x * 100) * 0.3;
-                    const cpy1 = (1 - prevPt.y) * 100;
-                    const cpx2 = prevPt.x * 100 + (px - prevPt.x * 100) * 0.7;
-                    const cpy2 = py;
-                    
-                    pathData += ` C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${px} ${py}`;
-                }
-            });
-            
-            // Обновляем или создаем SVG
-            let svg = graph.querySelector('svg');
-            if (!svg) {
-                svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('width', '100%');
-                svg.setAttribute('height', '100%');
-                graph.appendChild(svg);
-            }
-            
-            let path = svg.querySelector('path');
-            if (!path) {
-                path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('class', 'graph-path');
-                svg.appendChild(path);
-            }
-            
-            path.setAttribute('d', pathData);
-            
-            // Обновляем позицию точки
-            if (chartPoints.length > 0) {
-                const lastPoint = chartPoints[chartPoints.length - 1];
-                point.style.left = `${lastPoint.x * 100}%`;
-                point.style.bottom = `${lastPoint.y * 100}%`;
-                
-                // Пульсация точки каждые 8 секунд
-                if (incrementProgress < 0.1 || incrementProgress > 0.9) {
-                    point.classList.add('pulsing');
-                } else {
-                    point.classList.remove('pulsing');
-                }
+            if (fill) {
+                fill.style.setProperty('--progress', `${progress * 100}%`);
             }
         }
 
