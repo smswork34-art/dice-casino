@@ -7,7 +7,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        /* Все существующие стили остаются без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -32,7 +31,6 @@
             border: 1px solid rgba(42, 171, 238, 0.1);
         }
 
-        /* НОВАЯ ВЕРХНЯЯ ПАНЕЛЬ */
         .top-panel {
             padding: 12px 16px;
             display: flex;
@@ -62,6 +60,7 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid transparent;
+            position: relative;
         }
 
         .user-avatar:hover {
@@ -117,7 +116,6 @@
             mask-size: contain;
         }
 
-        /* Основной контент */
         .content {
             padding: 24px;
         }
@@ -130,7 +128,6 @@
             display: none;
         }
 
-        /* СТРАНИЦА ПРОФИЛЯ */
         .profile-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -205,16 +202,6 @@
             box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
             position: relative;
             overflow: hidden;
-        }
-
-        .profile-avatar-large::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: white;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
-            mask-size: 40px;
         }
 
         .profile-name {
@@ -335,7 +322,6 @@
             border: 1px solid #e6f4ff;
         }
 
-        /* ГЛАВНОЕ МЕНЮ */
         .main-menu {
             text-align: center;
         }
@@ -363,24 +349,6 @@
             padding: 24px;
             margin-bottom: 24px;
             border: 1px solid rgba(42, 171, 238, 0.15);
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #1a1a1a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .games-icon {
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg>');
-        }
-
-        .promo-icon {
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35L12 4l-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/></svg>');
         }
 
         .games-grid {
@@ -425,10 +393,6 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm-3 5c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"/></svg>');
         }
 
-        .coming-soon-icon {
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>');
-        }
-
         .game-title {
             font-size: 16px;
             font-weight: 700;
@@ -442,7 +406,6 @@
             line-height: 1.4;
         }
 
-        /* ОБНОВЛЕННЫЙ СТИЛЬ ДЛЯ АКЦИЙ И БОНУСОВ */
         .promo-items {
             display: flex;
             flex-direction: column;
@@ -503,34 +466,6 @@
             margin-bottom: 12px;
         }
 
-        .promo-details {
-            background: rgba(42, 171, 238, 0.05);
-            border-radius: 12px;
-            padding: 12px;
-            border-left: 3px solid #2aabee;
-        }
-
-        .promo-detail-item {
-            font-size: 13px;
-            color: #444;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .promo-detail-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .promo-detail-icon {
-            width: 14px;
-            height: 14px;
-            background: #2aabee;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>') no-repeat center;
-            mask-size: contain;
-        }
-
         .bonus-badge {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
@@ -557,7 +492,6 @@
             margin: 8px 0;
         }
 
-        /* СТРАНИЦА ВЫБОРА ИГР */
         .games-menu-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -651,26 +585,6 @@
             mask-size: 24px;
         }
 
-        .blackjack-list-icon::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: white;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>') no-repeat center;
-            mask-size: 24px;
-        }
-
-        .slots-list-icon::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: white;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 5H2v14h5V5zm15 0H10v14h12V5zM17 7h4v10h-4V7zM3 7h4v10H3V7z"/></svg>') no-repeat center;
-            mask-size: 24px;
-        }
-
         .game-list-info {
             flex: 1;
         }
@@ -695,7 +609,6 @@
             mask-size: contain;
         }
 
-        /* СТРАНИЦА ИГРЫ DICE */
         .dice-game-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -716,7 +629,6 @@
             color: #1a1a1a;
         }
 
-        /* СТРАНИЦА ИГРЫ MINES */
         .mines-game-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -818,7 +730,6 @@
             font-weight: bold;
         }
 
-        /* ИГРОВОЕ ПОЛЕ MINES */
         .mines-board {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -835,13 +746,15 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 24px;
             cursor: pointer;
             transition: all 0.3s;
             border: 3px solid transparent;
             box-shadow: 0 4px 8px rgba(42, 171, 238, 0.2);
             position: relative;
             overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .mine-cell:hover:not(.revealed):not(.is-mine) {
@@ -861,31 +774,11 @@
             background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
         }
 
-        .mine-cell.is-mine::before {
-            content: '💣';
-            font-size: 20px;
-        }
-
         .mine-cell.is-gem {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
         }
 
-        .mine-cell.is-gem::before {
-            content: '💎';
-            font-size: 20px;
-        }
-
-        .cell-content {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* УПРАВЛЕНИЕ MINES */
-        .mines-controls {
+        .mine-controls {
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -966,6 +859,7 @@
             background: #e6f4ff;
             border-radius: 4px;
             margin-bottom: 16px;
+            cursor: pointer;
         }
 
         .slider-track {
@@ -986,6 +880,7 @@
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(42, 171, 238, 0.3);
+            z-index: 2;
         }
 
         .mines-options {
@@ -1094,7 +989,6 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-6-7h3v-2h-3V8l-4 4 4 4v-3z"/></svg>');
         }
 
-        /* МУЛЬТИПЛИКАТОРЫ */
         .multipliers {
             margin-top: 24px;
             background: white;
@@ -1149,7 +1043,6 @@
             color: white;
         }
 
-        /* ДИСПЛЕЙ ВЫИГРЫША */
         .win-display {
             background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(69, 160, 73, 0.1) 100%);
             border-radius: 16px;
@@ -1189,144 +1082,36 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .dice-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 28px;
-            perspective: 1000px;
-            position: relative;
+        @keyframes cellReveal {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        .dice {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform-style: preserve-3d;
-            transition: transform 1s ease-out;
-            transform: rotateX(15deg) rotateY(15deg);
+        @keyframes mineExplosion {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .dice-face {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backface-visibility: hidden;
-            box-shadow: 
-                inset 0 0 20px rgba(255, 255, 255, 0.4),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3),
-                0 8px 20px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+        @keyframes gemGlow {
+            0% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); }
         }
 
-        .dots-container {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            display: grid;
-            gap: 12px;
+        .mine-cell.revealed {
+            animation: cellReveal 0.3s ease;
         }
 
-        .dot {
-            width: 18px;
-            height: 18px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 
-                0 3px 6px rgba(0, 0, 0, 0.4),
-                inset 0 2px 4px rgba(255, 255, 255, 0.6),
-                0 0 0 2px rgba(0, 0, 0, 0.1);
-            justify-self: center;
-            align-self: center;
+        .mine-cell.is-mine {
+            animation: mineExplosion 0.5s ease;
         }
 
-        /* Расположение граней */
-        .face-1 { transform: translateZ(60px); }
-        .face-2 { transform: rotateY(90deg) translateZ(60px); }
-        .face-3 { transform: rotateX(90deg) translateZ(60px); }
-        .face-4 { transform: rotateX(-90deg) translateZ(60px); }
-        .face-5 { transform: rotateY(-90deg) translateZ(60px); }
-        .face-6 { transform: rotateY(180deg) translateZ(60px); }
-
-        /* Конфигурации точек */
-        .face-1 .dots-container { grid-template-columns: 1fr; grid-template-rows: 1fr; place-items: center; }
-        .face-2 .dots-container { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-        .face-2 .dot:nth-child(1) { grid-column: 1; grid-row: 1; }
-        .face-2 .dot:nth-child(2) { grid-column: 2; grid-row: 2; }
-        .face-3 .dots-container { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
-        .face-3 .dot:nth-child(1) { grid-column: 1; grid-row: 1; }
-        .face-3 .dot:nth-child(2) { grid-column: 2; grid-row: 2; }
-        .face-3 .dot:nth-child(3) { grid-column: 3; grid-row: 3; }
-        .face-4 .dots-container { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-        .face-4 .dot:nth-child(1) { grid-column: 1; grid-row: 1; }
-        .face-4 .dot:nth-child(2) { grid-column: 2; grid-row: 1; }
-        .face-4 .dot:nth-child(3) { grid-column: 1; grid-row: 2; }
-        .face-4 .dot:nth-child(4) { grid-column: 2; grid-row: 2; }
-        .face-5 .dots-container { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
-        .face-5 .dot:nth-child(1) { grid-column: 1; grid-row: 1; }
-        .face-5 .dot:nth-child(2) { grid-column: 3; grid-row: 1; }
-        .face-5 .dot:nth-child(3) { grid-column: 2; grid-row: 2; }
-        .face-5 .dot:nth-child(4) { grid-column: 1; grid-row: 3; }
-        .face-5 .dot:nth-child(5) { grid-column: 3; grid-row: 3; }
-        .face-6 .dots-container { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
-        .face-6 .dot:nth-child(1) { grid-column: 1; grid-row: 1; }
-        .face-6 .dot:nth-child(2) { grid-column: 2; grid-row: 1; }
-        .face-6 .dot:nth-child(3) { grid-column: 1; grid-row: 2; }
-        .face-6 .dot:nth-child(4) { grid-column: 2; grid-row: 2; }
-        .face-6 .dot:nth-child(5) { grid-column: 1; grid-row: 3; }
-        .face-6 .dot:nth-child(6) { grid-column: 2; grid-row: 3; }
-
-        .play-button {
-            width: 100%;
-            padding: 22px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            font-size: 20px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
+        .mine-cell.is-gem {
+            animation: gemGlow 1s infinite;
         }
 
-        .play-button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(42, 171, 238, 0.4);
-        }
-
-        .play-button:active {
-            transform: translateY(-1px);
-        }
-
-        .play-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .play-icon {
-            width: 24px;
-            height: 24px;
-            background: white;
-            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M8 5v14l11-7z"/></svg>') no-repeat center;
-            mask-size: contain;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-
-        /* Страница статистики */
         .stats-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -1477,7 +1262,6 @@
             color: #666;
         }
 
-        /* Страница вывода */
         .withdraw-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
@@ -1688,7 +1472,6 @@
             color: #4CAF50;
         }
 
-        /* Модальное окно депозита */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1809,20 +1592,6 @@
             margin-right: 8px;
         }
 
-        /* Анимация кости */
-        @keyframes roll {
-            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-            25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
-            50% { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
-            75% { transform: rotateX(540deg) rotateY(270deg) rotateZ(135deg); }
-            100% { transform: var(--final-rotation); }
-        }
-
-        .rolling {
-            animation: roll 1.2s linear forwards;
-        }
-
-        /* Уведомление */
         .notification {
             position: fixed;
             top: 20px;
@@ -1861,7 +1630,6 @@
             border-color: rgba(42, 171, 238, 0.3);
         }
 
-        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1942,43 +1710,10 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* Анимации для игры Mines */
-        @keyframes cellReveal {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes mineExplosion {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes gemGlow {
-            0% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8); }
-            100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); }
-        }
-
-        .mine-cell.revealed {
-            animation: cellReveal 0.3s ease;
-        }
-
-        .mine-cell.is-mine {
-            animation: mineExplosion 0.5s ease;
-        }
-
-        .mine-cell.is-gem {
-            animation: gemGlow 1s infinite;
-        }
     </style>
 </head>
 <body>
-    <!-- Главное меню -->
     <div class="container">
-        <!-- ОБНОВЛЕННАЯ ВЕРХНЯЯ ПАНЕЛЬ С ПРОФИЛЕМ -->
         <div class="top-panel">
             <div class="user-info" id="openProfile">
                 <div class="user-avatar" id="userAvatar"></div>
@@ -2049,16 +1784,6 @@
                             Последние 100 игр, статистика по дням и ставкам
                         </div>
                     </div>
-                    
-                    <div class="profile-section">
-                        <div class="section-header">
-                            <div class="section-icon settings-icon"></div>
-                            <div class="section-title">Настройки</div>
-                        </div>
-                        <div class="section-description">
-                            Настройки профиля, уведомления и безопасность
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -2069,7 +1794,7 @@
                     <p class="subtitle">Игровой портал на блокчейне TON</p>
                     
                     <div class="menu-section">
-                        <div class="section-title">
+                        <div class="section-title" style="display: flex; align-items: center; gap: 10px;">
                             <div class="section-icon games-icon"></div>
                             <span>Игры</span>
                         </div>
@@ -2083,70 +1808,6 @@
                                 <div class="game-icon mines-icon"></div>
                                 <div class="game-title">Mines</div>
                                 <div class="game-description">Найди все алмазы и избегай мин!</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-section">
-                        <div class="section-title">
-                            <div class="section-icon promo-icon"></div>
-                            <span>Акции и бонусы</span>
-                        </div>
-                        <div class="promo-items">
-                            <div class="promo-card">
-                                <div class="promo-icon-small welcome-bonus-icon"></div>
-                                <div class="promo-content">
-                                    <div class="promo-title">
-                                        Приветственный бонус 
-                                        <span class="bonus-badge">+10 TON</span>
-                                    </div>
-                                    <div class="promo-description">
-                                        Получите бонус при первом депозите от 50 TON
-                                    </div>
-                                    <div class="promo-details">
-                                        <div class="promo-detail-item">
-                                            <div class="promo-detail-icon"></div>
-                                            Бонус начисляется автоматически
-                                        </div>
-                                        <div class="promo-detail-item">
-                                            <div class="promo-detail-icon"></div>
-                                            Минимальный депозит: 50 TON
-                                        </div>
-                                        <div class="promo-detail-item">
-                                            <div class="promo-detail-icon"></div>
-                                            Для новых игроков
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="promo-separator"></div>
-                            
-                            <div class="promo-card">
-                                <div class="promo-icon-small daily-bonus-icon"></div>
-                                <div class="promo-content">
-                                    <div class="promo-title">
-                                        Ежедневный бонус 
-                                        <span class="daily-bonus-badge">+0.1 TON/день</span>
-                                    </div>
-                                    <div class="promo-description">
-                                        Заходите каждый день за наградой
-                                    </div>
-                                    <div class="promo-details">
-                                        <div class="promo-detail-item">
-                                            <div class="promo-detail-icon"></div>
-                                            Награда доступна каждый день
-                                        </div>
-                                        <div class="promo-detail-item">
-                                            <div class="promo-detail-icon"></div>
-                                            Получайте 0.1 TON за ежедневный вход
-                                        </div>
-                                        <div class="promo-detail-item">
-                                            <div class="promo-detail-icon"></div>
-                                            Бонус увеличивается с каждым днем
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -2180,22 +1841,6 @@
                         </div>
                         <div class="arrow-icon"></div>
                     </div>
-                    <div class="game-list-item" style="opacity: 0.6;">
-                        <div class="game-list-icon blackjack-list-icon"></div>
-                        <div class="game-list-info">
-                            <div class="game-list-title">Blackjack</div>
-                            <div class="game-list-description">Скоро будет доступно</div>
-                        </div>
-                        <div class="arrow-icon"></div>
-                    </div>
-                    <div class="game-list-item" style="opacity: 0.6;">
-                        <div class="game-list-icon slots-list-icon"></div>
-                        <div class="game-list-info">
-                            <div class="game-list-title">Slots</div>
-                            <div class="game-list-description">Скоро будет доступно</div>
-                        </div>
-                        <div class="arrow-icon"></div>
-                    </div>
                 </div>
             </div>
 
@@ -2220,18 +1865,6 @@
                         <li>Проигрыш: если выпадает 1, 2 или 3</li>
                         <li>Минимальная ставка: 10 TON</li>
                     </ul>
-                </div>
-
-                <div class="dice-container">
-                    <div class="dice" id="dice">
-                        <!-- Грани кубика -->
-                        <div class="dice-face face-1"><div class="dots-container"><div class="dot"></div></div></div>
-                        <div class="dice-face face-2"><div class="dots-container"><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-3"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-4"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-5"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="dice-face face-6"><div class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                    </div>
                 </div>
 
                 <div class="bet-controls">
@@ -2271,7 +1904,6 @@
                     </div>
                 </div>
 
-                <!-- Дисплей выигрыша -->
                 <div class="win-display" id="winDisplay">
                     <div class="win-title" id="winTitle">Поздравляем!</div>
                     <div class="win-amount" id="winAmount">+0 TON</div>
@@ -2290,7 +1922,7 @@
                         <li>За каждый найденный алмаз множитель увеличивается</li>
                         <li>Если наткнетесь на мину - проигрываете всю ставку</li>
                         <li>Можете забрать выигрыш в любой момент</li>
-                        <li>Максимальный множитель: 10.00x</li>
+                        <li>Максимальный множитель: 15.43x</li>
                     </ul>
                 </div>
 
@@ -2299,7 +1931,7 @@
                     <!-- 25 клеток будут сгенерированы JavaScript -->
                 </div>
 
-                <div class="mines-controls">
+                <div class="mine-controls">
                     <div class="mines-settings">
                         <div class="settings-title">Настройки игры</div>
                         
@@ -2336,9 +1968,7 @@
                 <!-- Мультипликаторы -->
                 <div class="multipliers">
                     <div class="multipliers-title">Множители за алмазы</div>
-                    <div class="multipliers-grid" id="multipliersGrid">
-                        <!-- Мультипликаторы будут сгенерированы JavaScript -->
-                    </div>
+                    <div class="multipliers-grid" id="multipliersGrid"></div>
                 </div>
             </div>
 
@@ -2373,11 +2003,8 @@
 
                 <div class="bets-history">
                     <div class="bets-title">Последние 10 ставок</div>
-                    <div class="bets-list" id="betsList">
-                        <!-- Список ставок будет здесь -->
-                    </div>
+                    <div class="bets-list" id="betsList"></div>
                     <div class="empty-stats" id="emptyStats">
-                        <div class="dice-icon"></div>
                         <p>Статистика пока пуста</p>
                         <p style="font-size: 14px; margin-top: 8px;">Сыграйте несколько игр, чтобы увидеть статистику</p>
                     </div>
@@ -2427,9 +2054,7 @@
 
                 <div class="withdraw-history">
                     <div class="withdraw-history-title">История выводов</div>
-                    <div class="withdraw-history-list" id="withdrawHistoryList">
-                        <!-- История выводов будет здесь -->
-                    </div>
+                    <div class="withdraw-history-list" id="withdrawHistoryList"></div>
                     <div class="empty-stats" id="emptyWithdrawHistory">
                         <p style="text-align: center; color: #666; padding: 20px;">
                             История выводов пока пуста
@@ -2494,7 +2119,7 @@
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
         const ADMIN_CHAT_ID = '8155919358';
         const YOUR_WALLET_ADDRESS = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh';
-        const WITHDRAW_FEE_PERCENT = 5; // 5% комиссия
+        const WITHDRAW_FEE_PERCENT = 5;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let tonConnectUI;
@@ -2606,26 +2231,20 @@
                 tg.expand();
                 tg.enableClosingConfirmation();
                 
-                // Получаем данные пользователя из Telegram
                 const user = tg.initDataUnsafe?.user;
                 if (user) {
                     username = user.username ? '@' + user.username : user.first_name || 'Telegram User';
                     usernameElement.textContent = username;
-                    // Добавляем SVG иконку профиля
                     userAvatar.style.background = '#2aabee';
                     userAvatar.style.position = 'relative';
                     userAvatar.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>\') no-repeat center; mask-size: 24px;"></div>';
                     
                     profileNameElement.textContent = username;
-                    
-                    // Сохраняем в localStorage
                     localStorage.setItem('username', username);
                 }
             }
             
-            // Устанавливаем имя пользователя
             usernameElement.textContent = username;
-            // Устанавливаем SVG иконку профиля
             if (userAvatar.innerHTML === '') {
                 userAvatar.style.position = 'relative';
                 userAvatar.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>\') no-repeat center; mask-size: 24px;"></div>';
@@ -2633,56 +2252,36 @@
             
             profileNameElement.textContent = username;
             
-            // Обновляем баланс
             updateBalanceDisplay();
             updateProfileStats();
             
-            // Инициализируем TON Connect
             initTonConnect();
             
-            // Инициализируем статистику
             updateStats();
             
-            // Инициализируем страницу вывода
             initWithdrawPage();
             
-            // Инициализируем игру Mines
             initMinesGame();
             
-            // Навигация
             setupNavigation();
             
-            // Обработчики навигации по играм
             setupGameNavigation();
             
-            // Обработчики игры Dice
             setupDiceGame();
             
-            // Обработчики игры Mines
             setupMinesGame();
             
-            // Обработчики профиля
             setupProfileNavigation();
             
-            // Устанавливаем начальную страницу
             showPage('main');
         }
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ИГРЫ MINES ====================
         function initMinesGame() {
-            // Создаем игровое поле
             createMinesBoard();
-            
-            // Создаем сетку множителей
             createMultipliersGrid();
-            
-            // Настраиваем слайдер мин
             setupMinesSlider();
-            
-            // Настраиваем кнопки ставок
             setupMinesBetButtons();
-            
-            // Обновляем отображение
             updateMinesDisplay();
         }
         
@@ -2695,10 +2294,6 @@
                 cell.className = 'mine-cell';
                 cell.dataset.index = i;
                 
-                const content = document.createElement('div');
-                content.className = 'cell-content';
-                
-                cell.appendChild(content);
                 minesBoardElement.appendChild(cell);
                 minesBoard.push({
                     element: cell,
@@ -2708,8 +2303,11 @@
                     index: i
                 });
                 
-                // Обработчик клика на клетку
-                cell.addEventListener('click', () => revealMineCell(i));
+                // ФИКС: Обработчик клика на всю клетку
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    revealMineCell(i);
+                });
             }
         }
         
@@ -2747,15 +2345,12 @@
                 const thumbWidth = 24;
                 const availableWidth = width - thumbWidth;
                 
-                // Обновляем трек
                 const percent = ((minesCount - min) / (max - min)) * 100;
                 sliderTrack.style.width = `${percent}%`;
                 
-                // Обновляем позицию ползунка
                 const thumbPosition = ((minesCount - min) / (max - min)) * availableWidth;
                 sliderThumb.style.left = `${thumbPosition}px`;
                 
-                // Обновляем значение
                 minesCountValue.textContent = minesCount;
             };
             
@@ -2803,7 +2398,6 @@
                 isDragging = false;
             });
             
-            // Клик по слайдеру
             minesSlider.addEventListener('click', (e) => {
                 const rect = minesSlider.getBoundingClientRect();
                 const min = 1;
@@ -2843,19 +2437,15 @@
                 return;
             }
             
-            // Снимаем ставку
             balance -= minesBet;
             updateBalanceDisplay();
             updateProfileStats();
             
-            // Сбрасываем игру
             resetMinesGame();
             minesGameActive = true;
             
-            // Генерируем мины и алмазы
             generateMinesAndGems();
             
-            // Обновляем UI
             startMinesGameBtn.disabled = true;
             cashoutButton.disabled = false;
             minesBetButtons.forEach(btn => btn.disabled = true);
@@ -2866,43 +2456,37 @@
         }
         
         function resetMinesGame() {
-            // Сбрасываем состояние клеток
             minesBoard.forEach(cell => {
                 cell.element.className = 'mine-cell';
-                cell.element.children[0].innerHTML = '';
+                cell.element.innerHTML = '';
                 cell.isMine = false;
                 cell.isGem = false;
                 cell.revealed = false;
             });
             
-            // Сбрасываем счетчики
             gemsFound = 0;
             currentMultiplier = 1.0;
             winDisplay.classList.remove('show');
             
             updateMinesDisplay();
+            updateMultipliersGrid();
         }
         
         function generateMinesAndGems() {
-            // Создаем массив всех индексов
             const allIndexes = Array.from({ length: 25 }, (_, i) => i);
             
-            // Выбираем позиции для мин
             const mineIndexes = [];
             for (let i = 0; i < minesCount; i++) {
                 const randomIndex = Math.floor(Math.random() * allIndexes.length);
                 mineIndexes.push(allIndexes.splice(randomIndex, 1)[0]);
             }
             
-            // Выбираем позиции для алмазов (остальные клетки)
             const gemIndexes = allIndexes.slice(0, totalGems);
             
-            // Устанавливаем мины
             mineIndexes.forEach(index => {
                 minesBoard[index].isMine = true;
             });
             
-            // Устанавливаем алмазы
             gemIndexes.forEach(index => {
                 minesBoard[index].isGem = true;
             });
@@ -2917,31 +2501,29 @@
             cell.element.classList.add('revealed');
             
             if (cell.isMine) {
-                // Наткнулись на мину - проигрыш
                 cell.element.classList.add('is-mine');
+                cell.element.innerHTML = '💣';
                 endMinesGame(false);
                 showNotification('💥 Вы наткнулись на мину! Ставка проиграна.', 'lose');
             } else if (cell.isGem) {
-                // Нашли алмаз
                 cell.element.classList.add('is-gem');
+                cell.element.innerHTML = '💎';
                 gemsFound++;
                 
-                // Обновляем множитель
                 currentMultiplier = minesMultipliers[gemsFound];
                 
-                // Обновляем отображение
                 updateMinesDisplay();
                 
-                // Обновляем активный множитель в сетке
                 updateMultipliersGrid();
                 
-                // Проверяем, нашли ли все алмазы
                 if (gemsFound === totalGems) {
                     endMinesGame(true);
                     showNotification('🎉 Вы нашли все алмазы! Максимальный выигрыш!', 'win');
                 } else {
                     showNotification(`💎 Найден алмаз! Множитель: ${currentMultiplier.toFixed(2)}x`, 'info');
                 }
+            } else {
+                cell.element.innerHTML = '✓';
             }
         }
         
@@ -2955,36 +2537,35 @@
         function endMinesGame(win) {
             minesGameActive = false;
             
-            // Показываем все мины
             minesBoard.forEach(cell => {
                 if (cell.isMine && !cell.revealed) {
                     cell.element.classList.add('is-mine');
+                    cell.element.innerHTML = '💣';
+                }
+                if (cell.isGem && !cell.revealed) {
+                    cell.element.classList.add('is-gem');
+                    cell.element.innerHTML = '💎';
                 }
             });
             
             if (win) {
-                // Выигрыш
                 const winAmountValue = minesBet * currentMultiplier;
                 balance += winAmountValue;
                 updateBalanceDisplay();
                 updateProfileStats();
                 
-                // Добавляем в историю
                 addToBetsHistory(minesBet, true, 'mines', winAmountValue, gemsFound, currentMultiplier);
                 
-                // Показываем дисплей выигрыша
                 winAmount.textContent = `+${winAmountValue.toFixed(2)} TON`;
                 winGems.textContent = gemsFound;
                 winMultiplier.textContent = currentMultiplier.toFixed(2) + 'x';
                 winTitle.textContent = 'Поздравляем!';
                 winDisplay.classList.add('show');
             } else {
-                // Проигрыш
                 addToBetsHistory(minesBet, false, 'mines');
                 showNotification('Игра окончена. Попробуйте снова!', 'lose');
             }
             
-            // Обновляем UI
             startMinesGameBtn.disabled = false;
             cashoutButton.disabled = true;
             minesBetButtons.forEach(btn => btn.disabled = false);
@@ -3019,59 +2600,49 @@
         
         // ==================== НАВИГАЦИЯ ПО СТРАНИЦАМ ====================
         function setupProfileNavigation() {
-            // Открыть профиль
             openProfileBtn.addEventListener('click', () => {
                 showPage('profile');
                 updateProfileStats();
             });
             
-            // Вернуться из профиля
             backFromProfileBtn.addEventListener('click', () => {
                 showPage('main');
             });
         }
         
         function setupGameNavigation() {
-            // Открыть меню игр
             openGamesMenuBtn.addEventListener('click', () => {
                 showPage('gamesMenu');
             });
             
-            // Вернуться в главное меню
             backToMainMenuBtn.addEventListener('click', () => {
                 showPage('main');
             });
             
-            // Играть в Dice
             playDiceGameBtn.addEventListener('click', () => {
                 showPage('diceGame');
             });
             
-            // Вернуться в меню игр из игры Dice
             backToGamesMenuBtn.addEventListener('click', () => {
                 showPage('gamesMenu');
             });
             
-            // Играть в Mines из главного меню
             playMinesGameBtn.addEventListener('click', () => {
                 showPage('minesGame');
                 resetMinesGame();
             });
             
-            // Играть в Mines из меню игр
             playMinesGameFromMenuBtn.addEventListener('click', () => {
                 showPage('minesGame');
                 resetMinesGame();
             });
             
-            // Вернуться в меню игр из игры Mines
             backToGamesMenuFromMinesBtn.addEventListener('click', () => {
                 showPage('gamesMenu');
             });
         }
         
         function showPage(pageName) {
-            // Скрыть все страницы
             mainMenu.classList.add('hidden');
             gamesMenuPage.classList.add('hidden');
             diceGamePage.classList.add('hidden');
@@ -3080,10 +2651,8 @@
             withdrawPage.classList.add('hidden');
             profilePage.classList.add('hidden');
             
-            // Обновить активный элемент навигации
             navItems.forEach(nav => nav.classList.remove('active'));
             
-            // Показать нужную страницу
             if (pageName === 'main') {
                 mainMenu.classList.remove('hidden');
                 document.querySelector('.nav-item[data-page="main"]').classList.add('active');
@@ -3093,7 +2662,6 @@
                 diceGamePage.classList.remove('hidden');
             } else if (pageName === 'minesGame') {
                 minesGamePage.classList.remove('hidden');
-                // Обновляем отображение при переходе на страницу
                 updateMinesDisplay();
             } else if (pageName === 'stats') {
                 statsPage.classList.remove('hidden');
@@ -3139,18 +2707,15 @@
             
             const netProfit = totalProfit - totalLoss;
             
-            // Обновляем элементы профиля
             profileBalanceElement.textContent = balance + ' TON';
             profileGamesElement.textContent = totalGames;
             profileWinsElement.textContent = winRate + '%';
             profileProfitElement.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
             
-            // Обновляем адрес кошелька
             if (connectedWalletAddress) {
                 profileWalletAddressElement.textContent = connectedWalletAddress;
             }
             
-            // Обновляем роль пользователя
             if (balance >= 10000) {
                 userRoleElement.textContent = 'VIP Игрок';
                 userRoleElement.style.background = 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)';
@@ -3165,7 +2730,6 @@
         
         // ==================== ИГРА DICE ====================
         function setupDiceGame() {
-            // Обработчики ставок
             betButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     if (isRolling) return;
@@ -3175,7 +2739,6 @@
                 });
             });
             
-            // Обработчик игры
             playButton.addEventListener('click', () => {
                 if (isRolling) return;
                 if (balance < currentBet) {
@@ -3330,10 +2893,8 @@
                     sendDeposit.disabled = false;
                     sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
                     
-                    // Обновляем имя пользователя
                     const walletUsername = shortenAddress(address);
                     usernameElement.textContent = walletUsername;
-                    // Меняем иконку на кошелёк при подключении
                     userAvatar.innerHTML = '<div style="position: absolute; width: 100%; height: 100%; background: white; mask: url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>\') no-repeat center; mask-size: 24px;"></div>';
                     
                     profileNameElement.textContent = walletUsername;
