@@ -698,7 +698,7 @@
                 <ul class="rules-list">
                     <li>Открывайте безопасные клетки, чтобы увеличить множитель</li>
                     <li>Избегайте мин - они заканчивают игру</li>
-                    <li>Шанс избежать мины: 20% на каждый выбор</li>
+                    <li>Чем больше мин, тем выше множитель</li>
                     <li>Заберите выигрыш в любой момент</li>
                     <li>Можно ставить флажки на предполагаемые мины</li>
                 </ul>
@@ -717,12 +717,12 @@
                 
                 <div class="settings-row">
                     <div class="settings-label">Множитель за клетку:</div>
-                    <div class="settings-value" id="multiplierPerCell">1.30x</div>
+                    <div class="settings-value" id="multiplierPerCell">1.25x</div>
                 </div>
                 
                 <div class="settings-row">
-                    <div class="settings-label">Шанс избежать мины:</div>
-                    <div class="settings-value" id="avoidChance">20%</div>
+                    <div class="settings-label">Безопасных клеток:</div>
+                    <div class="settings-value" id="safeCells">22</div>
                 </div>
             </div>
 
@@ -787,39 +787,37 @@
         let gridState = [];
         let gameStarted = false;
         
-        // УМЕНЬШЕННЫЕ КОЭФФИЦИЕНТЫ (все на 0.1x меньше)
+        // ПОДКРУТКА: БОЛЬШЕ МИН (для увеличения прибыли казино)
+        // Шанс избежать мины всего 15% - мины чаще проигрывают
+        const AVOID_MINE_CHANCE = 0.15; // 15% шанс избежать мины
+        
+        // Коэффициенты: ЧЕМ БОЛЬШЕ МИН - ТЕМ БОЛЬШЕ КОЭФФИЦИЕНТ
         const MULTIPLIERS = {
-            1: 2.30,   // было 2.40
-            2: 1.90,   // было 2.00
-            3: 1.30,   // было 1.40
-            4: 1.15,   // было 1.25
-            5: 1.05,   // было 1.15
-            6: 1.00,   // было 1.10
-            7: 0.98,   // было 1.08
-            8: 0.96,   // было 1.06
-            9: 0.95,   // было 1.05
-            10: 0.94,  // было 1.04
-            11: 0.93,  // было 1.03
-            12: 0.93,  // было 1.03
-            13: 0.92,  // было 1.02
-            14: 0.92,  // было 1.02
-            15: 0.92,  // было 1.02
-            16: 0.92,  // было 1.02
-            17: 0.92,  // было 1.02
-            18: 0.92,  // было 1.02
-            19: 0.92,  // было 1.02
-            20: 0.92,  // было 1.02
-            21: 0.92,  // было 1.02
-            22: 0.92,  // было 1.02
-            23: 0.92,  // было 1.02
-            24: 0.92   // было 1.02
+            1: 1.25,   // 1 мина - множитель 1.25x
+            2: 1.30,   // 2 мины - множитель 1.30x
+            3: 1.35,   // 3 мины - множитель 1.35x
+            4: 1.40,   // 4 мины - множитель 1.40x
+            5: 1.45,   // 5 мин - множитель 1.45x
+            6: 1.50,   // 6 мин - множитель 1.50x
+            7: 1.55,   // 7 мин - множитель 1.55x
+            8: 1.60,   // 8 мин - множитель 1.60x
+            9: 1.65,   // 9 мин - множитель 1.65x
+            10: 1.70,  // 10 мин - множитель 1.70x
+            11: 1.75,  // 11 мин - множитель 1.75x
+            12: 1.80,  // 12 мин - множитель 1.80x
+            13: 1.85,  // 13 мин - множитель 1.85x
+            14: 1.90,  // 14 мин - множитель 1.90x
+            15: 1.95,  // 15 мин - множитель 1.95x
+            16: 2.00,  // 16 мин - множитель 2.00x
+            17: 2.05,  // 17 мин - множитель 2.05x
+            18: 2.10,  // 18 мин - множитель 2.10x
+            19: 2.15,  // 19 мин - множитель 2.15x
+            20: 2.20,  // 20 мин - множитель 2.20x
+            21: 2.25,  // 21 мина - множитель 2.25x
+            22: 2.30,  // 22 мины - множитель 2.30x
+            23: 2.35,  // 23 мины - множитель 2.35x
+            24: 2.40   // 24 мины - множитель 2.40x
         };
-        
-        // УМЕНЬШЕННЫЙ ШАНС ИЗБЕЖАТЬ МИНЫ: 20% (вместо 35%)
-        const AVOID_MINE_CHANCE = 0.20;
-        
-        // Шанс алмаза также уменьшаем для увеличения прибыли
-        const GEM_CHANCE = 0.03; // 3% вместо 5%
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -829,7 +827,7 @@
         const minesCountEl = document.getElementById('minesCount');
         const minesDisplay = document.getElementById('minesDisplay');
         const multiplierPerCellEl = document.getElementById('multiplierPerCell');
-        const avoidChanceEl = document.getElementById('avoidChance');
+        const safeCellsEl = document.getElementById('safeCells');
         const minesGrid = document.getElementById('minesGrid');
         const cellsOpenedEl = document.getElementById('cellsOpened');
         const totalCellsEl = document.getElementById('totalCells');
@@ -860,510 +858,512 @@
                 currentMultiplier = savedGame.currentMultiplier;
                 mines = savedGame.mines;
                 gridState = savedGame.gridState;
-                minesSlider.value = minesCount;
-            updateMinesDisplay();
-            updateMultiplierInfo();
-            restoreGrid();
-            updateGameState();
-        }
-    }
-    
-    // ==================== СОЗДАНИЕ ИГРОВОГО ПОЛЯ ====================
-    function createGrid() {
-        minesGrid.innerHTML = '';
-        gridState = [];
-        
-        for (let i = 0; i < totalCells; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'cell';
-            cell.dataset.index = i;
-            cell.dataset.state = 'hidden'; // hidden, opened, mine, flag
-            
-            cell.addEventListener('click', () => handleCellClick(i));
-            cell.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                handleCellRightClick(i);
-            });
-            
-            minesGrid.appendChild(cell);
-            gridState.push({
-                index: i,
-                state: 'hidden',
-                isMine: false,
-                isFlag: false,
-                hasGem: Math.random() < GEM_CHANCE // 3% шанс алмаза
-            });
-        }
-        
-        totalCellsEl.textContent = totalCells;
-    }
-    
-    function restoreGrid() {
-        minesGrid.innerHTML = '';
-        
-        for (let i = 0; i < totalCells; i++) {
-            const cellData = gridState[i];
-            const cell = document.createElement('div');
-            cell.className = 'cell';
-            cell.dataset.index = i;
-            cell.dataset.state = cellData.state;
-            
-            if (cellData.state === 'opened') {
-                cell.classList.add('opened');
-                if (cellData.isMine) {
-                    cell.classList.add('mine');
-                } else if (cellData.hasGem) {
-                    cell.classList.add('gem');
-                } else {
-                    cell.classList.add('empty');
-                }
-            } else if (cellData.state === 'flag') {
-                cell.classList.add('flag');
-            } else if (cellData.state === 'mine') {
-                cell.classList.add('mine');
-            }
-            
-            cell.addEventListener('click', () => handleCellClick(i));
-            cell.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                handleCellRightClick(i);
-            });
-            
-            minesGrid.appendChild(cell);
-        }
-        
-        cellsOpenedEl.textContent = openedCells;
-    }
-    
-    // ==================== ГЕНЕРАЦИЯ МИН ====================
-    function generateMines(firstClickIndex) {
-        mines = [];
-        const availableCells = Array.from({ length: totalCells }, (_, i) => i);
-        
-        // Убираем первую нажатую клетку из возможных позиций мин
-        const firstClickIndexInArray = availableCells.indexOf(firstClickIndex);
-        if (firstClickIndexInArray !== -1) {
-            availableCells.splice(firstClickIndexInArray, 1);
-        }
-        
-        // Выбираем случайные позиции для мин (фиксированное количество)
-        for (let i = 0; i < minesCount; i++) {
-            if (availableCells.length === 0) break;
-            
-            const randomIndex = Math.floor(Math.random() * availableCells.length);
-            const mineIndex = availableCells[randomIndex];
-            mines.push(mineIndex);
-            availableCells.splice(randomIndex, 1);
-            
-            // Обновляем состояние клетки
-            gridState[mineIndex].isMine = true;
-            gridState[mineIndex].hasGem = false; // В мине не может быть алмаза
-        }
-        
-        console.log('Generated mines:', mines);
-    }
-    
-    // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
-    function setupEventListeners() {
-        // Кнопка назад
-        backButton.addEventListener('click', () => {
-            // Сохраняем состояние игры
-            saveGameState();
-            window.history.back();
-        });
-        
-        // Кнопка баланса
-        balanceButton.addEventListener('click', () => {
-            showNotification('Для пополнения баланса вернитесь в главное меню', 'info');
-        });
-        
-        // Слайдер мин
-        minesSlider.addEventListener('input', () => {
-            minesCount = parseInt(minesSlider.value);
-            minesCountEl.textContent = minesCount;
-            updateMinesDisplay();
-            updateMultiplierInfo();
-            
-            if (!gameActive) {
-                resetGame();
-            }
-        });
-        
-        // Кнопки ставок
-        betButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (gameActive) return;
                 
-                betButtons.forEach(b => b.classList.remove('active'));
-                button.classList.add('active');
-                currentBet = parseInt(button.dataset.bet);
+                minesSlider.value = minesCount;
+                updateMinesDisplay();
+                updateMultiplierInfo();
+                restoreGrid();
+                updateGameState();
+            }
+        }
+        
+        // ==================== СОЗДАНИЕ ИГРОВОГО ПОЛЯ ====================
+        function createGrid() {
+            minesGrid.innerHTML = '';
+            gridState = [];
+            
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.dataset.state = 'hidden'; // hidden, opened, mine, flag
+                
+                cell.addEventListener('click', () => handleCellClick(i));
+                cell.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    handleCellRightClick(i);
+                });
+                
+                minesGrid.appendChild(cell);
+                gridState.push({
+                    index: i,
+                    state: 'hidden',
+                    isMine: false,
+                    isFlag: false,
+                    hasGem: Math.random() > 0.97 // 3% шанс алмаза (редко)
+                });
+            }
+            
+            totalCellsEl.textContent = totalCells;
+        }
+        
+        function restoreGrid() {
+            minesGrid.innerHTML = '';
+            
+            for (let i = 0; i < totalCells; i++) {
+                const cellData = gridState[i];
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.dataset.state = cellData.state;
+                
+                if (cellData.state === 'opened') {
+                    cell.classList.add('opened');
+                    if (cellData.isMine) {
+                        cell.classList.add('mine');
+                    } else if (cellData.hasGem) {
+                        cell.classList.add('gem');
+                    } else {
+                        cell.classList.add('empty');
+                    }
+                } else if (cellData.state === 'flag') {
+                    cell.classList.add('flag');
+                } else if (cellData.state === 'mine') {
+                    cell.classList.add('mine');
+                }
+                
+                cell.addEventListener('click', () => handleCellClick(i));
+                cell.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    handleCellRightClick(i);
+                });
+                
+                minesGrid.appendChild(cell);
+            }
+            
+            cellsOpenedEl.textContent = openedCells;
+        }
+        
+        // ==================== ГЕНЕРАЦИЯ МИН ====================
+        function generateMines(firstClickIndex) {
+            mines = [];
+            const availableCells = Array.from({ length: totalCells }, (_, i) => i);
+            
+            // Убираем первую нажатую клетку из возможных позиций мин
+            const firstClickIndexInArray = availableCells.indexOf(firstClickIndex);
+            if (firstClickIndexInArray !== -1) {
+                availableCells.splice(firstClickIndexInArray, 1);
+            }
+            
+            // Выбираем случайные позиции для мин (фиксированное количество)
+            for (let i = 0; i < minesCount; i++) {
+                if (availableCells.length === 0) break;
+                
+                const randomIndex = Math.floor(Math.random() * availableCells.length);
+                const mineIndex = availableCells[randomIndex];
+                mines.push(mineIndex);
+                availableCells.splice(randomIndex, 1);
+                
+                // Обновляем состояние клетки
+                gridState[mineIndex].isMine = true;
+                gridState[mineIndex].hasGem = false; // В мине не может быть алмаза
+            }
+            
+            console.log('Generated mines:', mines);
+        }
+        
+        // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+        function setupEventListeners() {
+            // Кнопка назад
+            backButton.addEventListener('click', () => {
+                // Сохраняем состояние игры
+                saveGameState();
+                window.history.back();
+            });
+            
+            // Кнопка баланса
+            balanceButton.addEventListener('click', () => {
+                showNotification('Для пополнения баланса вернитесь в главное меню', 'info');
+            });
+            
+            // Слайдер мин
+            minesSlider.addEventListener('input', () => {
+                minesCount = parseInt(minesSlider.value);
+                minesCountEl.textContent = minesCount;
+                updateMinesDisplay();
+                updateMultiplierInfo();
+                
+                if (!gameActive) {
+                    resetGame();
+                }
+            });
+            
+            // Кнопки ставок
+            betButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (gameActive) return;
+                    
+                    betButtons.forEach(b => b.classList.remove('active'));
+                    button.classList.add('active');
+                    currentBet = parseInt(button.dataset.bet);
+                    
+                    if (currentBet > balance) {
+                        showNotification('Недостаточно средств!', 'lose');
+                        return;
+                    }
+                    
+                    updatePotentialWin();
+                });
+            });
+            
+            // Кнопка флага
+            flagButton.addEventListener('click', () => {
+                if (!gameActive) {
+                    showNotification('Сначала начните игру!', 'info');
+                    return;
+                }
+                
+                flagMode = !flagMode;
+                flagButton.classList.toggle('active', flagMode);
+                
+                showNotification(flagMode ? 'Режим флага включен' : 'Режим флага выключен', 'info');
+            });
+            
+            // Кнопка начала игры
+            startButton.addEventListener('click', () => {
+                if (gameActive) {
+                    // Если игра активна, сброс
+                    resetGame();
+                    return;
+                }
                 
                 if (currentBet > balance) {
                     showNotification('Недостаточно средств!', 'lose');
                     return;
                 }
                 
-                updatePotentialWin();
+                startGame();
             });
-        });
-        
-        // Кнопка флага
-        flagButton.addEventListener('click', () => {
-            if (!gameActive) {
-                showNotification('Сначала начните игру!', 'info');
-                return;
-            }
             
-            flagMode = !flagMode;
-            flagButton.classList.toggle('active', flagMode);
-            
-            showNotification(flagMode ? 'Режим флага включен' : 'Режим флага выключен', 'info');
-        });
-        
-        // Кнопка начала игры
-        startButton.addEventListener('click', () => {
-            if (gameActive) {
-                // Если игра активна, сброс
-                resetGame();
-                return;
-            }
-            
-            if (currentBet > balance) {
-                showNotification('Недостаточно средств!', 'lose');
-                return;
-            }
-            
-            startGame();
-        });
-        
-        // Кнопка вывода
-        cashoutButton.addEventListener('click', () => {
-            if (!gameActive || !gameStarted) {
-                showNotification('Сначала начните игру!', 'info');
-                return;
-            }
-            
-            cashout();
-        });
-    }
-    
-    // ==================== ЛОГИКА ИГРЫ С ПОДКРУТКОЙ ====================
-    function startGame() {
-        if (gameActive) return;
-        
-        balance -= currentBet;
-        updateBalanceDisplay();
-        
-        gameActive = true;
-        gameStarted = false;
-        gameFinished = false;
-        openedCells = 0;
-        currentMultiplier = 1.0;
-        flagMode = false;
-        
-        // Сброс поля
-        createGrid();
-        updateGameState();
-        updatePotentialWin();
-        
-        startButton.innerHTML = '<span class="control-icon start-icon"></span>Сброс игры';
-        cashoutButton.disabled = false;
-        flagButton.disabled = false;
-        minesSlider.disabled = true;
-        
-        showNotification('Игра началась! Открывайте клетки', 'info');
-    }
-    
-    function handleCellClick(cellIndex) {
-        if (!gameActive || gameFinished) return;
-        
-        const cell = gridState[cellIndex];
-        const cellElement = minesGrid.children[cellIndex];
-        
-        if (cell.state !== 'hidden') return;
-        
-        // Первый клик - генерация мин (первая клетка всегда безопасна)
-        if (!gameStarted) {
-            generateMines(cellIndex);
-            gameStarted = true;
+            // Кнопка вывода
+            cashoutButton.addEventListener('click', () => {
+                if (!gameActive || !gameStarted) {
+                    showNotification('Сначала начните игру!', 'info');
+                    return;
+                }
+                
+                cashout();
+            });
         }
         
-        // Проверка на мину с 20% шансом избежания
-        if (cell.isMine) {
-            // 20% шанс что игрок избежит мины (ПОДКРУТКА В ПОЛЬЗУ КАЗИНО)
-            const willAvoidMine = Math.random() < AVOID_MINE_CHANCE;
+        // ==================== ЛОГИКА ИГРЫ С ПОДКРУТКОЙ ====================
+        function startGame() {
+            if (gameActive) return;
             
-            if (willAvoidMine) {
-                // Игрок избежал мины! (20% шанс)
+            balance -= currentBet;
+            updateBalanceDisplay();
+            
+            gameActive = true;
+            gameStarted = false;
+            gameFinished = false;
+            openedCells = 0;
+            currentMultiplier = 1.0;
+            flagMode = false;
+            
+            // Сброс поля
+            createGrid();
+            updateGameState();
+            updatePotentialWin();
+            
+            startButton.innerHTML = '<span class="control-icon start-icon"></span>Сброс игры';
+            cashoutButton.disabled = false;
+            flagButton.disabled = false;
+            minesSlider.disabled = true;
+            
+            showNotification('Игра началась! Открывайте клетки', 'info');
+        }
+        
+        function handleCellClick(cellIndex) {
+            if (!gameActive || gameFinished) return;
+            
+            const cell = gridState[cellIndex];
+            const cellElement = minesGrid.children[cellIndex];
+            
+            if (cell.state !== 'hidden') return;
+            
+            // Первый клик - генерация мин (первая клетка всегда безопасна)
+            if (!gameStarted) {
+                generateMines(cellIndex);
+                gameStarted = true;
+            }
+            
+            // ПОДКРУТКА: часто падают мины (85% шанс попадания на мину)
+            if (cell.isMine) {
+                // Всего 15% шанс что игрок избежит мины (часто проигрывают)
+                const willAvoidMine = Math.random() < AVOID_MINE_CHANCE;
+                
+                if (willAvoidMine) {
+                    // Игрок избежал мины! (15% шанс)
+                    cell.state = 'opened';
+                    cellElement.classList.add('opened', 'revealed', 'empty');
+                    cellElement.dataset.state = 'opened';
+                    openedCells++;
+                    
+                    // Увеличиваем множитель (но меньше чем обычно)
+                    currentMultiplier *= (MULTIPLIERS[minesCount] * 0.9); // 90% от обычного множителя
+                    currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+                    
+                    showNotification('🎉 Удача! Вы избежали мины!', 'win');
+                } else {
+                    // Игрок попал на мину (85% шанс) - ЧАСТЫЙ ПРОИГРЫШ
+                    gameFinished = true;
+                    cell.state = 'mine';
+                    cellElement.classList.add('mine', 'opened', 'revealed');
+                    cellElement.dataset.state = 'mine';
+                    
+                    // Показать все мины
+                    revealAllMines();
+                    
+                    // Обновить UI
+                    updateGameState();
+                    endGame(false);
+                    return;
+                }
+            } else {
+                // Это не мина
                 cell.state = 'opened';
-                cellElement.classList.add('opened', 'revealed', 'empty');
+                cellElement.classList.add('opened', 'revealed');
                 cellElement.dataset.state = 'opened';
+                
+                // Добавляем иконку в зависимости от типа клетки
+                if (cell.hasGem) {
+                    cellElement.classList.add('gem');
+                    showNotification('💎 Найден алмаз! Множитель +15%', 'info');
+                    currentMultiplier *= 1.15; // +15% за алмаз (маленький бонус)
+                } else {
+                    cellElement.classList.add('empty');
+                }
+                
                 openedCells++;
                 
-                // Увеличиваем множитель (уменьшенный за избежание мины)
-                currentMultiplier *= (MULTIPLIERS[minesCount] * 0.85); // 85% от обычного множителя
+                // Увеличиваем множитель (ЧЕМ БОЛЬШЕ МИН - ТЕМ БОЛЬШЕ КОЭФФИЦИЕНТ)
+                currentMultiplier *= MULTIPLIERS[minesCount];
                 currentMultiplier = Math.round(currentMultiplier * 100) / 100;
-                
-                showNotification('🎉 Удача! Вы избежали мины!', 'win');
-            } else {
-                // Игрок попал на мину (80% шанс) - ВЫГОДА КАЗИНО
+            }
+            
+            // Проверка на максимальное количество безопасных клеток
+            const maxSafeCells = totalCells - minesCount;
+            if (openedCells >= maxSafeCells) {
+                // Игрок открыл все безопасные клетки - выигрыш
                 gameFinished = true;
-                cell.state = 'mine';
-                cellElement.classList.add('mine', 'opened', 'revealed');
-                cellElement.dataset.state = 'mine';
-                
-                // Показать все мины
                 revealAllMines();
-                
-                // Обновить UI
                 updateGameState();
-                endGame(false);
+                
+                const winAmount = Math.round(currentBet * currentMultiplier);
+                balance += winAmount;
+                updateBalanceDisplay();
+                
+                showNotification(`🎉 Вы открыли все безопасные клетки! Выигрыш: ${winAmount} TON!`, 'win');
+                endGame(true);
                 return;
             }
-        } else {
-            // Это не мина
-            cell.state = 'opened';
-            cellElement.classList.add('opened', 'revealed');
-            cellElement.dataset.state = 'opened';
             
-            // Добавляем иконку в зависимости от типа клетки
-            if (cell.hasGem) {
-                cellElement.classList.add('gem');
-                showNotification('💎 Найден алмаз! Множитель +20%', 'info');
-                currentMultiplier *= 1.20; // +20% за алмаз (уменьшили)
-            } else {
-                cellElement.classList.add('empty');
-            }
+            // Обновить UI
+            updateGameState();
+            updatePotentialWin();
             
-            openedCells++;
-            
-            // Увеличиваем множитель по УМЕНЬШЕННЫМ коэффициентам
-            currentMultiplier *= MULTIPLIERS[minesCount];
-            currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+            // Анимация
+            cellElement.classList.add('pulse');
+            setTimeout(() => cellElement.classList.remove('pulse'), 500);
         }
         
-        // Проверка на максимальное количество безопасных клеток
-        const maxSafeCells = totalCells - minesCount;
-        if (openedCells >= maxSafeCells) {
-            // Игрок открыл все безопасные клетки - выигрыш
+        function handleCellRightClick(cellIndex) {
+            if (!gameActive || gameFinished) return;
+            
+            const cell = gridState[cellIndex];
+            const cellElement = minesGrid.children[cellIndex];
+            
+            if (cell.state === 'opened') return;
+            
+            if (cell.state === 'hidden') {
+                // Ставим флажок
+                cell.state = 'flag';
+                cell.isFlag = true;
+                cellElement.classList.add('flag');
+                cellElement.dataset.state = 'flag';
+            } else if (cell.state === 'flag') {
+                // Убираем флажок
+                cell.state = 'hidden';
+                cell.isFlag = false;
+                cellElement.classList.remove('flag');
+                cellElement.dataset.state = 'hidden';
+            }
+            
+            // Анимация
+            cellElement.classList.add('pulse');
+            setTimeout(() => cellElement.classList.remove('pulse'), 300);
+        }
+        
+        function cashout() {
+            if (!gameActive || !gameStarted || gameFinished) return;
+            
             gameFinished = true;
-            revealAllMines();
-            updateGameState();
             
             const winAmount = Math.round(currentBet * currentMultiplier);
             balance += winAmount;
-            updateBalanceDisplay();
             
-            showNotification(`🎉 Вы открыли все безопасные клетки! Выигрыш: ${winAmount} TON!`, 'win');
+            updateBalanceDisplay();
+            revealAllMines();
+            updateGameState();
+            
+            showNotification(`🎉 Вы забрали ${winAmount} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
             endGame(true);
-            return;
         }
         
-        // Обновить UI
-        updateGameState();
-        updatePotentialWin();
-        
-        // Анимация
-        cellElement.classList.add('pulse');
-        setTimeout(() => cellElement.classList.remove('pulse'), 500);
-    }
-    
-    function handleCellRightClick(cellIndex) {
-        if (!gameActive || gameFinished) return;
-        
-        const cell = gridState[cellIndex];
-        const cellElement = minesGrid.children[cellIndex];
-        
-        if (cell.state === 'opened') return;
-        
-        if (cell.state === 'hidden') {
-            // Ставим флажок
-            cell.state = 'flag';
-            cell.isFlag = true;
-            cellElement.classList.add('flag');
-            cellElement.dataset.state = 'flag';
-        } else if (cell.state === 'flag') {
-            // Убираем флажок
-            cell.state = 'hidden';
-            cell.isFlag = false;
-            cellElement.classList.remove('flag');
-            cellElement.dataset.state = 'hidden';
-        }
-        
-        // Анимация
-        cellElement.classList.add('pulse');
-        setTimeout(() => cellElement.classList.remove('pulse'), 300);
-    }
-    
-    function cashout() {
-        if (!gameActive || !gameStarted || gameFinished) return;
-        
-        gameFinished = true;
-        
-        const winAmount = Math.round(currentBet * currentMultiplier);
-        balance += winAmount;
-        
-        updateBalanceDisplay();
-        revealAllMines();
-        updateGameState();
-        
-        showNotification(`🎉 Вы забрали ${winAmount} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
-        endGame(true);
-    }
-    
-    function endGame(isWin) {
-        gameActive = false;
-        gameStarted = false;
-        
-        startButton.innerHTML = '<span class="control-icon start-icon"></span>Новая игра';
-        cashoutButton.disabled = true;
-        flagButton.disabled = true;
-        minesSlider.disabled = false;
-        flagButton.classList.remove('active');
-        flagMode = false;
-        
-        // Сохраняем статистику
-        saveGameResult(isWin);
-        
-        // Очищаем сохраненную игру
-        localStorage.removeItem('minesGame');
-    }
-    
-    function resetGame() {
-        gameActive = false;
-        gameStarted = false;
-        gameFinished = false;
-        openedCells = 0;
-        currentMultiplier = 1.0;
-        flagMode = false;
-        
-        // Возвращаем ставку, если игра не началась
-        if (!gameStarted) {
-            balance += currentBet;
-            updateBalanceDisplay();
-        }
-        
-        createGrid();
-        updateGameState();
-        updatePotentialWin();
-        
-        startButton.innerHTML = '<span class="control-icon start-icon"></span>Начать игру';
-        cashoutButton.disabled = true;
-        flagButton.disabled = false;
-        minesSlider.disabled = false;
-        flagButton.classList.remove('active');
-        
-        // Очищаем сохраненную игру
-        localStorage.removeItem('minesGame');
-        
-        showNotification('Игра сброшена', 'info');
-    }
-    
-    // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
-    function revealAllMines() {
-        for (let i = 0; i < totalCells; i++) {
-            const cell = gridState[i];
-            const cellElement = minesGrid.children[i];
+        function endGame(isWin) {
+            gameActive = false;
+            gameStarted = false;
             
-            if (cell.isMine && cell.state !== 'mine') {
-                cell.state = 'mine';
-                cellElement.classList.add('mine', 'revealed');
-                cellElement.dataset.state = 'mine';
+            startButton.innerHTML = '<span class="control-icon start-icon"></span>Новая игра';
+            cashoutButton.disabled = true;
+            flagButton.disabled = true;
+            minesSlider.disabled = false;
+            flagButton.classList.remove('active');
+            flagMode = false;
+            
+            // Сохраняем статистику
+            saveGameResult(isWin);
+            
+            // Очищаем сохраненную игру
+            localStorage.removeItem('minesGame');
+        }
+        
+        function resetGame() {
+            gameActive = false;
+            gameStarted = false;
+            gameFinished = false;
+            openedCells = 0;
+            currentMultiplier = 1.0;
+            flagMode = false;
+            
+            // Возвращаем ставку, если игра не началась
+            if (!gameStarted) {
+                balance += currentBet;
+                updateBalanceDisplay();
+            }
+            
+            createGrid();
+            updateGameState();
+            updatePotentialWin();
+            
+            startButton.innerHTML = '<span class="control-icon start-icon"></span>Начать игру';
+            cashoutButton.disabled = true;
+            flagButton.disabled = false;
+            minesSlider.disabled = false;
+            flagButton.classList.remove('active');
+            
+            // Очищаем сохраненную игру
+            localStorage.removeItem('minesGame');
+            
+            showNotification('Игра сброшена', 'info');
+        }
+        
+        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+        function revealAllMines() {
+            for (let i = 0; i < totalCells; i++) {
+                const cell = gridState[i];
+                const cellElement = minesGrid.children[i];
                 
-                if (cell.state !== 'opened') {
-                    setTimeout(() => {
-                        cellElement.classList.add('opened');
-                    }, 100 * i);
+                if (cell.isMine && cell.state !== 'mine') {
+                    cell.state = 'mine';
+                    cellElement.classList.add('mine', 'revealed');
+                    cellElement.dataset.state = 'mine';
+                    
+                    if (cell.state !== 'opened') {
+                        setTimeout(() => {
+                            cellElement.classList.add('opened');
+                        }, 100 * i);
+                    }
                 }
             }
         }
-    }
-    
-    function updateMinesDisplay() {
-        minesDisplay.innerHTML = '';
         
-        for (let i = 0; i < 24; i++) {
-            const indicator = document.createElement('div');
-            indicator.className = 'mine-indicator';
-            if (i < minesCount) {
-                indicator.classList.add('active');
+        function updateMinesDisplay() {
+            minesDisplay.innerHTML = '';
+            
+            for (let i = 0; i < 24; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'mine-indicator';
+                if (i < minesCount) {
+                    indicator.classList.add('active');
+                }
+                minesDisplay.appendChild(indicator);
             }
-            minesDisplay.appendChild(indicator);
         }
-    }
-    
-    function updateMultiplierInfo() {
-        const multiplier = MULTIPLIERS[minesCount];
-        multiplierPerCellEl.textContent = multiplier.toFixed(2) + 'x';
-        avoidChanceEl.textContent = Math.round(AVOID_MINE_CHANCE * 100) + '%';
-    }
-    
-    function updateGameState() {
-        cellsOpenedEl.textContent = openedCells;
-        currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
-        updatePotentialWin();
-    }
-    
-    function updatePotentialWin() {
-        const potentialWin = Math.round(currentBet * currentMultiplier);
-        potentialWinEl.textContent = potentialWin + ' TON';
-    }
-    
-    function updateBalanceDisplay() {
-        balanceAmount.textContent = balance + ' TON';
-        localStorage.setItem('balance', balance);
-    }
-    
-    function saveGameState() {
-        if (gameActive) {
-            const gameState = {
-                gameActive,
-                gameStarted,
-                minesCount,
-                currentBet,
-                openedCells,
-                currentMultiplier,
-                mines,
-                gridState
+        
+        function updateMultiplierInfo() {
+            const multiplier = MULTIPLIERS[minesCount];
+            multiplierPerCellEl.textContent = multiplier.toFixed(2) + 'x';
+            const safeCells = totalCells - minesCount;
+            safeCellsEl.textContent = safeCells;
+        }
+        
+        function updateGameState() {
+            cellsOpenedEl.textContent = openedCells;
+            currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
+            updatePotentialWin();
+        }
+        
+        function updatePotentialWin() {
+            const potentialWin = Math.round(currentBet * currentMultiplier);
+            potentialWinEl.textContent = potentialWin + ' TON';
+        }
+        
+        function updateBalanceDisplay() {
+            balanceAmount.textContent = balance + ' TON';
+            localStorage.setItem('balance', balance);
+        }
+        
+        function saveGameState() {
+            if (gameActive) {
+                const gameState = {
+                    gameActive,
+                    gameStarted,
+                    minesCount,
+                    currentBet,
+                    openedCells,
+                    currentMultiplier,
+                    mines,
+                    gridState
+                };
+                localStorage.setItem('minesGame', JSON.stringify(gameState));
+            }
+        }
+        
+        function saveGameResult(isWin) {
+            const gameResults = JSON.parse(localStorage.getItem('minesGameResults')) || [];
+            const result = {
+                timestamp: Date.now(),
+                bet: currentBet,
+                win: isWin,
+                multiplier: currentMultiplier,
+                amount: Math.round(currentBet * currentMultiplier),
+                mines: minesCount,
+                cellsOpened: openedCells
             };
-            localStorage.setItem('minesGame', JSON.stringify(gameState));
+            
+            gameResults.push(result);
+            localStorage.setItem('minesGameResults', JSON.stringify(gameResults));
         }
-    }
-    
-    function saveGameResult(isWin) {
-        const gameResults = JSON.parse(localStorage.getItem('minesGameResults')) || [];
-        const result = {
-            timestamp: Date.now(),
-            bet: currentBet,
-            win: isWin,
-            multiplier: currentMultiplier,
-            amount: Math.round(currentBet * currentMultiplier),
-            mines: minesCount,
-            cellsOpened: openedCells
-        };
         
-        gameResults.push(result);
-        localStorage.setItem('minesGameResults', JSON.stringify(gameResults));
-    }
-    
-    function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        document.body.appendChild(notification);
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(-50%) translateY(0)';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(-50%) translateY(-100px)';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
         
-        setTimeout(() => {
-            notification.style.transform = 'translateX(-50%) translateY(0)';
-        }, 10);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateX(-50%) translateY(-100px)';
-            setTimeout(() => notification.remove(), 500);
-        }, 3000);
-    }
-    
-    // ==================== ЗАПУСК ====================
-    document.addEventListener('DOMContentLoaded', init);
-</script>
+        // ==================== ЗАПУСК ====================
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
