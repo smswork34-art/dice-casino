@@ -244,12 +244,26 @@
             background: #2aabee;
             border-radius: 50%;
             opacity: 0.3;
+            position: relative;
         }
 
         .mine-indicator.active {
             opacity: 1;
             background: #ff6b6b;
             box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .mine-indicator.active::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>') no-repeat center;
+            mask-size: contain;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         /* Поле игры */
@@ -313,8 +327,13 @@
         }
 
         .cell.mine::before {
-            content: '💣';
-            font-size: 20px;
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>') no-repeat center;
+            mask-size: contain;
         }
 
         .cell.flag {
@@ -324,8 +343,13 @@
         }
 
         .cell.flag::before {
-            content: '🚩';
-            font-size: 16px;
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>') no-repeat center;
+            mask-size: contain;
         }
 
         .cell.gem {
@@ -335,8 +359,28 @@
         }
 
         .cell.gem::before {
-            content: '💎';
-            font-size: 20px;
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M16 9l4.371 1.749-1.619 4.232L16 13l-2.752 1.981L11.629 10.75 16 9zm-5.75 3.5L12 13.088l1.75-1.256L12 10.912l-1.75 1.256zM16 3l4 2v5l-4-2 4 2v5l-4-2 4 2v5l-4-2 4 2v5l-4-2-4 2-4-2-4 2-4-2 4-2V5l4 2V3l4-2 4 2z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .cell.empty {
+            background: white;
+            border-color: #e6f4ff;
+        }
+
+        .cell.empty::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: #e6f4ff;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23e6f4ff" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>') no-repeat center;
+            mask-size: contain;
         }
 
         .cell.number-1 { color: #2aabee; }
@@ -549,9 +593,9 @@
 
         /* Анимации */
         @keyframes cellReveal {
-            0% { transform: scale(0); }
-            70% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .cell.revealed {
@@ -566,6 +610,26 @@
 
         .pulse {
             animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes gemGlow {
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.7; transform: scale(1); }
+        }
+
+        .cell.gem::before {
+            animation: gemGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes minePulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .cell.mine::before {
+            animation: minePulse 1s ease-in-out infinite;
         }
 
         /* Загрузка */
@@ -802,7 +866,8 @@
                     index: i,
                     state: 'hidden',
                     isMine: false,
-                    isFlag: false
+                    isFlag: false,
+                    hasGem: Math.random() > 0.8 // 20% шанс алмаза в клетке
                 });
             }
             
@@ -823,6 +888,10 @@
                     cell.classList.add('opened');
                     if (cellData.isMine) {
                         cell.classList.add('mine');
+                    } else if (cellData.hasGem) {
+                        cell.classList.add('gem');
+                    } else {
+                        cell.classList.add('empty');
                     }
                 } else if (cellData.state === 'flag') {
                     cell.classList.add('flag');
@@ -864,6 +933,7 @@
                 
                 // Обновляем состояние клетки
                 gridState[mineIndex].isMine = true;
+                gridState[mineIndex].hasGem = false; // В мине не может быть алмаза
             }
             
             console.log('Generated mines:', mines);
@@ -1015,6 +1085,16 @@
             cell.state = 'opened';
             cellElement.classList.add('opened', 'revealed');
             cellElement.dataset.state = 'opened';
+            
+            // Добавляем иконку в зависимости от типа клетки
+            if (cell.hasGem) {
+                cellElement.classList.add('gem');
+                showNotification('💎 Найден алмаз! Множитель увеличен', 'info');
+                currentMultiplier *= 1.5; // Бонус за алмаз
+            } else {
+                cellElement.classList.add('empty');
+            }
+            
             openedCells++;
             
             // Увеличиваем множитель
@@ -1080,7 +1160,7 @@
             revealAllMines();
             updateGameState();
             
-            showNotification(`🎉 Вы забрали ${winAmount} TON! Множитель: ${currentMultiplier}x`, 'win');
+            showNotification(`🎉 Вы забрали ${winAmount} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
             endGame(true);
         }
         
