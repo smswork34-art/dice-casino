@@ -2089,6 +2089,112 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+/* Мобильная адаптация для всех разделов */
+@media (max-width: 480px) {
+    .content {
+        padding: 16px;
+    }
+    
+    /* Для профиля */
+    .profile-info {
+        padding: 20px;
+    }
+    
+    .profile-stats {
+        gap: 8px;
+    }
+    
+    .profile-stat {
+        padding: 12px;
+    }
+    
+    /* Для статистики */
+    .stats-summary {
+        gap: 8px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
+    /* Для игр */
+    .games-grid {
+        gap: 12px;
+    }
+    
+    .game-card {
+        padding: 16px;
+    }
+    
+    /* Для Mines игры */
+    .mines-game-controls {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+    
+    .mines-flag-button {
+        min-width: 40px;
+        width: 40px;
+        height: 50px;
+    }
+    
+    .mines-control-button {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+    
+    .mines-bet-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .mines-bet-input-container {
+        flex-direction: column;
+    }
+    
+    .mines-grid {
+        gap: 6px;
+    }
+    
+    /* Для списка ставок в статистике */
+    .bet-item {
+        padding: 12px;
+    }
+    
+    .bet-amount {
+        font-size: 14px;
+    }
+    
+    /* Для вывода */
+    .withdraw-amounts {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .withdraw-amount-btn {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    /* Для верхней панели */
+    .top-panel {
+        padding: 8px 12px;
+    }
+    
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .balance-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
     </style>
 </head>
 <body>
@@ -2190,11 +2296,12 @@
                             <span>Игры</span>
                         </div>
                         <div class="games-grid">
-                            <div class="game-card" id="playDiceGamesMenu">
-                                <div class="game-icon dice-icon"></div>
-                                <div class="game-title">Dice</div>
-                                <div class="game-description">Классическая игра в кости</div>
-                            </div>
+                            
+<div class="game-card" id="playDiceGame"> <!-- был id="openGamesMenu" -->
+    <div class="game-icon dice-icon"></div>
+    <div class="game-title">Dice</div>
+    <div class="game-description">Классическая игра в кости</div>
+</div>
                             <div class="game-card" id="openMinesGame">
                                 <div class="game-icon mines-icon"></div>
                                 <div class="game-title">Mines</div>
@@ -2721,12 +2828,6 @@
         const openMinesGameBtn = document.getElementById('openMinesGame');
         const backToMainMenuBtn = document.getElementById('backToMainMenu');
         const playDiceGameBtn = document.getElementById('playDiceGame');
-        const playDiceGameDirectBtn = document.getElementById('playDiceGameDirect');
-    if (playDiceGameDirectBtn) {
-        playDiceGameDirectBtn.addEventListener('click', () => {
-            showPage('diceGame');
-        });
-    }
         const playMinesGameBtn = document.getElementById('playMinesGame');
         const backToGamesMenuBtn = document.getElementById('backToGamesMenu');
         const backToGamesMenuFromMinesBtn = document.getElementById('backToGamesMenuFromMines');
