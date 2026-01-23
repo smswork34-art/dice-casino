@@ -787,8 +787,7 @@
                 </div>
                 
                 <div class="settings-row">
-                    <div class="settings-label">Шанс избежать мины:</div>
-                    <div class="settings-value" id="avoidChance">35%</div>
+                    <div class="settings-label">Играй и выигрывай вместе с нами! TON</div>
                 </div>
             </div>
 
@@ -861,8 +860,9 @@
         let gridState = [];
         let gameStarted = false;
         
-        // ШАНСЫ: 35% выигрыш, 65% проигрыш
-        const AVOID_MINE_CHANCE = 0.35; // 35% шанс избежать мины
+        // ШАНСЫ: 65% ПРОИГРЫШ при попадании на мину
+        const MINE_HIT_CHANCE = 0.65; // 65% шанс попасть на мину
+        const MINE_AVOID_CHANCE = 0.35; // 35% шанс избежать мины
         
         // Коэффициенты: ЧЕМ БОЛЬШЕ МИН - ТЕМ БОЛЬШЕ КОЭФФИЦИЕНТ
         const MULTIPLIERS = {
@@ -1169,7 +1169,7 @@
             showNotification(`Ставка установлена: ${value} TON`, 'info');
         }
         
-        // ==================== ЛОГИКА ИГРЫ С ПОДКРУТКОЙ ====================
+        // ==================== ЛОГИКА ИГРЫ С ШАНСОМ 65% ПРОИГРЫША ====================
         function startGame() {
             if (gameActive) return;
             
@@ -1213,25 +1213,13 @@
                 gameStarted = true;
             }
             
-            // ПОДКРУТКА: 65% попадания на мину, 35% избежания
+            // Проверяем, является ли клетка миной
             if (cell.isMine) {
-                // 35% шанс что игрок избежит мины (65% попадания)
-                const willAvoidMine = Math.random() < AVOID_MINE_CHANCE;
+                // ШАНС 65% ПРОИГРЫША (попадания на мину)
+                const willHitMine = Math.random() < MINE_HIT_CHANCE;
                 
-                if (willAvoidMine) {
-                    // Игрок избежал мины! (35% шанс)
-                    cell.state = 'opened';
-                    cellElement.classList.add('opened', 'revealed', 'empty');
-                    cellElement.dataset.state = 'opened';
-                    openedCells++;
-                    
-                    // Увеличиваем множитель (но меньше чем обычно)
-                    currentMultiplier *= (MULTIPLIERS[minesCount] * 0.9); // 90% от обычного множителя
-                    currentMultiplier = Math.round(currentMultiplier * 100) / 100;
-                    
-                    showNotification('🎉 Удача! Вы избежали мины!', 'win');
-                } else {
-                    // Игрок попал на мину (65% шанс) - ЧАСТЫЙ ПРОИГРЫШ
+                if (willHitMine) {
+                    // Игрок попал на мину (65% шанс) - ПРОИГРЫШ
                     gameFinished = true;
                     cell.state = 'mine';
                     cellElement.classList.add('mine', 'opened', 'revealed');
@@ -1244,6 +1232,18 @@
                     updateGameState();
                     endGame(false);
                     return;
+                } else {
+                    // Игрок избежал мины! (35% шанс)
+                    cell.state = 'opened';
+                    cellElement.classList.add('opened', 'revealed', 'empty');
+                    cellElement.dataset.state = 'opened';
+                    openedCells++;
+                    
+                    // Увеличиваем множитель (но меньше чем обычно)
+                    currentMultiplier *= (MULTIPLIERS[minesCount] * 0.9); // 90% от обычного множителя
+                    currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+                    
+                    showNotification('🎉 Удача! Вы избежали мины!', 'win');
                 }
             } else {
                 // Это не мина
@@ -1426,7 +1426,7 @@
         function updateMultiplierInfo() {
             const multiplier = MULTIPLIERS[minesCount];
             multiplierPerCellEl.textContent = multiplier.toFixed(2) + 'x';
-            avoidChanceEl.textContent = Math.round(AVOID_MINE_CHANCE * 100) + '%';
+            // Убрали отображение шанса, теперь здесь текст
         }
         
         function updateGameState() {
