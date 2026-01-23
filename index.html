@@ -211,7 +211,7 @@
             z-index: 2;
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.1s linear;
+            transition: transform 2s linear;
         }
 
         .chart-fill {
@@ -222,7 +222,7 @@
             height: 100%;
             background: linear-gradient(to top, rgba(42, 171, 238, 0.1) 0%, rgba(42, 171, 238, 0) 100%);
             clip-path: polygon(0% 100%, var(--progress, 0%) 100%, var(--progress, 0%) 0%, 0% 0%);
-            transition: clip-path 0.1s linear;
+            transition: clip-path 2s linear;
         }
 
         .chart-grid {
@@ -614,7 +614,8 @@
         // ==================== КОНСТАНТЫ ====================
         const INITIAL_BALANCE = 1000;
         const MIN_BET = 1;
-        const BET_TIME = 10000; // 10 секунд чтобы поставить ставку
+        const BET_TIME = 10000; // 10 секунд для ставок
+        const GAME_DURATION = 60000; // 60 секунд макс - МЕДЛЕННО
         const MAX_MULTIPLIER = 100;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
@@ -629,7 +630,6 @@
         let betTimer = null;
         let timeToNextGame = BET_TIME;
         let animationStartTime = 0;
-        let timeSinceLastX = 0;
 
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -672,7 +672,6 @@
             timeToNextGame = BET_TIME;
             updateTimerDisplay();
             
-            // Включаем кнопку ставки
             placeBetButton.disabled = false;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Поставить ставку';
             
@@ -680,7 +679,6 @@
                 timeToNextGame -= 1000;
                 
                 if (timeToNextGame <= 0) {
-                    // Время на ставки закончилось
                     clearInterval(betTimer);
                     isBettingTime = false;
                     placeBetButton.disabled = true;
@@ -712,7 +710,7 @@
             isGameActive = true;
             currentMultiplier = 1.0;
             
-            // Генерируем точку краша с подкруткой
+            // Генерируем точку краша с падающими шансами
             crashPoint = generateCrashPoint();
             console.log("Краш будет на:", crashPoint.toFixed(2) + "x");
             
@@ -721,10 +719,8 @@
             currentMultiplierEl.style.color = '#4CAF50';
             initializeChart();
             
-            // Выключаем таймер
             timerValue.textContent = 'Игра идет...';
             
-            // Запускаем игру
             animationStartTime = Date.now();
             gameInterval = setInterval(updateGame, 100);
         }
@@ -732,18 +728,38 @@
         function generateCrashPoint() {
             const random = Math.random();
             
-            // Подкрутка: 35% шанс краша до 2x
+            // ПАДАЮЩИЕ ШАНСЫ:
+            // до 2x - 35%
             if (random < 0.35) {
-                // Краш до 2x
-                return 1.0 + Math.random(); // от 1.0 до 2.0
-            } else {
-                // Рандом от 2x до 100x
-                const remainingChance = 1 - 0.35;
-                const adjustedRandom = (random - 0.35) / remainingChance;
-                
-                // Экспоненциальное распределение - чаще маленькие множители
-                const base = Math.pow(adjustedRandom, 2);
-                return 2.0 + base * 98; // от 2.0 до 100.0
+                return 1.0 + Math.random(); // 1.0 - 2.0
+            }
+            // до 3x - 30% от оставшегося
+            else if (random < 0.35 + 0.195) {
+                return 2.0 + Math.random(); // 2.0 - 3.0
+            }
+            // до 4x - 25% от оставшегося
+            else if (random < 0.35 + 0.195 + 0.114) {
+                return 3.0 + Math.random(); // 3.0 - 4.0
+            }
+            // до 5x - 20% от оставшегося
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068) {
+                return 4.0 + Math.random(); // 4.0 - 5.0
+            }
+            // до 10x - 15% от оставшегося
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041) {
+                return 5.0 + Math.random() * 5; // 5.0 - 10.0
+            }
+            // до 20x - 10% от оставшегося
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041 + 0.023) {
+                return 10.0 + Math.random() * 10; // 10.0 - 20.0
+            }
+            // до 50x - 5% от оставшегося
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041 + 0.023 + 0.0105) {
+                return 20.0 + Math.random() * 30; // 20.0 - 50.0
+            }
+            // до 100x - остаток
+            else {
+                return 50.0 + Math.random() * 50; // 50.0 - 100.0
             }
         }
 
@@ -751,32 +767,27 @@
             if (!isGameActive) return;
             
             const elapsedTime = Date.now() - animationStartTime;
-            const timeProgress = Math.min(elapsedTime / 30000, 1); // Максимум 30 секунд игры
+            const timeProgress = Math.min(elapsedTime / GAME_DURATION, 1);
             
-            // Всегда одинаковая анимация роста
-            // Сначала быстрый рост, потом медленнее
+            // МЕДЛЕННАЯ анимация роста
             let visualProgress;
-            if (timeProgress < 0.3) {
-                // Быстрый рост первые 30%
-                visualProgress = timeProgress * 1.5;
-            } else if (timeProgress < 0.7) {
-                // Средний рост
-                visualProgress = 0.45 + (timeProgress - 0.3) * 0.8;
+            if (timeProgress < 0.1) {
+                visualProgress = timeProgress * 0.5;
+            } else if (timeProgress < 0.4) {
+                visualProgress = 0.05 + (timeProgress - 0.1) * 0.3;
+            } else if (timeProgress < 0.8) {
+                visualProgress = 0.14 + (timeProgress - 0.4) * 0.5;
             } else {
-                // Медленный рост в конце
-                visualProgress = 0.77 + (timeProgress - 0.7) * 0.23;
+                visualProgress = 0.34 + (timeProgress - 0.8) * 0.66;
             }
             
-            // Рассчитываем текущий множитель на основе прогресса и точки краша
-            // График всегда растёт одинаково, но краш может быть в любой момент
-            const maxVisualMultiplier = 50; // Максимум для отображения
+            // Рассчитываем множитель
+            const maxVisualMultiplier = 100;
             let visualMultiplier;
             
             if (timeProgress < (crashPoint / maxVisualMultiplier)) {
-                // Если ещё не достигли точки краша
                 visualMultiplier = 1.0 + (maxVisualMultiplier - 1.0) * visualProgress;
                 
-                // Ограничиваем точкой краша
                 if (visualMultiplier >= crashPoint) {
                     currentMultiplier = crashPoint;
                     endGame();
@@ -785,7 +796,6 @@
                     currentMultiplier = visualMultiplier;
                 }
             } else {
-                // Достигли точки краша
                 currentMultiplier = crashPoint;
                 endGame();
                 return;
@@ -796,12 +806,10 @@
             updatePotentialWin();
             updateChart(visualProgress);
             
-            // Если игрок сделал ставку
             if (hasPlacedBet) {
                 potentialMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
                 potentialWinEl.textContent = (currentBet * currentMultiplier).toFixed(1) + ' TON';
                 
-                // Меняем цвет при приближении к крашу
                 if (currentMultiplier > crashPoint * 0.9) {
                     currentMultiplierEl.style.color = '#ff6b6b';
                 } else if (currentMultiplier > crashPoint * 0.7) {
@@ -816,24 +824,19 @@
             clearInterval(gameInterval);
             isGameActive = false;
             
-            // Анимация краша
             currentMultiplierEl.classList.add('crash-animation');
             currentMultiplierEl.style.color = '#ff6b6b';
             
-            // Создаем эффект взрыва на графике
             createExplosion();
             
-            // Проигрыш для тех, кто не забрал
             if (hasPlacedBet) {
                 showNotification(`💥 КРАШ! Игра закончилась на ${currentMultiplier.toFixed(2)}x`, 'lose');
                 hasPlacedBet = false;
             }
             
-            // Сбрасываем ставку игрока
             hasPlacedBet = false;
             cashoutButton.disabled = true;
             
-            // Запускаем новый таймер через 2 секунды
             setTimeout(() => {
                 currentMultiplierEl.classList.remove('crash-animation');
                 startBetTimer();
@@ -876,13 +879,11 @@
                 return;
             }
             
-            // Снимаем ставку
             balance -= currentBet;
             updateBalanceDisplay();
             
             hasPlacedBet = true;
             
-            // Обновляем UI
             placeBetButton.disabled = true;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ставка сделана';
             cashoutButton.disabled = false;
@@ -903,10 +904,8 @@
             
             showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
             
-            // Сбрасываем ставку
             hasPlacedBet = false;
             
-            // Обновляем UI
             cashoutButton.disabled = true;
             placeBetButton.disabled = true;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ожидание новой игры...';
@@ -916,7 +915,6 @@
         function initializeChart() {
             crashChart.innerHTML = '';
             
-            // Сетка
             const grid = document.createElement('div');
             grid.className = 'chart-grid';
             
@@ -929,25 +927,22 @@
             
             crashChart.appendChild(grid);
             
-            // Заливка графика
             const fill = document.createElement('div');
             fill.className = 'chart-fill';
             fill.id = 'chartFill';
             crashChart.appendChild(fill);
             
-            // Линия графика
             const line = document.createElement('div');
             line.className = 'chart-line';
             line.id = 'chartLine';
             crashChart.appendChild(line);
             
-            // Подписи множителей
             const multipliers = document.createElement('div');
             multipliers.className = 'chart-multipliers';
             
             for (let i = 0; i <= 5; i++) {
                 const multiplier = document.createElement('div');
-                multiplier.textContent = (i * 10) + 'x';
+                multiplier.textContent = (i * 20) + 'x';
                 multipliers.appendChild(multiplier);
             }
             
