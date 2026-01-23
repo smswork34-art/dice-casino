@@ -1666,26 +1666,29 @@
         }
 
         .mines-game-controls {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
+    display: flex;
+    gap: 12px; /* УМЕНЬШИТЕ с 16px до 12px */
+    margin-bottom: 16px;
+    align-items: center; /* ДОБАВЬТЕ это для выравнивания */
+}
 
         .mines-control-button {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
+    flex: 1;
+    padding: 16px 12px; /* ИЗМЕНИТЕ с padding: 16px; */
+    border: none;
+    border-radius: 16px;
+    font-size: 15px; /* УМЕНЬШИТЕ с 16px до 15px */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* УМЕНЬШИТЕ с 8px до 6px */
+    min-width: 0; /* ДОБАВЬТЕ это */
+    word-break: break-word; /* ДОБАВЬТЕ это для переноса текста */
+}
+        
         .mines-start-button {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
@@ -1721,11 +1724,11 @@
         }
 
         .mines-flag-button {
-            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
-            width: 50px;
-        }
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+    color: white;
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+    min-width: 50px; /* ДОБАВЬТЕ это */
+}
 
         .mines-flag-button:hover {
             transform: translateY(-3px);
@@ -1738,14 +1741,15 @@
         }
 
         .mines-control-icon {
-            width: 20px;
-            height: 20px;
-            background: white;
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            mask-position: center;
-        }
-
+    width: 18px; /* УМЕНЬШИТЕ с 20px до 18px */
+    height: 18px; /* УМЕНЬШИТЕ с 20px до 18px */
+    background: white;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    flex-shrink: 0; /* ДОБАВЬТЕ это */
+}
+        
         .mines-start-icon {
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M8 5v14l11-7z"/></svg>');
         }
@@ -1798,6 +1802,38 @@
         .mines-cell.mine::before {
             animation: minePulse 1s ease-in-out infinite;
         }
+
+        /* Мобильная адаптация для Mines */
+@media (max-width: 480px) {
+    .mines-game-controls {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+    
+    .mines-flag-button {
+        min-width: 40px;
+        width: 40px;
+        height: 50px;
+    }
+    
+    .mines-control-button {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+    
+    .mines-bet-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .mines-bet-input-container {
+        flex-direction: column;
+    }
+    
+    .mines-grid {
+        gap: 6px;
+    }
+}
 
         /* Модальное окно депозита */
         .modal-overlay {
@@ -2410,13 +2446,13 @@
                         <span class="mines-control-icon mines-flag-icon"></span>
                     </button>
                     <button class="mines-control-button mines-start-button" id="minesStartButton">
-                        <span class="mines-control-icon mines-start-icon"></span>
-                        Начать игру
-                    </button>
-                    <button class="mines-control-button mines-cashout-button" id="minesCashoutButton" disabled>
-                        <span class="mines-control-icon mines-cashout-icon"></span>
-                        Забрать
-                    </button>
+    <span class="mines-control-icon mines-start-icon"></span>
+    Начать
+</button>
+<button class="mines-control-button mines-cashout-button" id="minesCashoutButton" disabled>
+    <span class="mines-control-icon mines-cashout-icon"></span>
+    Забрать
+</button>
                 </div>
             </div>
 
