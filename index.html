@@ -2202,10 +2202,17 @@
     <div class="container">
         <!-- ОБНОВЛЕННАЯ ВЕРХНЯЯ ПАНЕЛЬ С ПРОФИЛЕМ -->
         <div class="top-panel">
-            <div class="user-info" id="openProfile">
-                <div class="user-avatar" id="userAvatar"></div>
-                <div class="username" id="username">Гость</div>
-            </div>
+            <!-- Кнопка открытия профиля в верхней панели -->
+<div class="user-info" id="openProfile">
+    <div class="user-avatar" id="userAvatar"></div>
+    <div class="username" id="username">Гость</div>
+</div>
+
+<!-- Кнопка возврата в профиле -->
+<button class="profile-back-btn" id="backFromProfile">
+    <span class="back-icon"></span>
+    Назад
+</button>
             <button class="balance-btn" id="openDepositModal">
                 <span class="balance-icon"></span>
                 <span id="balanceAmount">1,500 TON</span>
@@ -2290,25 +2297,26 @@
                     <h1 class="welcome-text">Добро пожаловать!</h1>
                     <p class="subtitle">Игровой портал на блокчейне TON</p>
                     
-                    <div class="menu-section">
-                        <div class="section-title">
-                            <div class="section-icon games-icon"></div>
-                            <span>Игры</span>
-                        </div>
-                        <div class="games-grid">
-                            
-<div class="game-card" id="playDiceGame"> <!-- был id="openGamesMenu" -->
-    <div class="game-icon dice-icon"></div>
-    <div class="game-title">Dice</div>
-    <div class="game-description">Классическая игра в кости</div>
+                    <!-- В основном меню измените блок игр на: -->
+<div class="menu-section">
+    <div class="section-title">
+        <div class="section-icon games-icon"></div>
+        <span>Игры</span>
+    </div>
+    <div class="games-grid">
+        <!-- ИЗМЕНИЛ ID С "openGamesMenu" НА "playDiceGame" -->
+        <div class="game-card" id="playDiceGameFromMain">
+            <div class="game-icon dice-icon"></div>
+            <div class="game-title">Dice</div>
+            <div class="game-description">Классическая игра в кости</div>
+        </div>
+        <div class="game-card" id="openMinesGame">
+            <div class="game-icon mines-icon"></div>
+            <div class="game-title">Mines</div>
+            <div class="game-description">Найдите все мины и выиграйте</div>
+        </div>
+    </div>
 </div>
-                            <div class="game-card" id="openMinesGame">
-                                <div class="game-icon mines-icon"></div>
-                                <div class="game-title">Mines</div>
-                                <div class="game-description">Найдите все мины и выиграйте</div>
-                            </div>
-                        </div>
-                    </div>
                     
                     <div class="menu-section">
                         <div class="section-title">
@@ -2930,48 +2938,63 @@
         
         // ==================== НАВИГАЦИЯ ПО СТРАНИЦАМ ====================
         function setupProfileNavigation() {
-            // Открыть профиль
-            openProfileBtn.addEventListener('click', () => {
-                showPage('profile');
-                updateProfileStats();
-            });
-            
-            // Вернуться из профиля
-            backFromProfileBtn.addEventListener('click', () => {
-                showPage('main');
-            });
-        }
+    // Открыть профиль
+    openProfileBtn.addEventListener('click', () => {
+        showPage('profile');
+        updateProfileStats();
+    });
+    
+    // Вернуться из профиля
+    backFromProfileBtn.addEventListener('click', () => {
+        showPage('main');
+    });
+}
         
-        function setupGameNavigation() {
-            // Открыть меню игр
-            openGamesMenuBtn.addEventListener('click', () => {
-                showPage('gamesMenu');
-            });
-            
-            // Открыть игру Mines напрямую
-            openMinesGameBtn.addEventListener('click', () => {
-                showPage('minesGame');
-            });
-            
-            // Вернуться в главное меню
-            backToMainMenuBtn.addEventListener('click', () => {
-                showPage('main');
-            });
-            
-            // Играть в Dice
-            playDiceGameBtn.addEventListener('click', () => {
-                showPage('diceGame');
-            });
-            
-            // Играть в Mines
-            playMinesGameBtn.addEventListener('click', () => {
-                showPage('minesGame');
-            });
-            
-            // Вернуться в меню игр из игры Dice
-            backToGamesMenuBtn.addEventListener('click', () => {
-                showPage('gamesMenu');
-            });
+        // В функции setupGameNavigation() добавьте:
+function setupGameNavigation() {
+    // Открыть меню игр
+    openGamesMenuBtn.addEventListener('click', () => {
+        showPage('gamesMenu');
+    });
+    
+    // Открыть игру Mines напрямую
+    openMinesGameBtn.addEventListener('click', () => {
+        showPage('minesGame');
+    });
+    
+    // Вернуться в главное меню
+    backToMainMenuBtn.addEventListener('click', () => {
+        showPage('main');
+    });
+    
+    // Играть в Dice из главного меню
+    const playDiceGameFromMainBtn = document.getElementById('playDiceGameFromMain');
+    if (playDiceGameFromMainBtn) {
+        playDiceGameFromMainBtn.addEventListener('click', () => {
+            showPage('diceGame');
+        });
+    }
+    
+    // Играть в Dice из меню игр
+    playDiceGameBtn.addEventListener('click', () => {
+        showPage('diceGame');
+    });
+    
+    // Играть в Mines из меню игр
+    playMinesGameBtn.addEventListener('click', () => {
+        showPage('minesGame');
+    });
+    
+    // Вернуться в меню игр из игры Dice
+    backToGamesMenuBtn.addEventListener('click', () => {
+        showPage('gamesMenu');
+    });
+    
+    // Вернуться в меню игр из игры Mines
+    backToGamesMenuFromMinesBtn.addEventListener('click', () => {
+        showPage('gamesMenu');
+    });
+}
             
             // Вернуться в меню игр из игры Mines
             backToGamesMenuFromMinesBtn.addEventListener('click', () => {
