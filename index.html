@@ -211,7 +211,7 @@
             z-index: 2;
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 2s linear;
+            transition: transform 4s linear; /* ОЧЕНЬ МЕДЛЕННО - 4 секунды */
         }
 
         .chart-fill {
@@ -222,7 +222,7 @@
             height: 100%;
             background: linear-gradient(to top, rgba(42, 171, 238, 0.1) 0%, rgba(42, 171, 238, 0) 100%);
             clip-path: polygon(0% 100%, var(--progress, 0%) 100%, var(--progress, 0%) 0%, 0% 0%);
-            transition: clip-path 2s linear;
+            transition: clip-path 4s linear; /* ОЧЕНЬ МЕДЛЕННО - 4 секунды */
         }
 
         .chart-grid {
@@ -615,7 +615,7 @@
         const INITIAL_BALANCE = 1000;
         const MIN_BET = 1;
         const BET_TIME = 10000; // 10 секунд для ставок
-        const GAME_DURATION = 60000; // 60 секунд макс - МЕДЛЕННО
+        const GAME_DURATION = 120000; // 120 секунд макс - ОЧЕНЬ МЕДЛЕННО
         const MAX_MULTIPLIER = 100;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
@@ -722,7 +722,7 @@
             timerValue.textContent = 'Игра идет...';
             
             animationStartTime = Date.now();
-            gameInterval = setInterval(updateGame, 100);
+            gameInterval = setInterval(updateGame, 50); // Чаще обновляем для плавности
         }
 
         function generateCrashPoint() {
@@ -769,16 +769,23 @@
             const elapsedTime = Date.now() - animationStartTime;
             const timeProgress = Math.min(elapsedTime / GAME_DURATION, 1);
             
-            // МЕДЛЕННАЯ анимация роста
+            // ОЧЕНЬ МЕДЛЕННАЯ анимация роста
             let visualProgress;
-            if (timeProgress < 0.1) {
-                visualProgress = timeProgress * 0.5;
-            } else if (timeProgress < 0.4) {
-                visualProgress = 0.05 + (timeProgress - 0.1) * 0.3;
+            if (timeProgress < 0.05) {
+                // Супер медленный старт
+                visualProgress = timeProgress * 0.2;
+            } else if (timeProgress < 0.2) {
+                // Очень медленный рост
+                visualProgress = 0.01 + (timeProgress - 0.05) * 0.15;
+            } else if (timeProgress < 0.5) {
+                // Медленный рост
+                visualProgress = 0.0235 + (timeProgress - 0.2) * 0.25;
             } else if (timeProgress < 0.8) {
-                visualProgress = 0.14 + (timeProgress - 0.4) * 0.5;
+                // Средний рост
+                visualProgress = 0.0985 + (timeProgress - 0.5) * 0.35;
             } else {
-                visualProgress = 0.34 + (timeProgress - 0.8) * 0.66;
+                // Медленный финиш
+                visualProgress = 0.2035 + (timeProgress - 0.8) * 0.8;
             }
             
             // Рассчитываем множитель
@@ -810,9 +817,9 @@
                 potentialMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
                 potentialWinEl.textContent = (currentBet * currentMultiplier).toFixed(1) + ' TON';
                 
-                if (currentMultiplier > crashPoint * 0.9) {
+                if (currentMultiplier > crashPoint * 0.95) {
                     currentMultiplierEl.style.color = '#ff6b6b';
-                } else if (currentMultiplier > crashPoint * 0.7) {
+                } else if (currentMultiplier > crashPoint * 0.8) {
                     currentMultiplierEl.style.color = '#FF9800';
                 }
             }
