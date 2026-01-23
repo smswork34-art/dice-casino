@@ -696,9 +696,9 @@
                     Правила игры
                 </div>
                 <ul class="rules-list">
-                    <li>Открывайте клетки, чтобы увеличить множитель</li>
+                    <li>Открывайте безопасные клетки, чтобы увеличить множитель</li>
                     <li>Избегайте мин - они заканчивают игру</li>
-                    <li>Шанс избежать мины: 35% на каждый выбор</li>
+                    <li>Чем меньше мин, тем выше множитель</li>
                     <li>Заберите выигрыш в любой момент</li>
                     <li>Можно ставить флажки на предполагаемые мины</li>
                 </ul>
@@ -717,12 +717,12 @@
                 
                 <div class="settings-row">
                     <div class="settings-label">Множитель за клетку:</div>
-                    <div class="settings-value" id="multiplierPerCell">1.08x</div>
+                    <div class="settings-value" id="multiplierPerCell">1.40x</div>
                 </div>
                 
                 <div class="settings-row">
-                    <div class="settings-label">Вероятность выигрыша:</div>
-                    <div class="settings-value" id="winProbability">35%</div>
+                    <div class="settings-label">Безопасных клеток:</div>
+                    <div class="settings-value" id="safeCells">22</div>
                 </div>
             </div>
 
@@ -787,19 +787,37 @@
         let gridState = [];
         let gameStarted = false;
         
-        // НОВЫЕ КОЭФФИЦИЕНТЫ с 35% шансом не-мины
-        // Коэффициенты рассчитаны так, чтобы при 35% вероятности выигрыша за каждый выбор
-        // множитель увеличивался более умеренно
+        // КОЭФФИЦИЕНТЫ МИН ИЗ GetX (аналогичные реальным казино)
+        // Для поля 5x5 (25 клеток), коэффициенты для разных количеств мин
         const MULTIPLIERS = {
-            1: 1.08,  2: 1.07,  3: 1.06,  4: 1.05,  5: 1.04,
-            6: 1.04,  7: 1.03,  8: 1.03,  9: 1.02,  10: 1.02,
-            11: 1.02, 12: 1.02, 13: 1.02, 14: 1.02, 15: 1.02,
-            16: 1.02, 17: 1.02, 18: 1.02, 19: 1.02, 20: 1.02,
-            21: 1.02, 22: 1.02, 23: 1.02, 24: 1.02
+            1: 2.40,   // 1 мина - множитель 2.40x за клетку
+            2: 2.00,   // 2 мины - множитель 2.00x за клетку
+            3: 1.40,   // 3 мины - множитель 1.40x за клетку
+            4: 1.25,   // 4 мины - множитель 1.25x за клетку
+            5: 1.15,   // 5 мин - множитель 1.15x за клетку
+            6: 1.10,   // 6 мин - множитель 1.10x за клетку
+            7: 1.08,   // 7 мин - множитель 1.08x за клетку
+            8: 1.06,   // 8 мин - множитель 1.06x за клетку
+            9: 1.05,   // 9 мин - множитель 1.05x за клетку
+            10: 1.04,  // 10 мин - множитель 1.04x за клетку
+            11: 1.03,  // 11 мин - множитель 1.03x за клетку
+            12: 1.03,  // 12 мин - множитель 1.03x за клетку
+            13: 1.02,  // 13 мин - множитель 1.02x за клетку
+            14: 1.02,  // 14 мин - множитель 1.02x за клетку
+            15: 1.02,  // 15 мин - множитель 1.02x за клетку
+            16: 1.02,  // 16 мин - множитель 1.02x за клетку
+            17: 1.02,  // 17 мин - множитель 1.02x за клетку
+            18: 1.02,  // 18 мин - множитель 1.02x за клетку
+            19: 1.02,  // 19 мин - множитель 1.02x за клетку
+            20: 1.02,  // 20 мин - множитель 1.02x за клетку
+            21: 1.02,  // 21 мина - множитель 1.02x за клетку
+            22: 1.02,  // 22 мины - множитель 1.02x за клетку
+            23: 1.02,  // 23 мины - множитель 1.02x за клетку
+            24: 1.02   // 24 мины - множитель 1.02x за клетку
         };
         
-        // Вероятность выигрыша (не попасть на мину)
-        const WIN_PROBABILITY = 0.35; // 35%
+        // Вероятности по классической схеме (без 35% шанса)
+        // В реальном GetX нет 35% шанса - там классическая логика Mines
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -809,7 +827,7 @@
         const minesCountEl = document.getElementById('minesCount');
         const minesDisplay = document.getElementById('minesDisplay');
         const multiplierPerCellEl = document.getElementById('multiplierPerCell');
-        const winProbabilityEl = document.getElementById('winProbability');
+        const safeCellsEl = document.getElementById('safeCells');
         const minesGrid = document.getElementById('minesGrid');
         const cellsOpenedEl = document.getElementById('cellsOpened');
         const totalCellsEl = document.getElementById('totalCells');
@@ -872,7 +890,7 @@
                     state: 'hidden',
                     isMine: false,
                     isFlag: false,
-                    hasGem: Math.random() > 0.9 // 10% шанс алмаза (уменьшили)
+                    hasGem: Math.random() > 0.95 // 5% шанс алмаза (редко)
                 });
             }
             
@@ -922,12 +940,13 @@
             const availableCells = Array.from({ length: totalCells }, (_, i) => i);
             
             // Убираем первую нажатую клетку из возможных позиций мин
+            // (в GetX первая клетка всегда безопасна)
             const firstClickIndexInArray = availableCells.indexOf(firstClickIndex);
             if (firstClickIndexInArray !== -1) {
                 availableCells.splice(firstClickIndexInArray, 1);
             }
             
-            // Выбираем случайные позиции для мин (фиксированное количество)
+            // Выбираем случайные позиции для мин (фиксированное количество как в GetX)
             for (let i = 0; i < minesCount; i++) {
                 if (availableCells.length === 0) break;
                 
@@ -1028,7 +1047,7 @@
             });
         }
         
-        // ==================== ЛОГИКА ИГРЫ ====================
+        // ==================== ЛОГИКА ИГРЫ (КАК В GetX) ====================
         function startGame() {
             if (gameActive) return;
             
@@ -1063,74 +1082,62 @@
             
             if (cell.state !== 'hidden') return;
             
-            // Первый клик - генерация мин
+            // Первый клик - генерация мин (в GetX первая клетка всегда безопасна)
             if (!gameStarted) {
                 generateMines(cellIndex);
                 gameStarted = true;
             }
             
-            // НОВАЯ ЛОГИКА: 35% шанс что это не мина
-            // При каждом клике проверяем, мина ли это
+            // Проверка на мину (классическая логика GetX - нет 35% шанса)
             if (cell.isMine) {
-                // 35% шанс что игрок избежит мины даже если она там есть
-                const willAvoidMine = Math.random() < WIN_PROBABILITY;
+                // Игрок попал на мину - игра заканчивается
+                gameFinished = true;
+                cell.state = 'mine';
+                cellElement.classList.add('mine', 'opened', 'revealed');
+                cellElement.dataset.state = 'mine';
                 
-                if (willAvoidMine) {
-                    // Игрок избежал мины! (35% шанс)
-                    cell.state = 'opened';
-                    cellElement.classList.add('opened', 'revealed', 'empty');
-                    cellElement.dataset.state = 'opened';
-                    openedCells++;
-                    
-                    // Увеличиваем множитель (немного меньше за избежание мины)
-                    currentMultiplier *= (MULTIPLIERS[minesCount] * 0.9); // 90% от обычного множителя
-                    currentMultiplier = Math.round(currentMultiplier * 100) / 100;
-                    
-                    showNotification('🎉 Удача! Вы избежали мины!', 'win');
-                } else {
-                    // Игрок попал на мину (65% шанс)
-                    gameFinished = true;
-                    cell.state = 'mine';
-                    cellElement.classList.add('mine', 'opened', 'revealed');
-                    cellElement.dataset.state = 'mine';
-                    
-                    // Показать все мины
-                    revealAllMines();
-                    
-                    // Обновить UI
-                    updateGameState();
-                    endGame(false);
-                    return;
-                }
-            } else {
-                // Это не мина
-                cell.state = 'opened';
-                cellElement.classList.add('opened', 'revealed');
-                cellElement.dataset.state = 'opened';
+                // Показать все мины
+                revealAllMines();
                 
-                // Добавляем иконку в зависимости от типа клетки
-                if (cell.hasGem) {
-                    cellElement.classList.add('gem');
-                    showNotification('💎 Найден алмаз! Множитель +20%', 'info');
-                    currentMultiplier *= 1.2; // +20% за алмаз (уменьшили)
-                } else {
-                    cellElement.classList.add('empty');
-                }
-                
-                openedCells++;
-                
-                // Увеличиваем множитель
-                currentMultiplier *= MULTIPLIERS[minesCount];
-                currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+                // Обновить UI
+                updateGameState();
+                endGame(false);
+                return;
             }
             
-            // Проверка на максимальное количество открытых клеток
+            // Это не мина
+            cell.state = 'opened';
+            cellElement.classList.add('opened', 'revealed');
+            cellElement.dataset.state = 'opened';
+            
+            // Добавляем иконку в зависимости от типа клетки
+            if (cell.hasGem) {
+                cellElement.classList.add('gem');
+                showNotification('💎 Найден алмаз! Множитель +25%', 'info');
+                currentMultiplier *= 1.25; // +25% за алмаз
+            } else {
+                cellElement.classList.add('empty');
+            }
+            
+            openedCells++;
+            
+            // Увеличиваем множитель по коэффициентам GetX
+            currentMultiplier *= MULTIPLIERS[minesCount];
+            currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+            
+            // Проверка на максимальное количество безопасных клеток
             const maxSafeCells = totalCells - minesCount;
             if (openedCells >= maxSafeCells) {
-                // Игрок выиграл максимальную сумму
+                // Игрок открыл все безопасные клетки - максимальный выигрыш
                 gameFinished = true;
                 revealAllMines();
                 updateGameState();
+                
+                const winAmount = Math.round(currentBet * currentMultiplier);
+                balance += winAmount;
+                updateBalanceDisplay();
+                
+                showNotification(`🎉 Вы открыли все безопасные клетки! Выигрыш: ${winAmount} TON!`, 'win');
                 endGame(true);
                 return;
             }
@@ -1271,7 +1278,8 @@
         function updateMultiplierInfo() {
             const multiplier = MULTIPLIERS[minesCount];
             multiplierPerCellEl.textContent = multiplier.toFixed(2) + 'x';
-            winProbabilityEl.textContent = Math.round(WIN_PROBABILITY * 100) + '%';
+            const safeCells = totalCells - minesCount;
+            safeCellsEl.textContent = safeCells;
         }
         
         function updateGameState() {
