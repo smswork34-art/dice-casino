@@ -266,6 +266,97 @@
             transform: translate(-50%, -50%);
         }
 
+        /* Кнопка для ввода ставки */
+        .bet-input-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid #e6f4ff;
+            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+        }
+
+        .bet-input-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            text-align: center;
+        }
+
+        .bet-input-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .bet-input {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e6f4ff;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            transition: all 0.3s;
+        }
+
+        .bet-input:focus {
+            outline: none;
+            border-color: #2aabee;
+            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
+        }
+
+        .bet-input-btn {
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .bet-input-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+
+        .bet-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .bet-btn {
+            padding: 12px;
+            background: white;
+            border: 2px solid #e6f4ff;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #2aabee;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .bet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
+            border-color: #2aabee;
+        }
+
+        .bet-btn.active {
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            border-color: #2aabee;
+            color: white;
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+
         /* Поле игры */
         .game-field {
             background: white;
@@ -430,39 +521,6 @@
             display: flex;
             gap: 16px;
             margin-bottom: 16px;
-        }
-
-        .bet-controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .bet-button {
-            background: white;
-            border: 2px solid #e6f4ff;
-            border-radius: 16px;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #2aabee;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
-        }
-
-        .bet-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
-        }
-
-        .bet-button.active {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-color: #2aabee;
-            color: white;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
         }
 
         .control-button {
@@ -666,6 +724,14 @@
                 width: 100%;
                 order: -1;
             }
+            
+            .bet-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .bet-input-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -721,8 +787,23 @@
                 </div>
                 
                 <div class="settings-row">
-                    <div class="settings-label">Безопасных клеток:</div>
-                    <div class="settings-value" id="safeCells">22</div>
+                    <div class="settings-label">Шанс избежать мины:</div>
+                    <div class="settings-value" id="avoidChance">35%</div>
+                </div>
+            </div>
+
+            <!-- Ввод ставки -->
+            <div class="bet-input-section">
+                <div class="bet-input-title">Ваша ставка (TON)</div>
+                <div class="bet-input-container">
+                    <input type="number" class="bet-input" id="betInput" value="1" min="0.3" step="0.1" placeholder="Введите сумму">
+                    <button class="bet-input-btn" id="setBetButton">Установить</button>
+                </div>
+                <div class="bet-buttons">
+                    <button class="bet-btn" data-bet="0.3">0.3 TON</button>
+                    <button class="bet-btn" data-bet="1">1 TON</button>
+                    <button class="bet-btn" data-bet="5">5 TON</button>
+                    <button class="bet-btn" data-bet="10">10 TON</button>
                 </div>
             </div>
 
@@ -748,13 +829,6 @@
                 </div>
             </div>
 
-            <!-- Управление ставками -->
-            <div class="bet-controls">
-                <button class="bet-button active" data-bet="10">10 TON</button>
-                <button class="bet-button" data-bet="50">50 TON</button>
-                <button class="bet-button" data-bet="100">100 TON</button>
-            </div>
-
             <!-- Управление игрой -->
             <div class="game-controls">
                 <button class="control-button flag-button" id="flagButton">
@@ -775,7 +849,7 @@
     <script>
         // ==================== ПЕРЕМЕННЫЕ ====================
         let balance = parseInt(localStorage.getItem('balance')) || 1500;
-        let currentBet = 10;
+        let currentBet = 1; // Минимальная ставка 1 TON
         let gameActive = false;
         let gameFinished = false;
         let minesCount = 3;
@@ -787,9 +861,8 @@
         let gridState = [];
         let gameStarted = false;
         
-        // ПОДКРУТКА: БОЛЬШЕ МИН (для увеличения прибыли казино)
-        // Шанс избежать мины всего 15% - мины чаще проигрывают
-        const AVOID_MINE_CHANCE = 0.15; // 15% шанс избежать мины
+        // ШАНСЫ: 35% выигрыш, 65% проигрыш
+        const AVOID_MINE_CHANCE = 0.35; // 35% шанс избежать мины
         
         // Коэффициенты: ЧЕМ БОЛЬШЕ МИН - ТЕМ БОЛЬШЕ КОЭФФИЦИЕНТ
         const MULTIPLIERS = {
@@ -819,6 +892,9 @@
             24: 2.40   // 24 мины - множитель 2.40x
         };
         
+        // Минимальная ставка 0.3 TON
+        const MIN_BET = 0.3;
+        
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
         const backButton = document.getElementById('backButton');
@@ -827,13 +903,15 @@
         const minesCountEl = document.getElementById('minesCount');
         const minesDisplay = document.getElementById('minesDisplay');
         const multiplierPerCellEl = document.getElementById('multiplierPerCell');
-        const safeCellsEl = document.getElementById('safeCells');
+        const avoidChanceEl = document.getElementById('avoidChance');
+        const betInput = document.getElementById('betInput');
+        const setBetButton = document.getElementById('setBetButton');
+        const betBtns = document.querySelectorAll('.bet-btn');
         const minesGrid = document.getElementById('minesGrid');
         const cellsOpenedEl = document.getElementById('cellsOpened');
         const totalCellsEl = document.getElementById('totalCells');
         const currentMultiplierEl = document.getElementById('currentMultiplier');
         const potentialWinEl = document.getElementById('potentialWin');
-        const betButtons = document.querySelectorAll('.bet-button');
         const flagButton = document.getElementById('flagButton');
         const startButton = document.getElementById('startButton');
         const cashoutButton = document.getElementById('cashoutButton');
@@ -846,6 +924,10 @@
             updateMultiplierInfo();
             createGrid();
             updateGameInfo();
+            
+            // Устанавливаем минимальную ставку
+            betInput.min = MIN_BET;
+            betInput.value = currentBet;
             
             // Восстановление из localStorage
             const savedGame = JSON.parse(localStorage.getItem('minesGame'));
@@ -890,7 +972,7 @@
                     state: 'hidden',
                     isMine: false,
                     isFlag: false,
-                    hasGem: Math.random() > 0.97 // 3% шанс алмаза (редко)
+                    hasGem: Math.random() > 0.98 // 2% шанс алмаза (очень редко)
                 });
             }
             
@@ -988,21 +1070,39 @@
                 }
             });
             
-            // Кнопки ставок
-            betButtons.forEach(button => {
+            // Ввод ставки через поле
+            betInput.addEventListener('input', () => {
+                let value = parseFloat(betInput.value);
+                if (isNaN(value) || value < MIN_BET) {
+                    value = MIN_BET;
+                    betInput.value = value;
+                }
+                
+                // Округляем до 1 десятичного знака
+                value = Math.round(value * 10) / 10;
+                betInput.value = value;
+                
+                // Снимаем активность с кнопок быстрых ставок
+                betBtns.forEach(btn => btn.classList.remove('active'));
+            });
+            
+            // Кнопка установки ставки
+            setBetButton.addEventListener('click', () => {
+                setCurrentBet();
+            });
+            
+            // Кнопки быстрых ставок
+            betBtns.forEach(button => {
                 button.addEventListener('click', () => {
                     if (gameActive) return;
                     
-                    betButtons.forEach(b => b.classList.remove('active'));
+                    const betValue = parseFloat(button.dataset.bet);
+                    betInput.value = betValue;
+                    setCurrentBet();
+                    
+                    // Устанавливаем активную кнопку
+                    betBtns.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    currentBet = parseInt(button.dataset.bet);
-                    
-                    if (currentBet > balance) {
-                        showNotification('Недостаточно средств!', 'lose');
-                        return;
-                    }
-                    
-                    updatePotentialWin();
                 });
             });
             
@@ -1027,6 +1127,12 @@
                     return;
                 }
                 
+                // Проверка минимальной ставки
+                if (currentBet < MIN_BET) {
+                    showNotification(`Минимальная ставка: ${MIN_BET} TON!`, 'lose');
+                    return;
+                }
+                
                 if (currentBet > balance) {
                     showNotification('Недостаточно средств!', 'lose');
                     return;
@@ -1044,6 +1150,23 @@
                 
                 cashout();
             });
+        }
+        
+        // Функция установки текущей ставки
+        function setCurrentBet() {
+            let value = parseFloat(betInput.value);
+            if (isNaN(value) || value < MIN_BET) {
+                value = MIN_BET;
+                betInput.value = value;
+            }
+            
+            // Округляем до 1 десятичного знака
+            value = Math.round(value * 10) / 10;
+            betInput.value = value;
+            currentBet = value;
+            
+            updatePotentialWin();
+            showNotification(`Ставка установлена: ${value} TON`, 'info');
         }
         
         // ==================== ЛОГИКА ИГРЫ С ПОДКРУТКОЙ ====================
@@ -1069,6 +1192,9 @@
             cashoutButton.disabled = false;
             flagButton.disabled = false;
             minesSlider.disabled = true;
+            betInput.disabled = true;
+            setBetButton.disabled = true;
+            betBtns.forEach(btn => btn.disabled = true);
             
             showNotification('Игра началась! Открывайте клетки', 'info');
         }
@@ -1087,13 +1213,13 @@
                 gameStarted = true;
             }
             
-            // ПОДКРУТКА: часто падают мины (85% шанс попадания на мину)
+            // ПОДКРУТКА: 65% попадания на мину, 35% избежания
             if (cell.isMine) {
-                // Всего 15% шанс что игрок избежит мины (часто проигрывают)
+                // 35% шанс что игрок избежит мины (65% попадания)
                 const willAvoidMine = Math.random() < AVOID_MINE_CHANCE;
                 
                 if (willAvoidMine) {
-                    // Игрок избежал мины! (15% шанс)
+                    // Игрок избежал мины! (35% шанс)
                     cell.state = 'opened';
                     cellElement.classList.add('opened', 'revealed', 'empty');
                     cellElement.dataset.state = 'opened';
@@ -1105,7 +1231,7 @@
                     
                     showNotification('🎉 Удача! Вы избежали мины!', 'win');
                 } else {
-                    // Игрок попал на мину (85% шанс) - ЧАСТЫЙ ПРОИГРЫШ
+                    // Игрок попал на мину (65% шанс) - ЧАСТЫЙ ПРОИГРЫШ
                     gameFinished = true;
                     cell.state = 'mine';
                     cellElement.classList.add('mine', 'opened', 'revealed');
@@ -1128,8 +1254,8 @@
                 // Добавляем иконку в зависимости от типа клетки
                 if (cell.hasGem) {
                     cellElement.classList.add('gem');
-                    showNotification('💎 Найден алмаз! Множитель +15%', 'info');
-                    currentMultiplier *= 1.15; // +15% за алмаз (маленький бонус)
+                    showNotification('💎 Найден алмаз! Множитель +10%', 'info');
+                    currentMultiplier *= 1.10; // +10% за алмаз (маленький бонус)
                 } else {
                     cellElement.classList.add('empty');
                 }
@@ -1149,11 +1275,11 @@
                 revealAllMines();
                 updateGameState();
                 
-                const winAmount = Math.round(currentBet * currentMultiplier);
+                const winAmount = Math.round(currentBet * currentMultiplier * 10) / 10; // Округление до 0.1
                 balance += winAmount;
                 updateBalanceDisplay();
                 
-                showNotification(`🎉 Вы открыли все безопасные клетки! Выигрыш: ${winAmount} TON!`, 'win');
+                showNotification(`🎉 Вы открыли все безопасные клетки! Выигрыш: ${winAmount.toFixed(1)} TON!`, 'win');
                 endGame(true);
                 return;
             }
@@ -1199,14 +1325,14 @@
             
             gameFinished = true;
             
-            const winAmount = Math.round(currentBet * currentMultiplier);
+            const winAmount = Math.round(currentBet * currentMultiplier * 10) / 10; // Округление до 0.1
             balance += winAmount;
             
             updateBalanceDisplay();
             revealAllMines();
             updateGameState();
             
-            showNotification(`🎉 Вы забрали ${winAmount} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
+            showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
             endGame(true);
         }
         
@@ -1214,12 +1340,15 @@
             gameActive = false;
             gameStarted = false;
             
-            startButton.innerHTML = '<span class="control-icon start-icon"></span>Новая игра';
+            startButton.innerHTML = '<span class="control-icon start-icon"></span>Начать игру';
             cashoutButton.disabled = true;
             flagButton.disabled = true;
             minesSlider.disabled = false;
             flagButton.classList.remove('active');
             flagMode = false;
+            betInput.disabled = false;
+            setBetButton.disabled = false;
+            betBtns.forEach(btn => btn.disabled = false);
             
             // Сохраняем статистику
             saveGameResult(isWin);
@@ -1251,6 +1380,9 @@
             flagButton.disabled = false;
             minesSlider.disabled = false;
             flagButton.classList.remove('active');
+            betInput.disabled = false;
+            setBetButton.disabled = false;
+            betBtns.forEach(btn => btn.disabled = false);
             
             // Очищаем сохраненную игру
             localStorage.removeItem('minesGame');
@@ -1294,8 +1426,7 @@
         function updateMultiplierInfo() {
             const multiplier = MULTIPLIERS[minesCount];
             multiplierPerCellEl.textContent = multiplier.toFixed(2) + 'x';
-            const safeCells = totalCells - minesCount;
-            safeCellsEl.textContent = safeCells;
+            avoidChanceEl.textContent = Math.round(AVOID_MINE_CHANCE * 100) + '%';
         }
         
         function updateGameState() {
@@ -1305,8 +1436,8 @@
         }
         
         function updatePotentialWin() {
-            const potentialWin = Math.round(currentBet * currentMultiplier);
-            potentialWinEl.textContent = potentialWin + ' TON';
+            const potentialWin = Math.round(currentBet * currentMultiplier * 10) / 10;
+            potentialWinEl.textContent = potentialWin.toFixed(1) + ' TON';
         }
         
         function updateBalanceDisplay() {
@@ -1337,7 +1468,7 @@
                 bet: currentBet,
                 win: isWin,
                 multiplier: currentMultiplier,
-                amount: Math.round(currentBet * currentMultiplier),
+                amount: Math.round(currentBet * currentMultiplier * 10) / 10,
                 mines: minesCount,
                 cellsOpened: openedCells
             };
