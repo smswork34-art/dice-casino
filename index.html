@@ -108,6 +108,28 @@
             padding: 24px;
         }
 
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: #2aabee;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 0;
+            margin-bottom: 20px;
+        }
+
+        .back-icon {
+            width: 16px;
+            height: 16px;
+            background: #2aabee;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232aabee" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
         .game-title {
             font-size: 28px;
             font-weight: 800;
@@ -120,16 +142,9 @@
             background-clip: text;
         }
 
-        .game-subtitle {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 32px;
-            text-align: center;
-        }
-
-        /* ТАЙМЕР НОВОЙ ИГРЫ */
-        .next-game-timer {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+        /* ТАЙМЕР ДЛЯ СТАВОК */
+        .bet-timer {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 24px;
@@ -495,10 +510,9 @@
             </button>
 
             <h1 class="game-title">КРАШ ИГРА</h1>
-            <p class="game-subtitle">Общая игра для всех</p>
 
-            <!-- ТАЙМЕР НОВОЙ ИГРЫ -->
-            <div class="next-game-timer" id="nextGameTimer">
+            <!-- ТАЙМЕР ДЛЯ СТАВОК (10 секунд) -->
+            <div class="bet-timer" id="betTimer">
                 <div class="timer-label">Следующая игра через:</div>
                 <div class="timer-value" id="timerValue">10 сек</div>
             </div>
@@ -530,9 +544,9 @@
             </div>
 
             <!-- КНОПКИ -->
-            <button class="place-bet-button" id="placeBetButton" disabled>
+            <button class="place-bet-button" id="placeBetButton">
                 <span class="control-icon bet-icon"></span>
-                Ожидание начала игры...
+                Поставить ставку
             </button>
             <button class="cashout-button" id="cashoutButton" disabled>
                 <span class="control-icon cashout-icon"></span>
@@ -557,20 +571,22 @@
         // ==================== КОНСТАНТЫ ====================
         const INITIAL_BALANCE = 1000;
         const MIN_BET = 1;
-        const TIME_BETWEEN_GAMES = 10000; // 10 секунд между играми
-        const GRAPH_SPEED = 5000; // 5 секунд до краша
+        const BET_TIME = 10000; // 10 секунд чтобы поставить ставку
+        const TIME_PER_X = 8000; // 8 секунд на каждый +1x
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let balance = parseInt(localStorage.getItem('crashBalance')) || INITIAL_BALANCE;
         let currentBet = 10;
         let isGameActive = false;
+        let isBettingTime = true;
         let hasPlacedBet = false;
         let currentMultiplier = 1.0;
         let crashPoint = 0;
         let gameInterval = null;
-        let nextGameTimer = null;
-        let timeToNextGame = TIME_BETWEEN_GAMES;
+        let betTimer = null;
+        let timeToNextGame = BET_TIME;
         let animationStartTime = 0;
+        let timeSinceLastX = 0;
 
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -593,7 +609,7 @@
             updateUsername();
             setupEventListeners();
             initializeChart();
-            startNextGameTimer();
+            startBetTimer();
         }
 
         function updateBalanceDisplay() {
@@ -606,18 +622,27 @@
             username.textContent = savedUsername;
         }
 
-        // ==================== ТАЙМЕР СЛЕДУЮЩЕЙ ИГРЫ ====================
-        function startNextGameTimer() {
-            clearInterval(nextGameTimer);
-            timeToNextGame = TIME_BETWEEN_GAMES;
+        // ==================== ТАЙМЕР ДЛЯ СТАВОК ====================
+        function startBetTimer() {
+            clearInterval(betTimer);
+            isBettingTime = true;
+            timeToNextGame = BET_TIME;
             updateTimerDisplay();
             
-            nextGameTimer = setInterval(() => {
+            // Включаем кнопку ставки
+            placeBetButton.disabled = false;
+            placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Поставить ставку';
+            
+            betTimer = setInterval(() => {
                 timeToNextGame -= 1000;
                 
                 if (timeToNextGame <= 0) {
-                    startNewGame();
-                    timeToNextGame = TIME_BETWEEN_GAMES;
+                    // Время на ставки закончилось
+                    clearInterval(betTimer);
+                    isBettingTime = false;
+                    placeBetButton.disabled = true;
+                    placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Время вышло';
+                    startGame();
                 }
                 
                 updateTimerDisplay();
@@ -637,23 +662,11 @@
             }
         }
 
-        // ==================== ГЕНЕРАЦИЯ ТОЧКИ КРАША ====================
-        function generateCrashPoint() {
-            const random = Math.random();
-            
-            if (random < 0.50) return 1.01 + Math.random() * 0.99;
-            if (random < 0.75) return 2.0 + Math.random() * 3.0;
-            if (random < 0.90) return 5.0 + Math.random() * 5.0;
-            if (random < 0.97) return 10.0 + Math.random() * 40.0;
-            return 50.0 + Math.random() * 50.0;
-        }
-
-        // ==================== НОВАЯ ИГРА ====================
-        function startNewGame() {
+        // ==================== НАЧАЛО ИГРЫ ====================
+        function startGame() {
             if (isGameActive) return;
             
             isGameActive = true;
-            hasPlacedBet = false;
             currentMultiplier = 1.0;
             
             // Генерируем точку краша
@@ -664,46 +677,57 @@
             currentMultiplierEl.style.color = '#4CAF50';
             initializeChart();
             
-            // Включаем кнопку ставки
-            placeBetButton.disabled = false;
-            placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Сделать ставку';
-            
-            // Выключаем кнопку вывода
-            cashoutButton.disabled = true;
-            
-            // Останавливаем таймер
-            clearInterval(nextGameTimer);
+            // Выключаем таймер
             timerValue.textContent = 'Игра идет...';
             
             // Запускаем игру
             animationStartTime = Date.now();
-            gameInterval = setInterval(updateGame, 50);
+            timeSinceLastX = Date.now();
+            gameInterval = setInterval(updateGame, 100);
+        }
+
+        function generateCrashPoint() {
+            const random = Math.random();
             
-            showNotification('🎮 Новая игра началась!', 'info');
+            // Шансы краша
+            if (random < 0.40) return 1.5; // 40% до 1.5x
+            if (random < 0.65) return 2.5; // 25% до 2.5x  
+            if (random < 0.80) return 5.0; // 15% до 5.0x
+            if (random < 0.90) return 10.0; // 10% до 10.0x
+            if (random < 0.97) return 25.0; // 7% до 25.0x
+            return 50.0; // 3% до 50.0x
         }
 
         function updateGame() {
             if (!isGameActive) return;
             
             const elapsedTime = Date.now() - animationStartTime;
-            const progress = Math.min(elapsedTime / GRAPH_SPEED, 1);
+            const timeSinceX = Date.now() - timeSinceLastX;
             
-            // Обновляем множитель
-            currentMultiplier = 1.0 + (crashPoint - 1.0) * progress;
+            // Каждые 8 секунд добавляем +1x
+            if (timeSinceX >= TIME_PER_X) {
+                currentMultiplier += 1.0;
+                timeSinceLastX = Date.now();
+            }
+            
+            // Проверяем не достигли ли точки краша
             currentMultiplier = Math.min(currentMultiplier, crashPoint);
             
             // Обновляем отображение
             currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
             updatePotentialWin();
-            updateChart(progress);
+            updateChart((currentMultiplier - 1) / (crashPoint - 1));
             
             // Если игрок сделал ставку
             if (hasPlacedBet) {
                 potentialMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
                 potentialWinEl.textContent = (currentBet * currentMultiplier).toFixed(1) + ' TON';
                 
+                // Меняем цвет при приближении к крашу
                 if (currentMultiplier > crashPoint * 0.9) {
                     currentMultiplierEl.style.color = '#ff6b6b';
+                } else if (currentMultiplier > crashPoint * 0.7) {
+                    currentMultiplierEl.style.color = '#FF9800';
                 }
             }
             
@@ -729,22 +753,21 @@
                 hasPlacedBet = false;
             }
             
-            // Выключаем кнопки
-            placeBetButton.disabled = true;
-            placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ожидание новой игры...';
+            // Сбрасываем ставку игрока
+            hasPlacedBet = false;
             cashoutButton.disabled = true;
             
-            // Запускаем таймер заново
+            // Запускаем новый таймер через 2 секунды
             setTimeout(() => {
                 currentMultiplierEl.classList.remove('crash-animation');
-                startNextGameTimer();
-            }, 1000);
+                startBetTimer();
+            }, 2000);
         }
 
         // ==================== ДЕЙСТВИЯ ИГРОКА ====================
         function placeBet() {
-            if (!isGameActive) {
-                showNotification('Игра еще не началась!', 'info');
+            if (!isBettingTime) {
+                showNotification('Время для ставок закончилось!', 'info');
                 return;
             }
             
