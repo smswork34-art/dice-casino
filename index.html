@@ -211,7 +211,7 @@
             z-index: 2;
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 4s linear; /* ОЧЕНЬ МЕДЛЕННО - 4 секунды */
+            transition: transform 4s linear;
         }
 
         .chart-fill {
@@ -222,7 +222,7 @@
             height: 100%;
             background: linear-gradient(to top, rgba(42, 171, 238, 0.1) 0%, rgba(42, 171, 238, 0) 100%);
             clip-path: polygon(0% 100%, var(--progress, 0%) 100%, var(--progress, 0%) 0%, 0% 0%);
-            transition: clip-path 4s linear; /* ОЧЕНЬ МЕДЛЕННО - 4 секунды */
+            transition: clip-path 4s linear;
         }
 
         .chart-grid {
@@ -614,8 +614,8 @@
         // ==================== КОНСТАНТЫ ====================
         const INITIAL_BALANCE = 1000;
         const MIN_BET = 1;
-        const BET_TIME = 10000; // 10 секунд для ставок
-        const GAME_DURATION = 120000; // 120 секунд макс - ОЧЕНЬ МЕДЛЕННО
+        const BET_TIME = 10000;
+        const GAME_DURATION = 120000;
         const MAX_MULTIPLIER = 100;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
@@ -626,6 +626,7 @@
         let hasPlacedBet = false;
         let currentMultiplier = 1.0;
         let crashPoint = 0;
+        let lastDisplayedMultiplier = 1.0; // Для правильного отображения в уведомлениях
         let gameInterval = null;
         let betTimer = null;
         let timeToNextGame = BET_TIME;
@@ -709,6 +710,7 @@
             
             isGameActive = true;
             currentMultiplier = 1.0;
+            lastDisplayedMultiplier = 1.0;
             
             // Генерируем точку краша с падающими шансами
             crashPoint = generateCrashPoint();
@@ -717,12 +719,14 @@
             // Сбрасываем UI
             currentMultiplierEl.textContent = '1.00x';
             currentMultiplierEl.style.color = '#4CAF50';
+            potentialMultiplierEl.textContent = '1.00x';
+            potentialWinEl.textContent = '0 TON';
             initializeChart();
             
             timerValue.textContent = 'Игра идет...';
             
             animationStartTime = Date.now();
-            gameInterval = setInterval(updateGame, 50); // Чаще обновляем для плавности
+            gameInterval = setInterval(updateGame, 50);
         }
 
         function generateCrashPoint() {
@@ -772,19 +776,14 @@
             // ОЧЕНЬ МЕДЛЕННАЯ анимация роста
             let visualProgress;
             if (timeProgress < 0.05) {
-                // Супер медленный старт
                 visualProgress = timeProgress * 0.2;
             } else if (timeProgress < 0.2) {
-                // Очень медленный рост
                 visualProgress = 0.01 + (timeProgress - 0.05) * 0.15;
             } else if (timeProgress < 0.5) {
-                // Медленный рост
                 visualProgress = 0.0235 + (timeProgress - 0.2) * 0.25;
             } else if (timeProgress < 0.8) {
-                // Средний рост
                 visualProgress = 0.0985 + (timeProgress - 0.5) * 0.35;
             } else {
-                // Медленный финиш
                 visualProgress = 0.2035 + (timeProgress - 0.8) * 0.8;
             }
             
@@ -796,19 +795,24 @@
                 visualMultiplier = 1.0 + (maxVisualMultiplier - 1.0) * visualProgress;
                 
                 if (visualMultiplier >= crashPoint) {
+                    // Достигли точки краша
                     currentMultiplier = crashPoint;
+                    lastDisplayedMultiplier = crashPoint; // Сохраняем для уведомления
                     endGame();
                     return;
                 } else {
                     currentMultiplier = visualMultiplier;
+                    lastDisplayedMultiplier = visualMultiplier; // Сохраняем актуальный множитель
                 }
             } else {
+                // Достигли точки краша
                 currentMultiplier = crashPoint;
+                lastDisplayedMultiplier = crashPoint; // Сохраняем для уведомления
                 endGame();
                 return;
             }
             
-            // Обновляем отображение
+            // Обновляем отображение с округлением до 2 знаков
             currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
             updatePotentialWin();
             updateChart(visualProgress);
@@ -831,13 +835,16 @@
             clearInterval(gameInterval);
             isGameActive = false;
             
+            // Обновляем отображение с ПРАВИЛЬНЫМ множителем
+            currentMultiplierEl.textContent = lastDisplayedMultiplier.toFixed(2) + 'x';
             currentMultiplierEl.classList.add('crash-animation');
             currentMultiplierEl.style.color = '#ff6b6b';
             
             createExplosion();
             
+            // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель, что и на экране
             if (hasPlacedBet) {
-                showNotification(`💥 КРАШ! Игра закончилась на ${currentMultiplier.toFixed(2)}x`, 'lose');
+                showNotification(`💥 КРАШ! Игра закончилась на ${lastDisplayedMultiplier.toFixed(2)}x`, 'lose');
                 hasPlacedBet = false;
             }
             
@@ -904,12 +911,14 @@
                 return;
             }
             
-            const winAmount = Math.round(currentBet * currentMultiplier * 10) / 10;
+            // Используем актуальный множитель для расчета выигрыша
+            const winAmount = Math.round(currentBet * lastDisplayedMultiplier * 10) / 10;
             balance += winAmount;
             
             updateBalanceDisplay();
             
-            showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${currentMultiplier.toFixed(2)}x`, 'win');
+            // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель
+            showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${lastDisplayedMultiplier.toFixed(2)}x`, 'win');
             
             hasPlacedBet = false;
             
