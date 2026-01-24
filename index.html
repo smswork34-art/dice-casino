@@ -453,6 +453,7 @@
             color: #2aabee;
         }
 
+        /* АНИМАЦИИ */
         @keyframes crashEffect {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.1); opacity: 0.8; }
@@ -463,6 +464,28 @@
             0% { transform: scale(0); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.7; }
             100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        @keyframes moneyRain {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes confetti {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes winPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(76, 175, 80, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        @keyframes bigWin {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
         }
 
         .crash-animation {
@@ -480,6 +503,85 @@
             animation: crashExplosion 0.8s ease-out forwards;
         }
 
+        .money-particle {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .win-animation {
+            animation: winPulse 1s ease-in-out;
+        }
+
+        .big-win-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .big-win-content {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            transform: scale(0);
+            animation: bigWin 1s ease-out forwards;
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.5);
+            border: 5px solid white;
+        }
+
+        .big-win-text {
+            font-size: 48px;
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .big-win-amount {
+            font-size: 64px;
+            font-weight: 900;
+            color: #000;
+            text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .big-win-multiplier {
+            font-size: 36px;
+            font-weight: 800;
+            color: #000;
+            margin-top: 10px;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        /* УВЕДОМЛЕНИЯ */
         .notification {
             position: fixed;
             top: 20px;
@@ -529,6 +631,18 @@
             
             .bet-input-container {
                 flex-direction: column;
+            }
+            
+            .big-win-text {
+                font-size: 32px;
+            }
+            
+            .big-win-amount {
+                font-size: 48px;
+            }
+            
+            .big-win-multiplier {
+                font-size: 24px;
             }
         }
     </style>
@@ -610,6 +724,32 @@
         </div>
     </div>
 
+    <!-- ОВЕРЛЕЙ ДЛЯ КРУПНОГО ВЫИГРЫША -->
+    <div class="big-win-overlay" id="bigWinOverlay">
+        <div class="big-win-content">
+            <div class="big-win-text">🔥 БОЛЬШОЙ ВЫИГРЫШ! 🔥</div>
+            <div class="big-win-amount" id="bigWinAmount">0 TON</div>
+            <div class="big-win-multiplier" id="bigWinMultiplier">0.00x</div>
+        </div>
+    </div>
+
+    <!-- АУДИО ЭЛЕМЕНТЫ -->
+    <audio id="soundBet" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="soundCashout" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="soundCrash" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-explosion-hit-1994.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="soundWin" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-coin-1998.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="soundBigWin" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-trumpet-2018.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         // ==================== КОНСТАНТЫ ====================
         const INITIAL_BALANCE = 1000;
@@ -617,6 +757,7 @@
         const BET_TIME = 10000;
         const GAME_DURATION = 120000;
         const MAX_MULTIPLIER = 100;
+        const BIG_WIN_THRESHOLD = 500; // Порог для большого выигрыша в TON
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let balance = parseInt(localStorage.getItem('crashBalance')) || INITIAL_BALANCE;
@@ -626,11 +767,12 @@
         let hasPlacedBet = false;
         let currentMultiplier = 1.0;
         let crashPoint = 0;
-        let lastDisplayedMultiplier = 1.0; // Для правильного отображения в уведомлениях
+        let lastDisplayedMultiplier = 1.0;
         let gameInterval = null;
         let betTimer = null;
         let timeToNextGame = BET_TIME;
         let animationStartTime = 0;
+        let soundEnabled = true;
 
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -646,6 +788,16 @@
         const crashChart = document.getElementById('crashChart');
         const timerValue = document.getElementById('timerValue');
         const backButton = document.getElementById('backButton');
+        const bigWinOverlay = document.getElementById('bigWinOverlay');
+        const bigWinAmount = document.getElementById('bigWinAmount');
+        const bigWinMultiplier = document.getElementById('bigWinMultiplier');
+
+        // ==================== ЗВУКИ ====================
+        const soundBet = document.getElementById('soundBet');
+        const soundCashout = document.getElementById('soundCashout');
+        const soundCrash = document.getElementById('soundCrash');
+        const soundWin = document.getElementById('soundWin');
+        const soundBigWin = document.getElementById('soundBigWin');
 
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
@@ -654,6 +806,7 @@
             setupEventListeners();
             initializeChart();
             startBetTimer();
+            preloadSounds();
         }
 
         function updateBalanceDisplay() {
@@ -664,6 +817,15 @@
         function updateUsername() {
             const savedUsername = localStorage.getItem('username') || 'Игрок';
             username.textContent = savedUsername;
+        }
+
+        function preloadSounds() {
+            // Предзагрузка звуков
+            const sounds = [soundBet, soundCashout, soundCrash, soundWin, soundBigWin];
+            sounds.forEach(sound => {
+                sound.volume = 0.5;
+                sound.load();
+            });
         }
 
         // ==================== ТАЙМЕР ДЛЯ СТАВОК ====================
@@ -797,22 +959,22 @@
                 if (visualMultiplier >= crashPoint) {
                     // Достигли точки краша
                     currentMultiplier = crashPoint;
-                    lastDisplayedMultiplier = crashPoint; // Сохраняем для уведомления
+                    lastDisplayedMultiplier = crashPoint;
                     endGame();
                     return;
                 } else {
                     currentMultiplier = visualMultiplier;
-                    lastDisplayedMultiplier = visualMultiplier; // Сохраняем актуальный множитель
+                    lastDisplayedMultiplier = visualMultiplier;
                 }
             } else {
                 // Достигли точки краша
                 currentMultiplier = crashPoint;
-                lastDisplayedMultiplier = crashPoint; // Сохраняем для уведомления
+                lastDisplayedMultiplier = crashPoint;
                 endGame();
                 return;
             }
             
-            // Обновляем отображение с округлением до 2 знаков
+            // Обновляем отображение
             currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
             updatePotentialWin();
             updateChart(visualProgress);
@@ -835,14 +997,17 @@
             clearInterval(gameInterval);
             isGameActive = false;
             
-            // Обновляем отображение с ПРАВИЛЬНЫМ множителем
+            // Обновляем отображение
             currentMultiplierEl.textContent = lastDisplayedMultiplier.toFixed(2) + 'x';
             currentMultiplierEl.classList.add('crash-animation');
             currentMultiplierEl.style.color = '#ff6b6b';
             
+            // Звук краша
+            playSound(soundCrash);
+            
             createExplosion();
             
-            // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель, что и на экране
+            // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель
             if (hasPlacedBet) {
                 showNotification(`💥 КРАШ! Игра закончилась на ${lastDisplayedMultiplier.toFixed(2)}x`, 'lose');
                 hasPlacedBet = false;
@@ -898,9 +1063,18 @@
             
             hasPlacedBet = true;
             
+            // Звук ставки
+            playSound(soundBet);
+            
             placeBetButton.disabled = true;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ставка сделана';
             cashoutButton.disabled = false;
+            
+            // Анимация кнопки
+            placeBetButton.classList.add('win-animation');
+            setTimeout(() => {
+                placeBetButton.classList.remove('win-animation');
+            }, 1000);
             
             showNotification(`Ставка ${currentBet} TON принята!`, 'info');
         }
@@ -917,6 +1091,24 @@
             
             updateBalanceDisplay();
             
+            // Звук вывода
+            playSound(soundCashout);
+            
+            // Анимация кнопки вывода
+            cashoutButton.classList.add('win-animation');
+            setTimeout(() => {
+                cashoutButton.classList.remove('win-animation');
+            }, 1000);
+            
+            // Проверяем на крупный выигрыш
+            if (winAmount >= BIG_WIN_THRESHOLD) {
+                showBigWinAnimation(winAmount, lastDisplayedMultiplier);
+                playSound(soundBigWin);
+            } else {
+                playSound(soundWin);
+                createMoneyRain(winAmount);
+            }
+            
             // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель
             showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${lastDisplayedMultiplier.toFixed(2)}x`, 'win');
             
@@ -925,6 +1117,84 @@
             cashoutButton.disabled = true;
             placeBetButton.disabled = true;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ожидание новой игры...';
+        }
+
+        // ==================== АНИМАЦИИ ВЫИГРЫША ====================
+        function showBigWinAnimation(amount, multiplier) {
+            bigWinAmount.textContent = amount.toFixed(1) + ' TON';
+            bigWinMultiplier.textContent = multiplier.toFixed(2) + 'x';
+            
+            bigWinOverlay.style.opacity = '1';
+            bigWinOverlay.style.pointerEvents = 'auto';
+            
+            // Создаем конфетти
+            createConfetti();
+            
+            // Скрываем через 3 секунды
+            setTimeout(() => {
+                bigWinOverlay.style.opacity = '0';
+                bigWinOverlay.style.pointerEvents = 'none';
+            }, 3000);
+        }
+
+        function createMoneyRain(amount) {
+            const particleCount = Math.min(50, Math.floor(amount / 10));
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'money-particle';
+                particle.textContent = '💎';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animation = `moneyRain ${1 + Math.random() * 2}s ease-in forwards`;
+                particle.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                document.body.appendChild(particle);
+                
+                // Удаляем частицу после анимации
+                setTimeout(() => {
+                    particle.remove();
+                }, 3000);
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#FFD700', '#FF6B6B', '#4CAF50', '#2aabee', '#FF9800', '#9C27B0'];
+            const shapes = ['💎', '💰', '🎁', '🏆', '⭐', '🔥'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.fontSize = (15 + Math.random() * 20) + 'px';
+                confetti.style.animation = `confetti ${2 + Math.random() * 2}s ease-in forwards`;
+                confetti.style.animationDelay = Math.random() * 1 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                // Удаляем конфетти после анимации
+                setTimeout(() => {
+                    confetti.remove();
+                }, 4000);
+            }
+        }
+
+        // ==================== ЗВУКИ ====================
+        function playSound(soundElement) {
+            if (!soundEnabled) return;
+            
+            try {
+                soundElement.currentTime = 0;
+                soundElement.play().catch(e => console.log("Звук не воспроизведен:", e));
+            } catch (e) {
+                console.log("Ошибка воспроизведения звука:", e);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            showNotification(soundEnabled ? '🔊 Звук включен' : '🔇 Звук выключен', 'info');
         }
 
         // ==================== ГРАФИК ====================
@@ -1029,6 +1299,15 @@
             
             backButton.addEventListener('click', () => {
                 window.history.back();
+            });
+            
+            // Двойной клик по балансу для переключения звука
+            balanceBtn.addEventListener('dblclick', toggleSound);
+            
+            // Клик по оверлею для закрытия
+            bigWinOverlay.addEventListener('click', () => {
+                bigWinOverlay.style.opacity = '0';
+                bigWinOverlay.style.pointerEvents = 'none';
             });
         }
 
