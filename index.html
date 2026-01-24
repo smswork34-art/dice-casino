@@ -668,7 +668,7 @@
 
             <h1 class="game-title">КРАШ ИГРА</h1>
 
-            <!-- ТАЙМЕР ДЛЯ СТАВОК (10 секунд) -->
+            <!-- ТАЙМЕР ДЛЯ СТАВОК -->
             <div class="bet-timer" id="betTimer">
                 <div class="timer-label">Следующая игра через:</div>
                 <div class="timer-value" id="timerValue">10 сек</div>
@@ -757,7 +757,7 @@
         const BET_TIME = 10000;
         const GAME_DURATION = 120000;
         const MAX_MULTIPLIER = 100;
-        const BIG_WIN_THRESHOLD = 500; // Порог для большого выигрыша в TON
+        const BIG_WIN_THRESHOLD = 500;
         
         // ==================== ПЕРЕМЕННЫЕ ====================
         let balance = parseInt(localStorage.getItem('crashBalance')) || INITIAL_BALANCE;
@@ -820,10 +820,9 @@
         }
 
         function preloadSounds() {
-            // Предзагрузка звуков
             const sounds = [soundBet, soundCashout, soundCrash, soundWin, soundBigWin];
             sounds.forEach(sound => {
-                sound.volume = 0.5;
+                sound.volume = 0.8;
                 sound.load();
             });
         }
@@ -874,11 +873,9 @@
             currentMultiplier = 1.0;
             lastDisplayedMultiplier = 1.0;
             
-            // Генерируем точку краша с падающими шансами
             crashPoint = generateCrashPoint();
             console.log("Краш будет на:", crashPoint.toFixed(2) + "x");
             
-            // Сбрасываем UI
             currentMultiplierEl.textContent = '1.00x';
             currentMultiplierEl.style.color = '#4CAF50';
             potentialMultiplierEl.textContent = '1.00x';
@@ -894,39 +891,14 @@
         function generateCrashPoint() {
             const random = Math.random();
             
-            // ПАДАЮЩИЕ ШАНСЫ:
-            // до 2x - 35%
-            if (random < 0.35) {
-                return 1.0 + Math.random(); // 1.0 - 2.0
-            }
-            // до 3x - 30% от оставшегося
-            else if (random < 0.35 + 0.195) {
-                return 2.0 + Math.random(); // 2.0 - 3.0
-            }
-            // до 4x - 25% от оставшегося
-            else if (random < 0.35 + 0.195 + 0.114) {
-                return 3.0 + Math.random(); // 3.0 - 4.0
-            }
-            // до 5x - 20% от оставшегося
-            else if (random < 0.35 + 0.195 + 0.114 + 0.068) {
-                return 4.0 + Math.random(); // 4.0 - 5.0
-            }
-            // до 10x - 15% от оставшегося
-            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041) {
-                return 5.0 + Math.random() * 5; // 5.0 - 10.0
-            }
-            // до 20x - 10% от оставшегося
-            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041 + 0.023) {
-                return 10.0 + Math.random() * 10; // 10.0 - 20.0
-            }
-            // до 50x - 5% от оставшегося
-            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041 + 0.023 + 0.0105) {
-                return 20.0 + Math.random() * 30; // 20.0 - 50.0
-            }
-            // до 100x - остаток
-            else {
-                return 50.0 + Math.random() * 50; // 50.0 - 100.0
-            }
+            if (random < 0.35) return 1.0 + Math.random();
+            else if (random < 0.35 + 0.195) return 2.0 + Math.random();
+            else if (random < 0.35 + 0.195 + 0.114) return 3.0 + Math.random();
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068) return 4.0 + Math.random();
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041) return 5.0 + Math.random() * 5;
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041 + 0.023) return 10.0 + Math.random() * 10;
+            else if (random < 0.35 + 0.195 + 0.114 + 0.068 + 0.041 + 0.023 + 0.0105) return 20.0 + Math.random() * 30;
+            else return 50.0 + Math.random() * 50;
         }
 
         function updateGame() {
@@ -935,21 +907,13 @@
             const elapsedTime = Date.now() - animationStartTime;
             const timeProgress = Math.min(elapsedTime / GAME_DURATION, 1);
             
-            // ОЧЕНЬ МЕДЛЕННАЯ анимация роста
             let visualProgress;
-            if (timeProgress < 0.05) {
-                visualProgress = timeProgress * 0.2;
-            } else if (timeProgress < 0.2) {
-                visualProgress = 0.01 + (timeProgress - 0.05) * 0.15;
-            } else if (timeProgress < 0.5) {
-                visualProgress = 0.0235 + (timeProgress - 0.2) * 0.25;
-            } else if (timeProgress < 0.8) {
-                visualProgress = 0.0985 + (timeProgress - 0.5) * 0.35;
-            } else {
-                visualProgress = 0.2035 + (timeProgress - 0.8) * 0.8;
-            }
+            if (timeProgress < 0.05) visualProgress = timeProgress * 0.2;
+            else if (timeProgress < 0.2) visualProgress = 0.01 + (timeProgress - 0.05) * 0.15;
+            else if (timeProgress < 0.5) visualProgress = 0.0235 + (timeProgress - 0.2) * 0.25;
+            else if (timeProgress < 0.8) visualProgress = 0.0985 + (timeProgress - 0.5) * 0.35;
+            else visualProgress = 0.2035 + (timeProgress - 0.8) * 0.8;
             
-            // Рассчитываем множитель
             const maxVisualMultiplier = 100;
             let visualMultiplier;
             
@@ -957,7 +921,6 @@
                 visualMultiplier = 1.0 + (maxVisualMultiplier - 1.0) * visualProgress;
                 
                 if (visualMultiplier >= crashPoint) {
-                    // Достигли точки краша
                     currentMultiplier = crashPoint;
                     lastDisplayedMultiplier = crashPoint;
                     endGame();
@@ -967,14 +930,12 @@
                     lastDisplayedMultiplier = visualMultiplier;
                 }
             } else {
-                // Достигли точки краша
                 currentMultiplier = crashPoint;
                 lastDisplayedMultiplier = crashPoint;
                 endGame();
                 return;
             }
             
-            // Обновляем отображение
             currentMultiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
             updatePotentialWin();
             updateChart(visualProgress);
@@ -997,17 +958,13 @@
             clearInterval(gameInterval);
             isGameActive = false;
             
-            // Обновляем отображение
             currentMultiplierEl.textContent = lastDisplayedMultiplier.toFixed(2) + 'x';
             currentMultiplierEl.classList.add('crash-animation');
             currentMultiplierEl.style.color = '#ff6b6b';
             
-            // Звук краша
             playSound(soundCrash);
-            
             createExplosion();
             
-            // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель
             if (hasPlacedBet) {
                 showNotification(`💥 КРАШ! Игра закончилась на ${lastDisplayedMultiplier.toFixed(2)}x`, 'lose');
                 hasPlacedBet = false;
@@ -1031,9 +988,7 @@
             explosion.style.transform = 'translate(-50%, -50%)';
             crashChart.appendChild(explosion);
             
-            setTimeout(() => {
-                explosion.remove();
-            }, 1000);
+            setTimeout(() => explosion.remove(), 1000);
         }
 
         // ==================== ДЕЙСТВИЯ ИГРОКА ====================
@@ -1060,21 +1015,16 @@
             
             balance -= currentBet;
             updateBalanceDisplay();
-            
             hasPlacedBet = true;
             
-            // Звук ставки
             playSound(soundBet);
             
             placeBetButton.disabled = true;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ставка сделана';
             cashoutButton.disabled = false;
             
-            // Анимация кнопки
             placeBetButton.classList.add('win-animation');
-            setTimeout(() => {
-                placeBetButton.classList.remove('win-animation');
-            }, 1000);
+            setTimeout(() => placeBetButton.classList.remove('win-animation'), 1000);
             
             showNotification(`Ставка ${currentBet} TON принята!`, 'info');
         }
@@ -1085,22 +1035,15 @@
                 return;
             }
             
-            // Используем актуальный множитель для расчета выигрыша
             const winAmount = Math.round(currentBet * lastDisplayedMultiplier * 10) / 10;
             balance += winAmount;
-            
             updateBalanceDisplay();
             
-            // Звук вывода
             playSound(soundCashout);
             
-            // Анимация кнопки вывода
             cashoutButton.classList.add('win-animation');
-            setTimeout(() => {
-                cashoutButton.classList.remove('win-animation');
-            }, 1000);
+            setTimeout(() => cashoutButton.classList.remove('win-animation'), 1000);
             
-            // Проверяем на крупный выигрыш
             if (winAmount >= BIG_WIN_THRESHOLD) {
                 showBigWinAnimation(winAmount, lastDisplayedMultiplier);
                 playSound(soundBigWin);
@@ -1109,11 +1052,9 @@
                 createMoneyRain(winAmount);
             }
             
-            // В уведомлении используем ТОЧНО ТОТ ЖЕ множитель
             showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${lastDisplayedMultiplier.toFixed(2)}x`, 'win');
             
             hasPlacedBet = false;
-            
             cashoutButton.disabled = true;
             placeBetButton.disabled = true;
             placeBetButton.innerHTML = '<span class="control-icon bet-icon"></span>Ожидание новой игры...';
@@ -1127,10 +1068,8 @@
             bigWinOverlay.style.opacity = '1';
             bigWinOverlay.style.pointerEvents = 'auto';
             
-            // Создаем конфетти
             createConfetti();
             
-            // Скрываем через 3 секунды
             setTimeout(() => {
                 bigWinOverlay.style.opacity = '0';
                 bigWinOverlay.style.pointerEvents = 'none';
@@ -1147,13 +1086,8 @@
                 particle.style.left = Math.random() * 100 + 'vw';
                 particle.style.animation = `moneyRain ${1 + Math.random() * 2}s ease-in forwards`;
                 particle.style.animationDelay = Math.random() * 0.5 + 's';
-                
                 document.body.appendChild(particle);
-                
-                // Удаляем частицу после анимации
-                setTimeout(() => {
-                    particle.remove();
-                }, 3000);
+                setTimeout(() => particle.remove(), 3000);
             }
         }
 
@@ -1170,13 +1104,8 @@
                 confetti.style.fontSize = (15 + Math.random() * 20) + 'px';
                 confetti.style.animation = `confetti ${2 + Math.random() * 2}s ease-in forwards`;
                 confetti.style.animationDelay = Math.random() * 1 + 's';
-                
                 document.body.appendChild(confetti);
-                
-                // Удаляем конфетти после анимации
-                setTimeout(() => {
-                    confetti.remove();
-                }, 4000);
+                setTimeout(() => confetti.remove(), 4000);
             }
         }
 
@@ -1186,6 +1115,7 @@
             
             try {
                 soundElement.currentTime = 0;
+                soundElement.volume = 0.8;
                 soundElement.play().catch(e => console.log("Звук не воспроизведен:", e));
             } catch (e) {
                 console.log("Ошибка воспроизведения звука:", e);
@@ -1239,13 +1169,8 @@
             const line = document.getElementById('chartLine');
             const fill = document.getElementById('chartFill');
             
-            if (line) {
-                line.style.transform = `scaleX(${progress})`;
-            }
-            
-            if (fill) {
-                fill.style.setProperty('--progress', `${progress * 100}%`);
-            }
+            if (line) line.style.transform = `scaleX(${progress})`;
+            if (fill) fill.style.setProperty('--progress', `${progress * 100}%`);
         }
 
         // ==================== ОБНОВЛЕНИЕ ВЫИГРЫША ====================
@@ -1297,14 +1222,8 @@
             placeBetButton.addEventListener('click', placeBet);
             cashoutButton.addEventListener('click', cashoutPlayer);
             
-            backButton.addEventListener('click', () => {
-                window.history.back();
-            });
-            
-            // Двойной клик по балансу для переключения звука
+            backButton.addEventListener('click', () => window.history.back());
             balanceBtn.addEventListener('dblclick', toggleSound);
-            
-            // Клик по оверлею для закрытия
             bigWinOverlay.addEventListener('click', () => {
                 bigWinOverlay.style.opacity = '0';
                 bigWinOverlay.style.pointerEvents = 'none';
@@ -1318,9 +1237,7 @@
             notification.textContent = message;
             document.body.appendChild(notification);
             
-            setTimeout(() => {
-                notification.style.transform = 'translateX(-50%) translateY(0)';
-            }, 10);
+            setTimeout(() => notification.style.transform = 'translateX(-50%) translateY(0)', 10);
             
             setTimeout(() => {
                 notification.style.transform = 'translateX(-50%) translateY(-100px)';
@@ -1329,9 +1246,7 @@
         }
 
         // ==================== ЗАПУСК ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            init();
-        });
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
