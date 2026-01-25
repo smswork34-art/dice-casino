@@ -2743,6 +2743,32 @@
             <div>Вывод</div>
         </div>
     </div>
+    // Простые обработчики для тестирования
+document.addEventListener('DOMContentLoaded', function() {
+    // Назначаем обработчики для всех кликабельных элементов
+    document.querySelectorAll('.game-card, .game-list-item, .nav-item, button').forEach(el => {
+        el.addEventListener('click', function(e) {
+            console.log('Клик по элементу:', this.id || this.className);
+        });
+    });
+    
+    // Конкретные обработчики для кнопок
+    const diceBtn = document.getElementById('diceGameBtn');
+    if (diceBtn) {
+        diceBtn.addEventListener('click', function() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('diceGamePage').classList.remove('hidden');
+        });
+    }
+    
+    const minesBtn = document.getElementById('minesGameBtn');
+    if (minesBtn) {
+        minesBtn.addEventListener('click', function() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('minesGamePage').classList.remove('hidden');
+        });
+    }
+});
 
     <script>
         // Функция для отладки - показывает какие элементы найдены
