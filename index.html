@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TON Casino - Бәйге (Скачки)</title>
     <style>
-        /* Использую твои стили, добавляю только специфичные для скачек */
         * {
             margin: 0;
             padding: 0;
@@ -59,6 +58,17 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid transparent;
+            position: relative;
+        }
+
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
+            mask-size: 24px;
         }
 
         .username {
@@ -84,6 +94,11 @@
             align-items: center;
             gap: 6px;
             transition: all 0.3s;
+        }
+
+        .balance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
 
         .content {
@@ -170,8 +185,8 @@
             font-weight: bold;
         }
 
-        /* ПОЛЕ ДЛЯ СКАЧЕК */
-        .race-track {
+        /* ПОЛЕ ДЛЯ СКАЧЕК - ВИД СБОКУ */
+        .race-track-container {
             background: white;
             border-radius: 16px;
             padding: 20px;
@@ -194,13 +209,18 @@
             background-clip: text;
         }
 
-        .track {
-            height: 200px;
-            background: linear-gradient(to bottom, #4CAF50, #45a049);
+        .race-track {
+            height: 220px;
+            background: linear-gradient(135deg, #8BC34A 0%, #689F38 100%);
             border-radius: 10px;
             position: relative;
             overflow: hidden;
-            border: 3px solid #2aabee;
+            border: 3px solid #795548;
+            background-image: 
+                linear-gradient(90deg, transparent 95%, rgba(255,255,255,0.3) 100%),
+                linear-gradient(90deg, transparent 90%, rgba(255,255,255,0.3) 95%),
+                linear-gradient(90deg, transparent 85%, rgba(255,255,255,0.3) 90%);
+            background-size: 100px 100%;
         }
 
         .finish-line {
@@ -208,7 +228,7 @@
             right: 0;
             top: 0;
             bottom: 0;
-            width: 10px;
+            width: 15px;
             background: repeating-linear-gradient(
                 45deg,
                 white,
@@ -217,37 +237,76 @@
                 red 20px
             );
             z-index: 1;
+            box-shadow: -5px 0 10px rgba(0,0,0,0.3);
         }
 
+        /* СТИЛИ ДЛЯ ЛОШАДЕЙ - ВИД СБОКУ */
         .horse {
             position: absolute;
-            width: 40px;
+            width: 60px;
             height: 40px;
             background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
             transition: left 0.1s linear;
             z-index: 2;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+            bottom: 10px;
+            transform-origin: bottom center;
         }
 
-        /* Казахские имена для лошадей */
-        .horse[data-horse="1"] { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23FF5722" d="M21 4v2H3V4h18zM3 14v-2h18v2H3zm0 6v-2h18v2H3z"/></svg>'); top: 20px; }
-        .horse[data-horse="2"] { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%232196F3" d="M21 4v2H3V4h18zM3 14v-2h18v2H3zm0 6v-2h18v2H3z"/></svg>'); top: 60px; }
-        .horse[data-horse="3"] { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%234CAF50" d="M21 4v2H3V4h18zM3 14v-2h18v2H3zm0 6v-2h18v2H3z"/></svg>'); top: 100px; }
-        .horse[data-horse="4"] { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%239C27B0" d="M21 4v2H3V4h18zM3 14v-2h18v2H3zm0 6v-2h18v2H3z"/></svg>'); top: 140px; }
+        /* SVG иконки лошадей (вид сбоку) */
+        .horse[data-horse="1"] { 
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><path fill="%23FF5722" d="M30,40 Q40,20 50,30 Q60,40 70,30 L80,40 Q85,45 80,50 L70,45 Q65,50 60,45 L50,50 Q40,55 30,50 L20,45 Q15,50 10,45 L0,50 Q-5,45 0,40 L10,30 Q20,40 30,40"/><circle cx="35" cy="20" r="8" fill="%238B4513"/><circle cx="65" cy="20" r="8" fill="%238B4513"/></svg>');
+            top: 30px; 
+        }
+        
+        .horse[data-horse="2"] { 
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><path fill="%232196F3" d="M30,40 Q40,20 50,30 Q60,40 70,30 L80,40 Q85,45 80,50 L70,45 Q65,50 60,45 L50,50 Q40,55 30,50 L20,45 Q15,50 10,45 L0,50 Q-5,45 0,40 L10,30 Q20,40 30,40"/><circle cx="35" cy="20" r="8" fill="%231E88E5"/><circle cx="65" cy="20" r="8" fill="%231E88E5"/></svg>');
+            top: 80px; 
+        }
+        
+        .horse[data-horse="3"] { 
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><path fill="%234CAF50" d="M30,40 Q40,20 50,30 Q60,40 70,30 L80,40 Q85,45 80,50 L70,45 Q65,50 60,45 L50,50 Q40,55 30,50 L20,45 Q15,50 10,45 L0,50 Q-5,45 0,40 L10,30 Q20,40 30,40"/><circle cx="35" cy="20" r="8" fill="%232E7D32"/><circle cx="65" cy="20" r="8" fill="%232E7D32"/></svg>');
+            top: 130px; 
+        }
+        
+        .horse[data-horse="4"] { 
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><path fill="%239C27B0" d="M30,40 Q40,20 50,30 Q60,40 70,30 L80,40 Q85,45 80,50 L70,45 Q65,50 60,45 L50,50 Q40,55 30,50 L20,45 Q15,50 10,45 L0,50 Q-5,45 0,40 L10,30 Q20,40 30,40"/><circle cx="35" cy="20" r="8" fill="%236A1B9A"/><circle cx="65" cy="20" r="8" fill="%236A1B9A"/></svg>');
+            top: 180px; 
+        }
 
         .horse-name {
             position: absolute;
-            left: -100px;
+            left: -80px;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .horse-number {
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 25px;
+            background: white;
+            border-radius: 50%;
+            color: #1a1a1a;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid #1a1a1a;
         }
 
         /* СТАВКИ НА ЛОШАДЕЙ */
@@ -282,28 +341,24 @@
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
         }
 
-        .horse-number {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 50%;
-            color: white;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .horse-bet-icon {
+            width: 50px;
+            height: 50px;
             margin: 0 auto 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         .horse-bet-name {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             margin-bottom: 6px;
             color: #1a1a1a;
         }
 
         .horse-odds {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: #4CAF50;
             margin-bottom: 4px;
@@ -312,6 +367,13 @@
         .horse-odds-label {
             font-size: 12px;
             color: #666;
+        }
+
+        .horse-color-indicator {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 8px;
         }
 
         /* СТАВКА */
@@ -509,27 +571,29 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>');
         }
 
-        /* АНИМАЦИИ */
-        @keyframes horseRun {
-            0% { transform: translateX(0) scaleX(1); }
-            25% { transform: translateX(25px) scaleX(1.1); }
-            50% { transform: translateX(50px) scaleX(1); }
-            75% { transform: translateX(75px) scaleX(0.9); }
-            100% { transform: translateX(100px) scaleX(1); }
+        /* АНИМАЦИИ ДЛЯ ЛОШАДЕЙ */
+        @keyframes horseGallop {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(2deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-3px) rotate(-2deg); }
         }
 
         .horse-running {
-            animation: horseRun 0.3s infinite linear;
+            animation: horseGallop 0.4s infinite linear;
         }
 
         @keyframes finishCelebration {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(5deg); }
+            50% { transform: scale(1) rotate(0deg); }
+            75% { transform: scale(1.2) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
 
         .winner {
             animation: finishCelebration 0.5s ease-in-out 3;
+            filter: drop-shadow(0 0 10px gold) brightness(1.2);
         }
 
         @keyframes pulse {
@@ -603,6 +667,17 @@
             .game-controls {
                 flex-direction: column;
             }
+            
+            .horse {
+                width: 50px;
+                height: 30px;
+            }
+            
+            .horse-name {
+                left: -60px;
+                font-size: 10px;
+                padding: 4px 8px;
+            }
         }
 
         .loading {
@@ -659,10 +734,10 @@
                     </ul>
                 </div>
 
-                <!-- ТРАССА ДЛЯ СКАЧЕК -->
-                <div class="race-track">
+                <!-- ТРАССА ДЛЯ СКАЧЕК - ВИД СБОКУ -->
+                <div class="race-track-container">
                     <div class="track-title">Казахские скачки "Бәйге"</div>
-                    <div class="track" id="raceTrack">
+                    <div class="race-track" id="raceTrack">
                         <div class="finish-line"></div>
                         <!-- Лошади появятся здесь -->
                     </div>
@@ -723,21 +798,42 @@
         let raceActive = false;
         let raceFinished = false;
         
-        // Казахские имена для лошадей
+        // Казахские имена для лошадей с коэффициентами
         const horses = [
-            { id: 1, name: "Акбоз", odds: 3.5, color: "#FF5722", position: 0 },
-            { id: 2, name: "Караер", odds: 2.8, color: "#2196F3", position: 0 },
-            { id: 3, name: "Сарыарқа", odds: 4.2, color: "#4CAF50", position: 0 },
-            { id: 4, name: "Көксары", odds: 5.0, color: "#9C27B0", position: 0 }
+            { 
+                id: 1, 
+                name: "Акбоз", 
+                color: "#FF5722", 
+                position: 0,
+                odds: 3.5,
+                // 🔧 Случайная скорость от 2 до 5 (ниже коэффициент - быстрее лошадь)
+                baseSpeed: 2 + Math.random() * 3
+            },
+            { 
+                id: 2, 
+                name: "Караер", 
+                color: "#2196F3", 
+                position: 0,
+                odds: 2.8,
+                baseSpeed: 2 + Math.random() * 3
+            },
+            { 
+                id: 3, 
+                name: "Сарыарқа", 
+                color: "#4CAF50", 
+                position: 0,
+                odds: 4.2,
+                baseSpeed: 2 + Math.random() * 3
+            },
+            { 
+                id: 4, 
+                name: "Көксары", 
+                color: "#9C27B0", 
+                position: 0,
+                odds: 5.0,
+                baseSpeed: 2 + Math.random() * 3
+            }
         ];
-        
-        // 🔧 ПОДКРУТКА: Шансы на победу (чем больше множитель, тем меньше шанс)
-        const WIN_CHANCES = {
-            1: 0.25,  // 25% шанс (коэф 3.5)
-            2: 0.35,  // 35% шанс (коэф 2.8)
-            3: 0.20,  // 20% шанс (коэф 4.2)
-            4: 0.15   // 15% шанс (коэф 5.0)
-        };
         
         // ==================== ЭЛЕМЕНТЫ DOM ====================
         const balanceAmount = document.getElementById('balanceAmount');
@@ -784,10 +880,12 @@
                 const horseElement = document.createElement('div');
                 horseElement.className = 'horse';
                 horseElement.dataset.horse = horse.id;
-                horseElement.style.left = '10px';
-                horseElement.style.top = `${20 + (horse.id - 1) * 40}px`;
-                horseElement.style.backgroundColor = horse.color;
-                horseElement.innerHTML = `<div class="horse-name">${horse.name}</div>`;
+                horseElement.style.left = '20px';
+                horseElement.style.top = `${30 + (horse.id - 1) * 50}px`;
+                horseElement.innerHTML = `
+                    <div class="horse-name">${horse.name}</div>
+                    <div class="horse-number">${horse.id}</div>
+                `;
                 
                 raceTrack.appendChild(horseElement);
             });
@@ -802,10 +900,13 @@
                 card.dataset.horse = horse.id;
                 
                 card.innerHTML = `
-                    <div class="horse-number" style="background: ${horse.color}">${horse.id}</div>
+                    <div class="horse-bet-icon" style="background-color: ${horse.color}; 
+                          mask: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 60\"><path fill=\"black\" d=\"M30,40 Q40,20 50,30 Q60,40 70,30 L80,40 Q85,45 80,50 L70,45 Q65,50 60,45 L50,50 Q40,55 30,50 L20,45 Q15,50 10,45 L0,50 Q-5,45 0,40 L10,30 Q20,40 30,40\"/><circle cx=\"35\" cy=\"20\" r=\"8\"/><circle cx=\"65\" cy=\"20\" r=\"8\"/></svg>') no-repeat center; 
+                          mask-size: contain;"></div>
                     <div class="horse-bet-name">${horse.name}</div>
                     <div class="horse-odds">${horse.odds}x</div>
                     <div class="horse-odds-label">Коэффициент</div>
+                    <div class="horse-color-indicator" style="background: ${horse.color}"></div>
                 `;
                 
                 card.addEventListener('click', () => selectHorse(horse.id));
@@ -948,10 +1049,15 @@
             betButtons.forEach(btn => btn.disabled = true);
             document.querySelectorAll('.horse-bet-card').forEach(card => card.style.pointerEvents = 'none');
             
-            // Сброс позиций лошадей
-            horses.forEach(horse => horse.position = 0);
+            // Сброс позиций лошадей и обновление случайных скоростей
+            horses.forEach(horse => {
+                horse.position = 0;
+                // 🔧 РАНДОМНАЯ СКОРОСТЬ КАЖДЫЙ ЗАБЕГ
+                horse.baseSpeed = 1.5 + Math.random() * 4; // От 1.5 до 5.5
+            });
+            
             document.querySelectorAll('.horse').forEach(horse => {
-                horse.style.left = '10px';
+                horse.style.left = '20px';
                 horse.classList.add('horse-running');
             });
             
@@ -960,24 +1066,17 @@
         }
         
         function runRace() {
-            const trackWidth = raceTrack.offsetWidth - 60;
+            const trackWidth = raceTrack.offsetWidth - 80; // Оставляем место для лошади
             let winner = null;
+            
             const raceInterval = setInterval(() => {
-                // Двигаем каждую лошадь с разной скоростью
+                // Двигаем каждую лошадь
                 horses.forEach(horse => {
-                    // 🔧 ПОДКРУТКА: Используем наши шансы на победу
-                    let speed;
-                    const randomFactor = Math.random();
+                    // 🔧 СЛУЧАЙНЫЙ ФАКТОР КАЖДЫЙ КАДР для реалистичности
+                    const randomFactor = 0.8 + Math.random() * 0.4; // От 0.8 до 1.2
+                    const currentSpeed = horse.baseSpeed * randomFactor;
                     
-                    if (randomFactor < WIN_CHANCES[horse.id]) {
-                        // Эта лошадь имеет шанс на победу
-                        speed = 3 + Math.random() * 4; // Быстрая скорость
-                    } else {
-                        // Обычная скорость
-                        speed = 1 + Math.random() * 2;
-                    }
-                    
-                    horse.position += speed;
+                    horse.position += currentSpeed;
                     
                     const horseElement = document.querySelector(`.horse[data-horse="${horse.id}"]`);
                     if (horseElement) {
@@ -1027,7 +1126,7 @@
                 
                 // Сохраняем игру
                 saveGame();
-            }, 1500);
+            }, 2000);
         }
         
         function resetGame() {
@@ -1053,7 +1152,7 @@
             });
             
             document.querySelectorAll('.horse').forEach(horse => {
-                horse.style.left = '10px';
+                horse.style.left = '20px';
                 horse.classList.remove('horse-running', 'winner');
             });
             
