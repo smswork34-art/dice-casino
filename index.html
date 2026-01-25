@@ -3826,40 +3826,52 @@ function updateProfileStats() {
         
         // ==================== СТАТИСТИКА ====================
         function updateStats() {
-            const allGames = [...betsHistory, ...minesGameHistory];
-            const totalGames = allGames.length;
-            const totalWins = allGames.filter(game => game.win).length;
-            const totalLosses = totalGames - totalWins;
-            
-            let totalProfit = 0;
-            let totalLoss = 0;
-            
-            allGames.forEach(game => {
-                if (game.win) {
-                    totalProfit += game.amount || (game.bet * (game.multiplier || 2));
-                } else {
-                    totalLoss += game.bet;
-                }
-            });
-            
-            const netProfit = totalProfit - totalLoss;
-            const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
-            
-            totalGamesEl.textContent = totalGames;
-            totalProfitEl.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
-            winRateEl.textContent = winRate + '%';
-            totalLossEl.textContent = totalLoss + ' TON';
-            
-            updateBetsList();
-            
-            if (totalGames === 0) {
-                emptyStatsEl.style.display = 'block';
-                betsListEl.style.display = 'none';
-            } else {
-                emptyStatsEl.style.display = 'none';
-                betsListEl.style.display = 'flex';
-            }
+    const allGames = [...betsHistory, ...minesGameHistory];
+    const totalGames = allGames.length;
+    const totalWins = allGames.filter(game => game.win).length;
+    const totalLosses = totalGames - totalWins;
+    
+    let totalProfit = 0;
+    let totalLoss = 0;
+    
+    allGames.forEach(game => {
+        if (game.win) {
+            totalProfit += game.amount || (game.bet * (game.multiplier || 2));
+        } else {
+            totalLoss += game.bet;
         }
+    });
+    
+    const netProfit = totalProfit - totalLoss;
+    const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+    
+    // ОБНОВЛЯЕМ с форматированием
+    totalGamesEl.textContent = totalGames;
+    totalProfitEl.textContent = formatTON(netProfit);
+    winRateEl.textContent = winRate + '%';
+    totalLossEl.textContent = formatTON(totalLoss);
+    
+    updateBetsList();
+    
+    if (totalGames === 0) {
+        emptyStatsEl.style.display = 'block';
+        betsListEl.style.display = 'none';
+    } else {
+        emptyStatsEl.style.display = 'none';
+        betsListEl.style.display = 'flex';
+    }
+}
+
+// Добавляем функцию форматирования
+function formatTON(amount) {
+    if (amount > 0) {
+        return '+' + amount + ' TON';
+    } else if (amount < 0) {
+        return amount + ' TON';
+    } else {
+        return '0 TON';
+    }
+}
         
         function updateBetsList() {
             betsListEl.innerHTML = '';
