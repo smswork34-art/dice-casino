@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Casino - Бәйге (Скачки)</title>
+    <title>TON Casino - Гонки</title>
     <style>
         * {
             margin: 0;
@@ -106,8 +106,8 @@
             padding: 24px;
         }
 
-        /* СТРАНИЦА ИГРЫ БӘЙГЕ */
-        .baige-game-page {
+        /* СТРАНИЦА ГОНОК */
+        .race-game-page {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
             padding: 24px;
@@ -186,9 +186,9 @@
             font-weight: bold;
         }
 
-        /* СКАКОВАЯ ДОРОЖКА */
-        .race-track {
-            background: linear-gradient(135deg, #8BC34A 0%, #689F38 100%);
+        /* ТРАССА ДЛЯ ГОНОК */
+        .race-track-road {
+            background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%);
             border-radius: 16px;
             padding: 0;
             margin-bottom: 24px;
@@ -196,9 +196,9 @@
             overflow: hidden;
             height: 220px;
             box-shadow: 
-                inset 0 0 50px rgba(0, 0, 0, 0.2),
-                0 8px 25px rgba(0, 0, 0, 0.15);
-            border: 3px solid #795548;
+                inset 0 0 50px rgba(0, 0, 0, 0.3),
+                0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 3px solid #37474F;
         }
 
         .track-title {
@@ -210,143 +210,146 @@
             font-size: 16px;
             font-weight: 700;
             color: white;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
             z-index: 10;
         }
 
-        .track-container {
+        .track-road-container {
             width: 100%;
             height: 100%;
             position: relative;
         }
 
-        /* Земля и трава */
-        .ground {
+        /* Асфальт */
+        .asphalt {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: linear-gradient(0deg, #8B4513 0%, #A0522D 100%);
+            bottom: 0;
+            background: linear-gradient(135deg, #424242 0%, #212121 100%);
             z-index: 1;
         }
 
-        .grass {
+        /* Разметка на трассе */
+        .road-marking {
             position: absolute;
-            bottom: 60px;
-            left: 0;
-            right: 0;
-            height: 120px;
-            background: 
-                linear-gradient(135deg, transparent 25%, rgba(0, 100, 0, 0.2) 25%, rgba(0, 100, 0, 0.2) 50%, transparent 50%, transparent 75%, rgba(0, 100, 0, 0.2) 75%),
-                linear-gradient(135deg, #228B22 0%, #32CD32 100%);
-            background-size: 20px 20px;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: repeating-linear-gradient(
+                to bottom,
+                white,
+                white 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            transform: translateX(-50%);
             z-index: 2;
         }
 
-        /* Дорожки */
-        .lane {
+        /* Полосы движения */
+        .road-lane {
             position: absolute;
-            width: 90%;
-            height: 30px;
-            background: linear-gradient(90deg, 
-                rgba(139, 69, 19, 0.7) 0%, 
-                rgba(160, 82, 45, 0.7) 50%, 
-                rgba(139, 69, 19, 0.7) 100%);
-            border-radius: 15px;
-            left: 5%;
-            z-index: 3;
-            box-shadow: 
-                inset 0 0 8px rgba(0, 0, 0, 0.3),
-                0 3px 10px rgba(0, 0, 0, 0.2);
+            width: 80px;
+            height: 100%;
+            border-right: 2px dashed rgba(255, 255, 255, 0.3);
+            z-index: 2;
         }
 
-        .lane-1 { top: 40px; }
-        .lane-2 { top: 80px; }
-        .lane-3 { top: 120px; }
-        .lane-4 { top: 160px; }
+        .lane-1 { left: 25%; }
+        .lane-2 { left: 50%; transform: translateX(-50%); }
+        .lane-3 { right: 25%; }
 
-        /* Разметка */
-        .lane::before {
-            content: '';
+        /* Бордюры */
+        .curb {
             position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: repeating-linear-gradient(
-                90deg,
-                white,
-                white 15px,
-                transparent 15px,
-                transparent 30px
-            );
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-
-        /* Финиш */
-        .finish-line {
-            position: absolute;
-            right: 5%;
             top: 0;
             bottom: 0;
-            width: 15px;
+            width: 20px;
+            background: linear-gradient(135deg, #757575 0%, #424242 100%);
+            z-index: 3;
+        }
+
+        .curb-left { left: 0; }
+        .curb-right { right: 0; }
+
+        .curb::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: repeating-linear-gradient(
+                to bottom,
+                yellow,
+                yellow 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+
+        .curb-left::before { right: 0; }
+        .curb-right::before { left: 0; }
+
+        /* Финиш */
+        .finish-line-road {
+            position: absolute;
+            right: 50px;
+            top: 0;
+            bottom: 0;
+            width: 10px;
             background: repeating-linear-gradient(
                 45deg,
                 white,
-                white 10px,
-                red 10px,
-                red 20px
+                white 8px,
+                red 8px,
+                red 16px
             );
             z-index: 4;
-            box-shadow: -3px 0 10px rgba(255, 0, 0, 0.3);
+            box-shadow: -3px 0 10px rgba(255, 0, 0, 0.4);
         }
 
-        /* РЕАЛЬНЫЕ ЛОШАДИ */
-        .horse-real {
+        /* МАШИНКИ */
+        .car {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 30px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             z-index: 5;
-            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.4));
-            transform-origin: bottom center;
+            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5));
+            transform-origin: center;
             transition: left 0.05s ease-out;
-            bottom: -5px;
+            bottom: 10px;
         }
 
-        /* РЕАЛЬНЫЕ ИЗОБРАЖЕНИЯ ЛОШАДЕЙ */
-        .horse-real[data-horse="1"] { 
-            background-image: url('https://cdn-icons-png.flaticon.com/512/1046/1046751.png');
-            top: 30px; 
-            transform: scaleX(-1);
+        /* РЕАЛЬНЫЕ ИЗОБРАЖЕНИЯ МАШИНОК */
+        .car[data-car="1"] { 
+            background-image: url('https://cdn-icons-png.flaticon.com/512/744/744465.png');
+            top: 50px;
         }
         
-        .horse-real[data-horse="2"] { 
-            background-image: url('https://cdn-icons-png.flaticon.com/512/1998/1998610.png');
-            top: 70px; 
-            transform: scaleX(-1);
+        .car[data-car="2"] { 
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3079/3079012.png');
+            top: 100px; 
         }
         
-        .horse-real[data-horse="3"] { 
-            background-image: url('https://cdn-icons-png.flaticon.com/512/5239/5239321.png');
-            top: 110px; 
-            transform: scaleX(-1);
-        }
-        
-        .horse-real[data-horse="4"] { 
-            background-image: url('https://cdn-icons-png.flaticon.com/512/5239/5239321.png');
+        .car[data-car="3"] { 
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3079/3079014.png');
             top: 150px; 
-            filter: hue-rotate(90deg) drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
-            transform: scaleX(-1);
+        }
+        
+        .car[data-car="4"] { 
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3079/3079015.png');
+            top: 190px; 
         }
 
-        .horse-name-tag {
+        .car-name-tag {
             position: absolute;
-            left: -70px;
+            right: -80px; /* ОТЗЕРКАЛИЛ - теперь справа */
             top: 50%;
             transform: translateY(-50%);
             background: rgba(0,0,0,0.8);
@@ -358,15 +361,16 @@
             white-space: nowrap;
             border: 2px solid rgba(255, 255, 255, 0.2);
             z-index: 6;
+            text-align: right;
         }
 
-        .horse-number-badge {
+        .car-number-badge {
             position: absolute;
-            right: -25px;
+            left: -30px; /* ОТЗЕРКАЛИЛ - теперь слева */
             top: 50%;
             transform: translateY(-50%);
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             background: white;
             border-radius: 50%;
             color: #1a1a1a;
@@ -375,19 +379,19 @@
             align-items: center;
             justify-content: center;
             font-size: 14px;
-            border: 2px solid #1a1a1a;
+            border: 3px solid #1a1a1a;
             z-index: 6;
         }
 
-        /* СТАВКИ НА ЛОШАДЕЙ */
-        .horses-betting {
+        /* СТАВКИ НА МАШИНЫ */
+        .cars-betting {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 24px;
         }
 
-        .horse-bet-card {
+        .car-bet-card {
             background: white;
             border-radius: 16px;
             padding: 16px;
@@ -399,19 +403,19 @@
             overflow: hidden;
         }
 
-        .horse-bet-card:hover {
+        .car-bet-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
             border-color: #2aabee;
         }
 
-        .horse-bet-card.active {
+        .car-bet-card.active {
             border-color: #4CAF50;
             background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
         }
 
-        .horse-bet-icon {
+        .car-bet-icon {
             width: 50px;
             height: 50px;
             margin: 0 auto 10px;
@@ -420,21 +424,21 @@
             background-position: center;
         }
 
-        .horse-bet-name {
+        .car-bet-name {
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 6px;
             color: #1a1a1a;
         }
 
-        .horse-odds {
+        .car-odds {
             font-size: 24px;
             font-weight: 800;
             color: #4CAF50;
             margin-bottom: 4px;
         }
 
-        .horse-odds-label {
+        .car-odds-label {
             font-size: 12px;
             color: #666;
         }
@@ -559,7 +563,7 @@
             font-weight: 500;
         }
 
-        .selected-horse {
+        .selected-car {
             color: #2aabee;
         }
 
@@ -636,41 +640,41 @@
             mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>');
         }
 
-        /* АНИМАЦИИ ДЛЯ ЛОШАДЕЙ */
-        @keyframes horseGallop {
+        /* АНИМАЦИИ ДЛЯ МАШИН */
+        @keyframes carDrive {
             0%, 100% { 
-                transform: translateY(0) scaleX(-1);
+                transform: translateY(0);
                 filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
             }
             25% { 
-                transform: translateY(-5px) scaleX(-1);
-                filter: drop-shadow(5px 8px 10px rgba(0,0,0,0.5));
+                transform: translateY(-2px);
+                filter: drop-shadow(5px 5px 8px rgba(0,0,0,0.5));
             }
             50% { 
-                transform: translateY(0) scaleX(-1);
+                transform: translateY(0);
                 filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
             }
             75% { 
-                transform: translateY(-3px) scaleX(-1);
-                filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.45));
+                transform: translateY(-1px);
+                filter: drop-shadow(4px 4px 7px rgba(0,0,0,0.45));
             }
         }
 
-        .horse-running {
-            animation: horseGallop 0.4s infinite linear;
+        .car-running {
+            animation: carDrive 0.3s infinite linear;
         }
 
         @keyframes winnerCelebration {
             0% { 
-                transform: scale(1) scaleX(-1);
+                transform: scale(1);
                 filter: drop-shadow(0 0 10px gold);
             }
             50% { 
-                transform: scale(1.1) scaleX(-1);
+                transform: scale(1.1);
                 filter: drop-shadow(0 0 20px gold);
             }
             100% { 
-                transform: scale(1) scaleX(-1);
+                transform: scale(1);
                 filter: drop-shadow(0 0 10px gold);
             }
         }
@@ -725,7 +729,7 @@
                 padding: 16px;
             }
             
-            .horses-betting {
+            .cars-betting {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
@@ -744,8 +748,8 @@
                 gap: 8px;
             }
             
-            .horse-name-tag {
-                left: -50px;
+            .car-name-tag {
+                right: -60px;
                 font-size: 10px;
                 padding: 3px 8px;
             }
@@ -781,14 +785,14 @@
         </div>
 
         <div class="content">
-            <!-- СТРАНИЦА ИГРЫ БӘЙГЕ -->
-            <div class="baige-game-page">
+            <!-- СТРАНИЦА ГОНОК -->
+            <div class="race-game-page">
                 <div class="game-header">
                     <button class="back-button" id="backButton">
                         <span class="back-icon"></span>
                         Назад
                     </button>
-                    <h2 class="game-title">Бәйге (Скачки)</h2>
+                    <h2 class="game-title">🏁 Гонки</h2>
                 </div>
 
                 <div class="game-rules">
@@ -797,38 +801,44 @@
                         Правила игры
                     </div>
                     <ul class="rules-list">
-                        <li>Выберите лошадь и поставьте на неё</li>
-                        <li>Коэффициент у всех лошадей: 1.8x</li>
-                        <li>Запустите скачки и следите за забегом</li>
-                        <li>Если ваша лошадь приходит первой - вы выигрываете!</li>
+                        <li>Выберите машину и поставьте на неё</li>
+                        <li>Коэффициент у всех машин: 1.8x</li>
+                        <li>Запустите гонку и следите за заездом</li>
+                        <li>Если ваша машина приходит первой - вы выигрываете!</li>
                         <li>Минимальная ставка: 10 TON</li>
                     </ul>
                 </div>
 
-                <!-- СКАКОВАЯ ДОРОЖКА -->
-                <div class="race-track">
-                    <div class="track-title">Казахские скачки "Бәйге"</div>
-                    <div class="track-container">
-                        <div class="ground"></div>
-                        <div class="grass"></div>
+                <!-- ТРАССА ДЛЯ ГОНОК -->
+                <div class="race-track-road">
+                    <div class="track-title">🏎️ Дрэг-рейсинг</div>
+                    <div class="track-road-container">
+                        <!-- Асфальт -->
+                        <div class="asphalt"></div>
                         
-                        <!-- Дорожки -->
-                        <div class="lane lane-1"></div>
-                        <div class="lane lane-2"></div>
-                        <div class="lane lane-3"></div>
-                        <div class="lane lane-4"></div>
+                        <!-- Бордюры -->
+                        <div class="curb curb-left"></div>
+                        <div class="curb curb-right"></div>
+                        
+                        <!-- Полосы -->
+                        <div class="road-lane lane-1"></div>
+                        <div class="road-lane lane-2"></div>
+                        <div class="road-lane lane-3"></div>
+                        
+                        <!-- Разметка -->
+                        <div class="road-marking"></div>
                         
                         <!-- Финиш -->
-                        <div class="finish-line"></div>
+                        <div class="finish-line-road"></div>
                         
-                        <!-- Лошади -->
-                        <div id="horsesContainer"></div>
+                        <!-- Машины -->
+                        <div id="carsContainer"></div>
                     </div>
                 </div>
 
-                <!-- ВЫБОР ЛОШАДИ -->
-                <div class="horses-betting" id="horsesBetting">
-                    <!-- Карточки лошадей -->
+                <!-- ВЫБОР МАШИНЫ -->
+                <div class="cars-betting" id="carsBetting">
+                    <!-- Карточки машин -->
                 </div>
 
                 <!-- СТАВКА -->
@@ -849,8 +859,8 @@
                 <!-- ИНФОРМАЦИЯ О СТАВКЕ -->
                 <div class="bet-info">
                     <div class="info-card">
-                        <div class="info-value selected-horse" id="selectedHorse">Не выбрана</div>
-                        <div class="info-label">Выбранная лошадь</div>
+                        <div class="info-value selected-car" id="selectedCar">Не выбрана</div>
+                        <div class="info-label">Выбранная машина</div>
                     </div>
                     <div class="info-card">
                         <div class="info-value potential-win" id="potentialWin">0 TON</div>
@@ -866,7 +876,7 @@
                     </button>
                     <button class="control-button start-button" id="startButton">
                         <span class="control-icon start-icon"></span>
-                        Начать скачки!
+                        Старт гонки!
                     </button>
                 </div>
             </div>
@@ -877,51 +887,51 @@
         // ==================== ПЕРЕМЕННЫЕ ====================
         let balance = parseInt(localStorage.getItem('balance')) || 1500;
         let currentBet = 100;
-        let selectedHorse = null;
+        let selectedCar = null;
         let raceActive = false;
         let raceFinished = false;
         
-        // Лошади - ВСЕ С КОЭФФИЦИЕНТОМ 1.8x
-        const horses = [
+        // Машины - ВСЕ С КОЭФФИЦИЕНТОМ 1.8x
+        const cars = [
             { 
                 id: 1, 
-                name: "Акбоз", 
+                name: "Red Fury", 
                 color: "#FF5722", 
                 position: 0,
-                odds: 1.8, // 🔧 ВСЕ 1.8x
+                odds: 1.8,
                 baseSpeed: 2.0 + Math.random() * 1.5,
-                stamina: 0.7 + Math.random() * 0.3,
-                form: 0.6 + Math.random() * 0.4
+                acceleration: 0.7 + Math.random() * 0.3,
+                handling: 0.6 + Math.random() * 0.4
             },
             { 
                 id: 2, 
-                name: "Караер", 
+                name: "Blue Bolt", 
                 color: "#2196F3", 
                 position: 0,
-                odds: 1.8, // 🔧 ВСЕ 1.8x
+                odds: 1.8,
                 baseSpeed: 2.2 + Math.random() * 1.3,
-                stamina: 0.65 + Math.random() * 0.35,
-                form: 0.7 + Math.random() * 0.3
+                acceleration: 0.65 + Math.random() * 0.35,
+                handling: 0.7 + Math.random() * 0.3
             },
             { 
                 id: 3, 
-                name: "Сарыарқа", 
+                name: "Green Ghost", 
                 color: "#4CAF50", 
                 position: 0,
-                odds: 1.8, // 🔧 ВСЕ 1.8x
+                odds: 1.8,
                 baseSpeed: 1.8 + Math.random() * 1.7,
-                stamina: 0.75 + Math.random() * 0.25,
-                form: 0.5 + Math.random() * 0.5
+                acceleration: 0.75 + Math.random() * 0.25,
+                handling: 0.5 + Math.random() * 0.5
             },
             { 
                 id: 4, 
-                name: "Көксары", 
+                name: "Purple Storm", 
                 color: "#9C27B0", 
                 position: 0,
-                odds: 1.8, // 🔧 ВСЕ 1.8x
+                odds: 1.8,
                 baseSpeed: 1.6 + Math.random() * 1.9,
-                stamina: 0.8 + Math.random() * 0.2,
-                form: 0.4 + Math.random() * 0.6
+                acceleration: 0.8 + Math.random() * 0.2,
+                handling: 0.4 + Math.random() * 0.6
             }
         ];
         
@@ -929,12 +939,12 @@
         const balanceAmount = document.getElementById('balanceAmount');
         const usernameElement = document.getElementById('username');
         const backButton = document.getElementById('backButton');
-        const horsesContainer = document.getElementById('horsesContainer');
-        const horsesBetting = document.getElementById('horsesBetting');
+        const carsContainer = document.getElementById('carsContainer');
+        const carsBetting = document.getElementById('carsBetting');
         const betInput = document.getElementById('betInput');
         const setBetButton = document.getElementById('setBetButton');
         const betButtons = document.querySelectorAll('.bet-btn');
-        const selectedHorseElement = document.getElementById('selectedHorse');
+        const selectedCarElement = document.getElementById('selectedCar');
         const potentialWinElement = document.getElementById('potentialWin');
         const resetButton = document.getElementById('resetButton');
         const startButton = document.getElementById('startButton');
@@ -949,9 +959,9 @@
             // Обновляем баланс
             updateBalanceDisplay();
             
-            // Создаем лошадей
-            createHorses();
-            createHorseBettingCards();
+            // Создаем машины
+            createCars();
+            createCarBettingCards();
             
             // Устанавливаем начальную ставку
             updatePotentialWin();
@@ -963,48 +973,48 @@
             loadSavedGame();
         }
         
-        function createHorses() {
-            horsesContainer.innerHTML = '';
+        function createCars() {
+            carsContainer.innerHTML = '';
             
-            horses.forEach(horse => {
-                const horseElement = document.createElement('div');
-                horseElement.className = 'horse-real';
-                horseElement.dataset.horse = horse.id;
-                horseElement.style.left = '30px';
-                horseElement.innerHTML = `
-                    <div class="horse-name-tag">${horse.name}</div>
-                    <div class="horse-number-badge">${horse.id}</div>
+            cars.forEach(car => {
+                const carElement = document.createElement('div');
+                carElement.className = 'car';
+                carElement.dataset.car = car.id;
+                carElement.style.left = '30px';
+                carElement.innerHTML = `
+                    <div class="car-name-tag">${car.name}</div>
+                    <div class="car-number-badge">${car.id}</div>
                 `;
                 
-                horsesContainer.appendChild(horseElement);
+                carsContainer.appendChild(carElement);
             });
         }
         
-        function createHorseBettingCards() {
-            horsesBetting.innerHTML = '';
+        function createCarBettingCards() {
+            carsBetting.innerHTML = '';
             
-            horses.forEach(horse => {
+            cars.forEach(car => {
                 const card = document.createElement('div');
-                card.className = 'horse-bet-card';
-                card.dataset.horse = horse.id;
+                card.className = 'car-bet-card';
+                card.dataset.car = car.id;
                 
                 // Иконки для карточек ставок
                 const icons = [
-                    'https://cdn-icons-png.flaticon.com/512/1046/1046751.png',
-                    'https://cdn-icons-png.flaticon.com/512/1998/1998610.png',
-                    'https://cdn-icons-png.flaticon.com/512/5239/5239321.png',
-                    'https://cdn-icons-png.flaticon.com/512/5239/5239321.png'
+                    'https://cdn-icons-png.flaticon.com/512/744/744465.png',
+                    'https://cdn-icons-png.flaticon.com/512/3079/3079012.png',
+                    'https://cdn-icons-png.flaticon.com/512/3079/3079014.png',
+                    'https://cdn-icons-png.flaticon.com/512/3079/3079015.png'
                 ];
                 
                 card.innerHTML = `
-                    <div class="horse-bet-icon" style="background-image: url('${icons[horse.id-1]}');"></div>
-                    <div class="horse-bet-name">${horse.name}</div>
-                    <div class="horse-odds">${horse.odds}x</div>
-                    <div class="horse-odds-label">Коэффициент</div>
+                    <div class="car-bet-icon" style="background-image: url('${icons[car.id-1]}');"></div>
+                    <div class="car-bet-name">${car.name}</div>
+                    <div class="car-odds">${car.odds}x</div>
+                    <div class="car-odds-label">Коэффициент</div>
                 `;
                 
-                card.addEventListener('click', () => selectHorse(horse.id));
-                horsesBetting.appendChild(card);
+                card.addEventListener('click', () => selectCar(car.id));
+                carsBetting.appendChild(card);
             });
         }
         
@@ -1047,7 +1057,7 @@
             // Кнопка сброса
             resetButton.addEventListener('click', resetGame);
             
-            // Кнопка начала скачек
+            // Кнопка начала гонки
             startButton.addEventListener('click', startRace);
             
             // Кнопка баланса
@@ -1057,36 +1067,36 @@
         }
         
         // ==================== ФУНКЦИИ ИГРЫ ====================
-        function selectHorse(horseId) {
+        function selectCar(carId) {
             if (raceActive) {
-                showNotification('Скачки уже начались!', 'info');
+                showNotification('Гонка уже началась!', 'info');
                 return;
             }
             
-            selectedHorse = horseId;
+            selectedCar = carId;
             
-            // Обновляем UI выбранной лошади
-            document.querySelectorAll('.horse-bet-card').forEach(card => {
+            // Обновляем UI выбранной машины
+            document.querySelectorAll('.car-bet-card').forEach(card => {
                 card.classList.remove('active');
-                if (parseInt(card.dataset.horse) === horseId) {
+                if (parseInt(card.dataset.car) === carId) {
                     card.classList.add('active');
                 }
             });
             
-            const horse = horses.find(h => h.id === horseId);
-            selectedHorseElement.textContent = horse.name;
-            selectedHorseElement.style.color = horse.color;
+            const car = cars.find(c => c.id === carId);
+            selectedCarElement.textContent = car.name;
+            selectedCarElement.style.color = car.color;
             
-            // Подсветка выбранной лошади
-            document.querySelectorAll('.horse-real').forEach(h => {
-                h.style.filter = 'drop-shadow(3px 3px 6px rgba(0,0,0,0.4))';
-                if (parseInt(h.dataset.horse) === horseId) {
-                    h.style.filter = `drop-shadow(0 0 10px ${horse.color}) brightness(1.1)`;
+            // Подсветка выбранной машины
+            document.querySelectorAll('.car').forEach(c => {
+                c.style.filter = 'drop-shadow(3px 3px 6px rgba(0,0,0,0.4))';
+                if (parseInt(c.dataset.car) === carId) {
+                    c.style.filter = `drop-shadow(0 0 10px ${car.color}) brightness(1.1)`;
                 }
             });
             
             updatePotentialWin();
-            showNotification(`Выбрана лошадь: ${horse.name} (${horse.odds}x)`, 'info');
+            showNotification(`Выбрана машина: ${car.name} (${car.odds}x)`, 'info');
         }
         
         function setCurrentBet() {
@@ -1108,21 +1118,21 @@
         }
         
         function updatePotentialWin() {
-            if (!selectedHorse) {
+            if (!selectedCar) {
                 potentialWinElement.textContent = '0 TON';
                 return;
             }
             
-            const horse = horses.find(h => h.id === selectedHorse);
-            const potentialWin = Math.floor(currentBet * horse.odds);
+            const car = cars.find(c => c.id === selectedCar);
+            const potentialWin = Math.floor(currentBet * car.odds);
             potentialWinElement.textContent = `${potentialWin} TON`;
         }
         
         function startRace() {
             if (raceActive) return;
             
-            if (!selectedHorse) {
-                showNotification('Сначала выберите лошадь!', 'lose');
+            if (!selectedCar) {
+                showNotification('Сначала выберите машину!', 'lose');
                 return;
             }
             
@@ -1143,58 +1153,58 @@
             // Блокируем интерфейс
             raceActive = true;
             startButton.disabled = true;
-            startButton.innerHTML = '<span class="loading"></span>Скачки начались!';
+            startButton.innerHTML = '<span class="loading"></span>Гонка началась!';
             betInput.disabled = true;
             setBetButton.disabled = true;
             betButtons.forEach(btn => btn.disabled = true);
-            document.querySelectorAll('.horse-bet-card').forEach(card => card.style.pointerEvents = 'none');
+            document.querySelectorAll('.car-bet-card').forEach(card => card.style.pointerEvents = 'none');
             
             // Сброс позиций и обновление характеристик
-            horses.forEach(horse => {
-                horse.position = 0;
-                // Обновляем характеристики каждый забег для реализма
-                horse.baseSpeed = 1.5 + Math.random() * 2.0;
-                horse.stamina = 0.6 + Math.random() * 0.4;
-                horse.form = 0.5 + Math.random() * 0.5;
+            cars.forEach(car => {
+                car.position = 0;
+                // Обновляем характеристики каждый заезд для реализма
+                car.baseSpeed = 1.5 + Math.random() * 2.0;
+                car.acceleration = 0.6 + Math.random() * 0.4;
+                car.handling = 0.5 + Math.random() * 0.5;
             });
             
             // Запускаем анимацию
-            document.querySelectorAll('.horse-real').forEach(horse => {
-                horse.style.left = '30px';
-                horse.classList.add('horse-running');
+            document.querySelectorAll('.car').forEach(car => {
+                car.style.left = '30px';
+                car.classList.add('car-running');
             });
             
-            // Запускаем скачки
+            // Запускаем гонку
             runRace();
         }
         
         function runRace() {
-            const trackWidth = document.querySelector('.race-track').offsetWidth - 90;
+            const trackWidth = document.querySelector('.race-track-road').offsetWidth - 90;
             let winner = null;
             let raceTime = 0;
             
             const raceInterval = setInterval(() => {
                 raceTime += 0.05;
                 
-                // Двигаем каждую лошадь
-                horses.forEach(horse => {
-                    // Реалистичная формула движения
-                    const distanceFactor = 1 - (horse.position / trackWidth) * 0.2;
-                    const staminaFactor = horse.stamina * (0.9 + Math.random() * 0.2);
-                    const formFactor = horse.form * (0.8 + Math.random() * 0.4);
+                // Двигаем каждую машину
+                cars.forEach(car => {
+                    // Реалистичная формула движения для машин
+                    const distanceFactor = 1 - (car.position / trackWidth) * 0.2;
+                    const accelerationFactor = car.acceleration * (0.9 + Math.random() * 0.2);
+                    const handlingFactor = car.handling * (0.8 + Math.random() * 0.4);
                     const randomFactor = 0.8 + Math.random() * 0.4;
                     
-                    const currentSpeed = horse.baseSpeed * distanceFactor * staminaFactor * formFactor * randomFactor;
-                    horse.position += currentSpeed;
+                    const currentSpeed = car.baseSpeed * distanceFactor * accelerationFactor * handlingFactor * randomFactor;
+                    car.position += currentSpeed;
                     
-                    const horseElement = document.querySelector(`.horse-real[data-horse="${horse.id}"]`);
-                    if (horseElement) {
-                        const newPosition = Math.min(horse.position, trackWidth);
-                        horseElement.style.left = `${30 + newPosition}px`;
+                    const carElement = document.querySelector(`.car[data-car="${car.id}"]`);
+                    if (carElement) {
+                        const newPosition = Math.min(car.position, trackWidth);
+                        carElement.style.left = `${30 + newPosition}px`;
                         
                         // Проверка финиша
                         if (newPosition >= trackWidth && !winner) {
-                            winner = horse.id;
+                            winner = car.id;
                             clearInterval(raceInterval);
                             finishRace(winner);
                         }
@@ -1208,25 +1218,25 @@
             raceFinished = true;
             
             // Останавливаем анимацию
-            document.querySelectorAll('.horse-real').forEach(horse => {
-                horse.classList.remove('horse-running');
+            document.querySelectorAll('.car').forEach(car => {
+                car.classList.remove('car-running');
             });
             
             // Анимация победителя
-            const winnerElement = document.querySelector(`.horse-real[data-horse="${winnerId}"]`);
+            const winnerElement = document.querySelector(`.car[data-car="${winnerId}"]`);
             winnerElement.classList.add('winner');
             
             // Проверяем результат
-            const winnerHorse = horses.find(h => h.id === winnerId);
-            const userWon = winnerId === selectedHorse;
+            const winnerCar = cars.find(c => c.id === winnerId);
+            const userWon = winnerId === selectedCar;
             
             setTimeout(() => {
                 if (userWon) {
-                    const winAmount = Math.floor(currentBet * winnerHorse.odds);
+                    const winAmount = Math.floor(currentBet * winnerCar.odds);
                     balance += winAmount;
-                    showNotification(`🎉 ПОБЕДА! ${winnerHorse.name} выиграл! +${winAmount} TON!`, 'win');
+                    showNotification(`🏆 ПОБЕДА! ${winnerCar.name} выиграл! +${winAmount} TON!`, 'win');
                 } else {
-                    showNotification(`🏁 ${winnerHorse.name} победил! Ваша лошадь проиграла.`, 'lose');
+                    showNotification(`🏁 ${winnerCar.name} победил! Ваша машина проиграла.`, 'lose');
                 }
                 
                 updateBalanceDisplay();
@@ -1238,65 +1248,65 @@
         
         function resetGame() {
             if (raceActive) {
-                showNotification('Дождитесь окончания скачек!', 'info');
+                showNotification('Дождитесь окончания гонки!', 'info');
                 return;
             }
             
-            if (!raceFinished && selectedHorse) {
+            if (!raceFinished && selectedCar) {
                 balance += currentBet;
                 updateBalanceDisplay();
             }
             
             // Сброс состояния
-            selectedHorse = null;
+            selectedCar = null;
             currentBet = 100;
             raceFinished = false;
             
             // Сброс UI
-            document.querySelectorAll('.horse-bet-card').forEach(card => {
+            document.querySelectorAll('.car-bet-card').forEach(card => {
                 card.classList.remove('active');
             });
             
-            document.querySelectorAll('.horse-real').forEach(horse => {
-                horse.style.left = '30px';
-                horse.classList.remove('horse-running', 'winner');
-                horse.style.filter = '';
+            document.querySelectorAll('.car').forEach(car => {
+                car.style.left = '30px';
+                car.classList.remove('car-running', 'winner');
+                car.style.filter = '';
             });
             
-            selectedHorseElement.textContent = 'Не выбрана';
-            selectedHorseElement.style.color = '';
+            selectedCarElement.textContent = 'Не выбрана';
+            selectedCarElement.style.color = '';
             betInput.value = '100';
             potentialWinElement.textContent = '0 TON';
             
             // Разблокируем интерфейс
             resetGameUI();
-            showNotification('Игра сброшена', 'info');
+            showNotification('Гонка сброшена', 'info');
             
-            localStorage.removeItem('baigeGame');
+            localStorage.removeItem('raceGame');
         }
         
         function resetGameUI() {
             startButton.disabled = false;
-            startButton.innerHTML = '<span class="control-icon start-icon"></span>Начать скачки!';
+            startButton.innerHTML = '<span class="control-icon start-icon"></span>Старт гонки!';
             betInput.disabled = false;
             setBetButton.disabled = false;
             betButtons.forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('active');
             });
-            document.querySelectorAll('.horse-bet-card').forEach(card => card.style.pointerEvents = 'auto');
+            document.querySelectorAll('.car-bet-card').forEach(card => card.style.pointerEvents = 'auto');
         }
         
         // ==================== СОХРАНЕНИЕ ====================
         function saveGameResult(userWon, winnerId) {
             const gameHistory = JSON.parse(localStorage.getItem('gameHistory')) || [];
             const result = {
-                game: 'baige',
+                game: 'race',
                 bet: currentBet,
                 win: userWon,
-                horse: selectedHorse,
+                car: selectedCar,
                 winner: winnerId,
-                amount: userWon ? Math.floor(currentBet * horses.find(h => h.id === selectedHorse).odds) : 0,
+                amount: userWon ? Math.floor(currentBet * cars.find(c => c.id === selectedCar).odds) : 0,
                 timestamp: Date.now()
             };
             
@@ -1306,25 +1316,25 @@
         
         function saveGame() {
             const gameState = {
-                selectedHorse: selectedHorse,
+                selectedCar: selectedCar,
                 currentBet: currentBet,
                 balance: balance,
                 raceFinished: raceFinished
             };
             
-            localStorage.setItem('baigeGame', JSON.stringify(gameState));
+            localStorage.setItem('raceGame', JSON.stringify(gameState));
         }
         
         function loadSavedGame() {
-            const savedGame = JSON.parse(localStorage.getItem('baigeGame'));
+            const savedGame = JSON.parse(localStorage.getItem('raceGame'));
             if (savedGame) {
-                selectedHorse = savedGame.selectedHorse;
+                selectedCar = savedGame.selectedCar;
                 currentBet = savedGame.currentBet || 100;
                 balance = savedGame.balance || balance;
                 raceFinished = savedGame.raceFinished || false;
                 
-                if (selectedHorse) {
-                    selectHorse(selectedHorse);
+                if (selectedCar) {
+                    selectCar(selectedCar);
                 }
                 
                 betInput.value = currentBet;
