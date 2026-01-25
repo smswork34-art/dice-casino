@@ -143,12 +143,12 @@
             color: #1a1a1a;
         }
 
-        /* Таймер ставок - БЕЗ ЦВЕТНОГО ПРЯМОУГОЛЬНИКА */
+        /* Таймер ставок */
         .bet-timer {
             background: white;
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             text-align: center;
             border: 2px solid #e6f4ff;
             box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
@@ -173,7 +173,7 @@
             font-weight: normal;
         }
 
-        /* Основная игровая область - БЕЗ ГОЛУБОГО ПРЯМОУГОЛЬНИКА */
+        /* Основная игровая область с кнопками */
         .game-main-area {
             background: white;
             border-radius: 16px;
@@ -184,7 +184,11 @@
             text-align: center;
         }
 
-        /* Текущий множитель - БОЛЬШОЙ И ВИДИМЫЙ */
+        /* Блок с множителем и графиком */
+        .multiplier-graph-section {
+            margin-bottom: 20px;
+        }
+
         .current-multiplier {
             font-size: 72px;
             font-weight: 900;
@@ -202,7 +206,7 @@
 
         /* График */
         .graph-container {
-            height: 150px;
+            height: 120px;
             margin: 20px 0;
             position: relative;
             overflow: hidden;
@@ -211,7 +215,78 @@
             border: 1px solid #e6f4ff;
         }
 
-        /* Статус игры - БЕЗ ЦВЕТНОГО ПРЯМОУГОЛЬНИКА */
+        /* Кнопки рядом с графиком */
+        .graph-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .graph-button {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .graph-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .bet-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .bet-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .cashout-button {
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.3);
+        }
+
+        .cashout-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.4);
+        }
+
+        .cashout-button.auto {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+        }
+
+        .button-icon {
+            width: 20px;
+            height: 20px;
+            background: white;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+
+        .bet-icon {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');
+        }
+
+        .cashout-icon {
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-6-7h3v-2h-3V8l-4 4 4 4v-3z"/></svg>');
+        }
+
+        /* Статус игры */
         .game-status {
             font-size: 16px;
             font-weight: 700;
@@ -220,18 +295,7 @@
             margin-bottom: 20px;
             background: #f8fbff;
             border: 2px solid #e6f4ff;
-        }
-
-        .game-status.awaiting {
             color: #2aabee;
-        }
-
-        .game-status.playing {
-            color: #4CAF50;
-        }
-
-        .game-status.crashed {
-            color: #ff6b6b;
         }
 
         /* Статистика игры */
@@ -401,77 +465,6 @@
             box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
         }
 
-        /* Кнопки управления */
-        .game-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .control-button {
-            padding: 20px;
-            border: none;
-            border-radius: 16px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .control-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .bet-button {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-        }
-
-        .bet-button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-        }
-
-        .cashout-button {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
-        }
-
-        .cashout-button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.4);
-        }
-
-        .cashout-button.auto {
-            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-        }
-
-        .control-icon {
-            width: 20px;
-            height: 20px;
-            background: white;
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            mask-position: center;
-        }
-
-        .bet-icon {
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');
-        }
-
-        .cashout-icon {
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-6-7h3v-2h-3V8l-4 4 4 4v-3z"/></svg>');
-        }
-
         /* История игр */
         .game-history {
             background: white;
@@ -608,12 +601,16 @@
             }
             
             .graph-container {
-                height: 120px;
+                height: 100px;
             }
             
-            .control-button {
-                padding: 16px;
-                font-size: 16px;
+            .graph-buttons {
+                gap: 8px;
+            }
+            
+            .graph-button {
+                padding: 14px;
+                font-size: 14px;
             }
         }
     </style>
@@ -651,16 +648,30 @@
 
             <!-- Основная игровая область -->
             <div class="game-main-area">
-                <div class="current-multiplier" id="currentMultiplier">1.00</div>
-                <div class="multiplier-label">Текущий множитель</div>
-                
-                <!-- График -->
-                <div class="graph-container" id="graphContainer">
-                    <canvas id="gameGraph"></canvas>
+                <div class="multiplier-graph-section">
+                    <div class="current-multiplier" id="currentMultiplier">1.00</div>
+                    <div class="multiplier-label">Текущий множитель</div>
+                    
+                    <!-- График -->
+                    <div class="graph-container" id="graphContainer">
+                        <canvas id="gameGraph"></canvas>
+                    </div>
+                    
+                    <!-- Кнопки рядом с графиком -->
+                    <div class="graph-buttons">
+                        <button class="graph-button bet-button" id="placeBetButton">
+                            <span class="button-icon bet-icon"></span>
+                            Сделать ставку
+                        </button>
+                        <button class="graph-button cashout-button" id="cashoutButton" disabled>
+                            <span class="button-icon cashout-icon"></span>
+                            Забрать
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Статус игры -->
-                <div class="game-status awaiting" id="gameStatus">
+                <div class="game-status" id="gameStatus">
                     ⏳ Ожидание ставок
                 </div>
                 
@@ -668,11 +679,11 @@
                 <div class="game-stats">
                     <div class="stat-card">
                         <div class="stat-value" id="potentialWin">0.00</div>
-                        <div class="stat-label">Выигрыш</div>
+                        <div class="stat-label">Потенциальный выигрыш</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="playersCount">126</div>
-                        <div class="stat-label">Игроков</div>
+                        <div class="stat-label">Игроков онлайн</div>
                     </div>
                 </div>
             </div>
@@ -705,22 +716,10 @@
                 </div>
             </div>
 
-            <!-- Кнопки управления -->
-            <div class="game-controls">
-                <button class="control-button bet-button" id="placeBetButton">
-                    <span class="control-icon bet-icon"></span>
-                    Сделать ставку
-                </button>
-                <button class="control-button cashout-button" id="cashoutButton" disabled>
-                    <span class="control-icon cashout-icon"></span>
-                    Забрать выигрыш
-                </button>
-            </div>
-
             <!-- История игр -->
             <div class="game-history">
                 <div class="history-title">
-                    <span>История игр</span>
+                    <span>Последние игры</span>
                     <span id="historyCount">15</span>
                 </div>
                 <div class="history-cards" id="historyCards">
@@ -795,14 +794,15 @@
             currentMultiplier = 1.00;
             graphPoints = [];
             
-            updateGameStatus('betting');
+            updateGameStatus('⏳ Прием ставок');
             updateMultiplierDisplay();
             drawGraph();
             
             // Включаем кнопку ставки
             document.getElementById('placeBetButton').disabled = false;
-            document.getElementById('placeBetButton').innerHTML = '<span class="control-icon bet-icon"></span>Сделать ставку';
+            document.getElementById('placeBetButton').innerHTML = '<span class="button-icon bet-icon"></span>Сделать ставку';
             document.getElementById('cashoutButton').disabled = true;
+            document.getElementById('cashoutButton').innerHTML = '<span class="button-icon cashout-icon"></span>Забрать';
             document.getElementById('betInput').disabled = false;
             document.querySelectorAll('.bet-preset').forEach(btn => btn.disabled = false);
             document.getElementById('autoCashoutInput').disabled = false;
@@ -850,7 +850,7 @@
             
             // Отключаем ставки
             document.getElementById('placeBetButton').disabled = true;
-            document.getElementById('placeBetButton').innerHTML = '<span class="control-icon bet-icon"></span>Ставки закрыты';
+            document.getElementById('placeBetButton').innerHTML = '<span class="button-icon bet-icon"></span>Ставки закрыты';
             document.getElementById('betInput').disabled = true;
             document.querySelectorAll('.bet-preset').forEach(btn => btn.disabled = true);
             document.getElementById('autoCashoutInput').disabled = true;
@@ -859,7 +859,7 @@
                 document.getElementById('cashoutButton').disabled = false;
             }
             
-            updateGameStatus('playing');
+            updateGameStatus('🚀 Полёт!');
             
             // Снимаем ставку с баланса
             if (isBetPlaced) {
@@ -940,7 +940,7 @@
             
             addToHistory(true, currentMultiplier, netWin);
             document.getElementById('cashoutButton').disabled = true;
-            document.getElementById('cashoutButton').innerHTML = '<span class="control-icon cashout-icon"></span>Автовывод сработал!';
+            document.getElementById('cashoutButton').innerHTML = '<span class="button-icon cashout-icon"></span>Автовывод!';
             
             showNotification(`🤖 Автовывод! ${netWin.toFixed(1)} TON (${currentMultiplier.toFixed(2)}x)`, 'win');
         }
@@ -956,7 +956,7 @@
             
             addToHistory(true, currentMultiplier, netWin);
             document.getElementById('cashoutButton').disabled = true;
-            document.getElementById('cashoutButton').innerHTML = '<span class="control-icon cashout-icon"></span>Выигрыш получен!';
+            document.getElementById('cashoutButton').innerHTML = '<span class="button-icon cashout-icon"></span>Забрано!';
             
             showNotification(`🎉 Вы забрали ${netWin.toFixed(1)} TON! (${currentMultiplier.toFixed(2)}x)`, 'win');
         }
@@ -978,7 +978,7 @@
                 showNotification(`💥 Крах на ${currentMultiplier.toFixed(2)}x`, 'info');
             }
             
-            updateGameStatus('crashed');
+            updateGameStatus('💥 Крах!');
             document.getElementById('cashoutButton').disabled = true;
             
             // Показываем точку краха на графике
@@ -1051,7 +1051,7 @@
             updatePlayersCount();
             
             document.getElementById('placeBetButton').disabled = true;
-            document.getElementById('placeBetButton').innerHTML = '<span class="control-icon bet-icon"></span>Ставка сделана';
+            document.getElementById('placeBetButton').innerHTML = '<span class="button-icon bet-icon"></span>Ставка сделана';
             
             showNotification(`✅ Ставка ${currentBet} TON принята!`, 'info');
         }
@@ -1130,24 +1130,8 @@
             document.getElementById('balanceAmount').textContent = balance + ' TON';
         }
 
-        function updateGameStatus(status) {
-            const element = document.getElementById('gameStatus');
-            element.className = 'game-status';
-            
-            switch(status) {
-                case 'betting':
-                    element.classList.add('awaiting');
-                    element.innerHTML = '⏳ Прием ставок';
-                    break;
-                case 'playing':
-                    element.classList.add('playing');
-                    element.innerHTML = '🚀 График растет!';
-                    break;
-                case 'crashed':
-                    element.classList.add('crashed');
-                    element.innerHTML = '💥 Крах!';
-                    break;
-            }
+        function updateGameStatus(text) {
+            document.getElementById('gameStatus').textContent = text;
         }
 
         function updatePlayersCount() {
