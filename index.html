@@ -215,16 +215,54 @@
             border: 1px solid #e6f4ff;
         }
 
+        /* Компактный блок управления */
+        .compact-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .bet-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .bet-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e6f4ff;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .bet-input:focus {
+            outline: none;
+            border-color: #2aabee;
+            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
+        }
+
+        .bet-input-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 4px;
+        }
+
         /* Кнопки рядом с графиком */
         .graph-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 20px;
         }
 
         .graph-button {
-            padding: 16px;
+            padding: 14px;
             border: none;
             border-radius: 12px;
             font-size: 16px;
@@ -327,78 +365,6 @@
             font-weight: 500;
         }
 
-        /* Панель ставки */
-        .bet-panel {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #e6f4ff;
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
-        }
-
-        .bet-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #1a1a1a;
-        }
-
-        .bet-input-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .bet-input {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid #e6f4ff;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a1a1a;
-            transition: all 0.3s;
-        }
-
-        .bet-input:focus {
-            outline: none;
-            border-color: #2aabee;
-            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
-        }
-
-        .bet-presets {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-
-        .bet-preset {
-            padding: 12px;
-            background: white;
-            border: 2px solid #e6f4ff;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #2aabee;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .bet-preset:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
-        }
-
-        .bet-preset.active {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-color: #2aabee;
-            color: white;
-            box-shadow: 0 4px 8px rgba(42, 171, 238, 0.3);
-        }
-
         /* Автовывод */
         .auto-cashout-panel {
             background: white;
@@ -407,6 +373,13 @@
             margin-bottom: 20px;
             border: 2px solid #e6f4ff;
             box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+        }
+
+        .auto-cashout-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
         }
 
         .auto-cashout-input-container {
@@ -588,10 +561,6 @@
                 padding: 16px;
             }
             
-            .bet-presets {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .auto-cashout-presets {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -609,7 +578,12 @@
             }
             
             .graph-button {
-                padding: 14px;
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .bet-input {
+                padding: 10px;
                 font-size: 14px;
             }
         }
@@ -657,16 +631,25 @@
                         <canvas id="gameGraph"></canvas>
                     </div>
                     
-                    <!-- Кнопки рядом с графиком -->
-                    <div class="graph-buttons">
-                        <button class="graph-button bet-button" id="placeBetButton">
-                            <span class="button-icon bet-icon"></span>
-                            Сделать ставку
-                        </button>
-                        <button class="graph-button cashout-button" id="cashoutButton" disabled>
-                            <span class="button-icon cashout-icon"></span>
-                            Забрать
-                        </button>
+                    <!-- Компактный блок управления -->
+                    <div class="compact-controls">
+                        <!-- Ввод ставки -->
+                        <div class="bet-input-row">
+                            <input type="number" class="bet-input" id="betInput" value="0.3" min="0.3" step="0.1" placeholder="0.3">
+                        </div>
+                        <div class="bet-input-label">Сумма ставки (TON)</div>
+                        
+                        <!-- Кнопки рядом с графиком -->
+                        <div class="graph-buttons">
+                            <button class="graph-button bet-button" id="placeBetButton">
+                                <span class="button-icon bet-icon"></span>
+                                Сделать ставку
+                            </button>
+                            <button class="graph-button cashout-button" id="cashoutButton" disabled>
+                                <span class="button-icon cashout-icon"></span>
+                                Забрать
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -688,23 +671,9 @@
                 </div>
             </div>
 
-            <!-- Панель ставки -->
-            <div class="bet-panel">
-                <div class="bet-title">Ваша ставка (TON)</div>
-                <div class="bet-input-container">
-                    <input type="number" class="bet-input" id="betInput" value="10" min="1" step="1" placeholder="Сумма ставки">
-                </div>
-                <div class="bet-presets">
-                    <button class="bet-preset active" data-bet="10">10</button>
-                    <button class="bet-preset" data-bet="50">50</button>
-                    <button class="bet-preset" data-bet="100">100</button>
-                    <button class="bet-preset" data-bet="500">500</button>
-                </div>
-            </div>
-
             <!-- Автовывод -->
             <div class="auto-cashout-panel">
-                <div class="bet-title">Автовывод (x)</div>
+                <div class="auto-cashout-title">Автовывод (x)</div>
                 <div class="auto-cashout-input-container">
                     <input type="number" class="auto-cashout-input" id="autoCashoutInput" value="2.00" min="1.10" max="100" step="0.10">
                 </div>
@@ -732,7 +701,7 @@
     <script>
         // ==================== ПЕРЕМЕННЫЕ И КОНСТАНТЫ ====================
         let balance = 1000;
-        let currentBet = 10;
+        let currentBet = 0.3; // Минимальная ставка 0.3 TON
         let autoCashoutMultiplier = 2.00;
         let gameState = 'waiting'; // waiting, betting, playing, crashed
         let currentMultiplier = 1.00;
@@ -759,6 +728,7 @@
 
         const GROWTH_SPEED = 0.03; // Медленный рост
         const HOUSE_EDGE = 0.03; // 3% комиссия казино
+        const MIN_BET = 0.3; // Минимальная ставка 0.3 TON
 
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
@@ -804,7 +774,6 @@
             document.getElementById('cashoutButton').disabled = true;
             document.getElementById('cashoutButton').innerHTML = '<span class="button-icon cashout-icon"></span>Забрать';
             document.getElementById('betInput').disabled = false;
-            document.querySelectorAll('.bet-preset').forEach(btn => btn.disabled = false);
             document.getElementById('autoCashoutInput').disabled = false;
             
             startBettingTimer();
@@ -852,7 +821,6 @@
             document.getElementById('placeBetButton').disabled = true;
             document.getElementById('placeBetButton').innerHTML = '<span class="button-icon bet-icon"></span>Ставки закрыты';
             document.getElementById('betInput').disabled = true;
-            document.querySelectorAll('.bet-preset').forEach(btn => btn.disabled = true);
             document.getElementById('autoCashoutInput').disabled = true;
             
             if (isBetPlaced) {
@@ -999,17 +967,9 @@
             // Кнопка вывода
             document.getElementById('cashoutButton').addEventListener('click', cashout);
             
-            // Быстрые ставки
-            document.querySelectorAll('.bet-preset').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const betValue = parseInt(btn.dataset.bet);
-                    document.getElementById('betInput').value = betValue;
-                    setCurrentBet();
-                    
-                    document.querySelectorAll('.bet-preset').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
-            });
+            // Ввод ставки
+            document.getElementById('betInput').addEventListener('input', setCurrentBet);
+            document.getElementById('betInput').addEventListener('change', validateBetAmount);
             
             // Автовывод пресеты
             document.querySelectorAll('.auto-cashout-preset').forEach(preset => {
@@ -1023,21 +983,29 @@
                 });
             });
             
-            // Ввод ставки
-            document.getElementById('betInput').addEventListener('input', () => {
-                setCurrentBet();
-                document.querySelectorAll('.bet-preset').forEach(btn => btn.classList.remove('active'));
-            });
-            
             // Ввод автовывода
             document.getElementById('autoCashoutInput').addEventListener('change', setAutoCashout);
+        }
+
+        function validateBetAmount() {
+            let value = parseFloat(document.getElementById('betInput').value);
+            if (isNaN(value) || value < MIN_BET) {
+                value = MIN_BET;
+                document.getElementById('betInput').value = value.toFixed(1);
+            }
+            
+            // Округляем до 1 десятичного знака
+            value = Math.round(value * 10) / 10;
+            document.getElementById('betInput').value = value.toFixed(1);
+            
+            setCurrentBet();
         }
 
         function placeBet() {
             if (gameState !== 'betting' || isBetPlaced) return;
             
-            if (currentBet < 1) {
-                showNotification('Минимальная ставка: 1 TON!', 'lose');
+            if (currentBet < MIN_BET) {
+                showNotification(`Минимальная ставка: ${MIN_BET} TON!`, 'lose');
                 return;
             }
             
@@ -1053,17 +1021,20 @@
             document.getElementById('placeBetButton').disabled = true;
             document.getElementById('placeBetButton').innerHTML = '<span class="button-icon bet-icon"></span>Ставка сделана';
             
-            showNotification(`✅ Ставка ${currentBet} TON принята!`, 'info');
+            showNotification(`✅ Ставка ${currentBet.toFixed(1)} TON принята!`, 'info');
         }
 
         function setCurrentBet() {
-            let value = parseInt(document.getElementById('betInput').value);
-            if (isNaN(value) || value < 1) {
-                value = 1;
-                document.getElementById('betInput').value = value;
+            let value = parseFloat(document.getElementById('betInput').value);
+            if (isNaN(value) || value < MIN_BET) {
+                value = MIN_BET;
+                document.getElementById('betInput').value = value.toFixed(1);
             }
             
+            // Округляем до 1 десятичного знака
+            value = Math.round(value * 10) / 10;
             currentBet = value;
+            
             updatePotentialWin();
         }
 
