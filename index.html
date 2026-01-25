@@ -599,7 +599,7 @@
             </div>
             <button class="balance-btn">
                 <span class="balance-icon"></span>
-                <span id="balanceAmount">1,000 TON</span>
+                <span id="balanceAmount">1,000.00 TON</span>
             </button>
         </div>
 
@@ -661,7 +661,7 @@
                 <!-- Статистика игры -->
                 <div class="game-stats">
                     <div class="stat-card">
-                        <div class="stat-value" id="potentialWin">0.00</div>
+                        <div class="stat-value" id="potentialWin">0.0</div>
                         <div class="stat-label">Потенциальный выигрыш</div>
                     </div>
                     <div class="stat-card">
@@ -700,7 +700,7 @@
 
     <script>
         // ==================== ПЕРЕМЕННЫЕ И КОНСТАНТЫ ====================
-        let balance = 1000;
+        let balance = 1000.00;
         let currentBet = 0.3; // Минимальная ставка 0.3 TON
         let autoCashoutMultiplier = 2.00;
         let gameState = 'waiting'; // waiting, betting, playing, crashed
@@ -832,6 +832,7 @@
             // Снимаем ставку с баланса
             if (isBetPlaced) {
                 balance -= currentBet;
+                balance = Math.round(balance * 100) / 100;
                 updateBalanceDisplay();
             }
             
@@ -901,32 +902,34 @@
             hasAutoCashedOut = true;
             
             const winAmount = currentBet * currentMultiplier * (1 - HOUSE_EDGE);
-            const netWin = Math.round(winAmount * 10) / 10;
+            const netWin = Math.round(winAmount * 100) / 100;
             
             balance += netWin;
+            balance = Math.round(balance * 100) / 100;
             updateBalanceDisplay();
             
             addToHistory(true, currentMultiplier, netWin);
             document.getElementById('cashoutButton').disabled = true;
             document.getElementById('cashoutButton').innerHTML = '<span class="button-icon cashout-icon"></span>Автовывод!';
             
-            showNotification(`🤖 Автовывод! ${netWin.toFixed(1)} TON (${currentMultiplier.toFixed(2)}x)`, 'win');
+            showNotification(`🤖 Автовывод! ${netWin.toFixed(2)} TON (${currentMultiplier.toFixed(2)}x)`, 'win');
         }
 
         function cashout() {
             if (!isBetPlaced || gameState !== 'playing') return;
             
             const winAmount = currentBet * currentMultiplier * (1 - HOUSE_EDGE);
-            const netWin = Math.round(winAmount * 10) / 10;
+            const netWin = Math.round(winAmount * 100) / 100;
             
             balance += netWin;
+            balance = Math.round(balance * 100) / 100;
             updateBalanceDisplay();
             
             addToHistory(true, currentMultiplier, netWin);
             document.getElementById('cashoutButton').disabled = true;
             document.getElementById('cashoutButton').innerHTML = '<span class="button-icon cashout-icon"></span>Забрано!';
             
-            showNotification(`🎉 Вы забрали ${netWin.toFixed(1)} TON! (${currentMultiplier.toFixed(2)}x)`, 'win');
+            showNotification(`🎉 Вы забрали ${netWin.toFixed(2)} TON! (${currentMultiplier.toFixed(2)}x)`, 'win');
         }
 
         function endGame() {
@@ -941,7 +944,7 @@
             
             if (isBetPlaced && !hasAutoCashedOut) {
                 addToHistory(false, currentMultiplier, 0);
-                showNotification(`💥 Крах! Вы проиграли ${currentBet} TON (${currentMultiplier.toFixed(2)}x)`, 'lose');
+                showNotification(`💥 Крах! Вы проиграли ${currentBet.toFixed(2)} TON (${currentMultiplier.toFixed(2)}x)`, 'lose');
             } else if (!isBetPlaced) {
                 showNotification(`💥 Крах на ${currentMultiplier.toFixed(2)}x`, 'info');
             }
@@ -1098,7 +1101,7 @@
         }
 
         function updateBalanceDisplay() {
-            document.getElementById('balanceAmount').textContent = balance + ' TON';
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2) + ' TON';
         }
 
         function updateGameStatus(text) {
@@ -1295,3 +1298,4 @@
     </script>
 </body>
 </html>
+        
