@@ -2745,6 +2745,22 @@
     </div>
 
     <script>
+        // Функция для отладки - показывает какие элементы найдены
+function debugElements() {
+    console.log('Элементы DOM:');
+    console.log('diceGameBtn:', document.getElementById('diceGameBtn'));
+    console.log('minesGameBtn:', document.getElementById('minesGameBtn'));
+    console.log('playDiceGameBtn:', document.getElementById('playDiceGame'));
+    console.log('playMinesGameBtn:', document.getElementById('playMinesGame'));
+    console.log('mainMenu:', document.getElementById('mainMenu'));
+    console.log('gamesMenuPage:', document.getElementById('gamesMenuPage'));
+}
+
+// Вызовите при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    debugElements();
+    init();
+});
         // ==================== КОНСТАНТЫ ====================
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
         const ADMIN_CHAT_ID = '8155919358';
