@@ -143,7 +143,37 @@
             color: #1a1a1a;
         }
 
-        /* Основная игровая область */
+        /* Таймер ставок - БЕЗ ЦВЕТНОГО ПРЯМОУГОЛЬНИКА */
+        .bet-timer {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 2px solid #e6f4ff;
+            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+        }
+
+        .timer-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .timer-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #2aabee;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        .timer-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        /* Основная игровая область - БЕЗ ГОЛУБОГО ПРЯМОУГОЛЬНИКА */
         .game-main-area {
             background: white;
             border-radius: 16px;
@@ -154,48 +184,18 @@
             text-align: center;
         }
 
-        /* Таймер ставок */
-        .bet-timer {
-            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-            text-align: center;
-            color: white;
-            font-weight: 700;
-        }
-
-        .timer-text {
-            font-size: 14px;
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-
-        .timer-value {
-            font-size: 32px;
-            font-weight: 800;
-            font-family: 'Courier New', monospace;
-        }
-
-        .timer-label {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        /* Текущий множитель */
+        /* Текущий множитель - БОЛЬШОЙ И ВИДИМЫЙ */
         .current-multiplier {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 900;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #1a1a1a;
             margin-bottom: 8px;
-            font-family: 'Arial Black', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            text-shadow: 0 2px 10px rgba(42, 171, 238, 0.2);
         }
 
         .multiplier-label {
-            font-size: 14px;
+            font-size: 16px;
             color: #666;
             margin-bottom: 20px;
         }
@@ -208,50 +208,30 @@
             overflow: hidden;
             border-radius: 8px;
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border: 1px solid #e6f4ff;
         }
 
-        .graph-line {
-            stroke: #2aabee;
-            stroke-width: 3;
-            fill: none;
-        }
-
-        .crash-point {
-            position: absolute;
-            background: #ff6b6b;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Статус игры */
+        /* Статус игры - БЕЗ ЦВЕТНОГО ПРЯМОУГОЛЬНИКА */
         .game-status {
             font-size: 16px;
             font-weight: 700;
             padding: 12px;
             border-radius: 12px;
             margin-bottom: 20px;
+            background: #f8fbff;
+            border: 2px solid #e6f4ff;
         }
 
         .game-status.awaiting {
-            background: rgba(255, 152, 0, 0.1);
-            color: #FF9800;
-            border: 2px solid #FF9800;
+            color: #2aabee;
         }
 
         .game-status.playing {
-            background: rgba(42, 171, 238, 0.1);
-            color: #2aabee;
-            border: 2px solid #2aabee;
+            color: #4CAF50;
         }
 
         .game-status.crashed {
-            background: rgba(255, 107, 107, 0.1);
             color: #ff6b6b;
-            border: 2px solid #ff6b6b;
         }
 
         /* Статистика игры */
@@ -274,6 +254,7 @@
             font-size: 20px;
             font-weight: 800;
             margin-bottom: 4px;
+            color: #1a1a1a;
         }
 
         .stat-label {
@@ -290,10 +271,6 @@
             margin-bottom: 20px;
             border: 2px solid #e6f4ff;
             box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
-        }
-
-        .bet-input-section {
-            margin-bottom: 20px;
         }
 
         .bet-title {
@@ -612,12 +589,6 @@
             animation: crashExplosion 0.5s ease-out;
         }
 
-        @keyframes rocketTakeoff {
-            0% { transform: translateX(0) scale(1); }
-            50% { transform: translateX(50px) scale(1.2); }
-            100% { transform: translateX(100px) scale(1.5); }
-        }
-
         /* Мобильная адаптация */
         @media (max-width: 480px) {
             .content {
@@ -633,7 +604,7 @@
             }
             
             .current-multiplier {
-                font-size: 48px;
+                font-size: 56px;
             }
             
             .graph-container {
@@ -830,6 +801,7 @@
             
             // Включаем кнопку ставки
             document.getElementById('placeBetButton').disabled = false;
+            document.getElementById('placeBetButton').innerHTML = '<span class="control-icon bet-icon"></span>Сделать ставку';
             document.getElementById('cashoutButton').disabled = true;
             document.getElementById('betInput').disabled = false;
             document.querySelectorAll('.bet-preset').forEach(btn => btn.disabled = false);
@@ -841,15 +813,31 @@
         function startBettingTimer() {
             if (timerId) clearInterval(timerId);
             
+            updateTimerDisplay();
+            
             timerId = setInterval(() => {
                 bettingTime--;
-                document.getElementById('timerValue').textContent = bettingTime;
+                updateTimerDisplay();
                 
                 if (bettingTime <= 0) {
                     clearInterval(timerId);
                     startGame();
                 }
             }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerElement = document.getElementById('timerValue');
+            timerElement.textContent = bettingTime;
+            
+            // Меняем цвет в зависимости от оставшегося времени
+            if (bettingTime <= 3) {
+                timerElement.style.color = '#ff6b6b';
+            } else if (bettingTime <= 5) {
+                timerElement.style.color = '#FF9800';
+            } else {
+                timerElement.style.color = '#2aabee';
+            }
         }
 
         function startGame() {
@@ -862,6 +850,7 @@
             
             // Отключаем ставки
             document.getElementById('placeBetButton').disabled = true;
+            document.getElementById('placeBetButton').innerHTML = '<span class="control-icon bet-icon"></span>Ставки закрыты';
             document.getElementById('betInput').disabled = true;
             document.querySelectorAll('.bet-preset').forEach(btn => btn.disabled = true);
             document.getElementById('autoCashoutInput').disabled = true;
@@ -880,6 +869,24 @@
             
             // Запускаем анимацию игры
             gameLoop();
+        }
+
+        function generateCrashPoint() {
+            const r = Math.random();
+            
+            if (r < CRASH_PROBABILITY['1.10']) {
+                return 1.00 + Math.random() * 0.10;
+            } else if (r < CRASH_PROBABILITY['1.50']) {
+                return 1.10 + Math.random() * 0.40;
+            } else if (r < CRASH_PROBABILITY['2.00']) {
+                return 1.50 + Math.random() * 0.50;
+            } else if (r < CRASH_PROBABILITY['5.00']) {
+                return 2.00 + Math.random() * 3.00;
+            } else if (r < CRASH_PROBABILITY['10.00']) {
+                return 5.00 + Math.random() * 5.00;
+            } else {
+                return 10.00 + Math.random() * 90.00;
+            }
         }
 
         function gameLoop() {
@@ -917,24 +924,6 @@
             animationId = requestAnimationFrame(gameLoop);
         }
 
-        function generateCrashPoint() {
-            const r = Math.random();
-            
-            if (r < CRASH_PROBABILITY['1.10']) {
-                return 1.00 + Math.random() * 0.10;
-            } else if (r < CRASH_PROBABILITY['1.50']) {
-                return 1.10 + Math.random() * 0.40;
-            } else if (r < CRASH_PROBABILITY['2.00']) {
-                return 1.50 + Math.random() * 0.50;
-            } else if (r < CRASH_PROBABILITY['5.00']) {
-                return 2.00 + Math.random() * 3.00;
-            } else if (r < CRASH_PROBABILITY['10.00']) {
-                return 5.00 + Math.random() * 5.00;
-            } else {
-                return 10.00 + Math.random() * 90.00;
-            }
-        }
-
         function calculateMultiplier(time) {
             // Экспоненциальный рост как в JetX
             return 1.00 + (Math.exp(time * 0.1) - 1) * 0.5;
@@ -951,6 +940,7 @@
             
             addToHistory(true, currentMultiplier, netWin);
             document.getElementById('cashoutButton').disabled = true;
+            document.getElementById('cashoutButton').innerHTML = '<span class="control-icon cashout-icon"></span>Автовывод сработал!';
             
             showNotification(`🤖 Автовывод! ${netWin.toFixed(1)} TON (${currentMultiplier.toFixed(2)}x)`, 'win');
         }
@@ -966,6 +956,7 @@
             
             addToHistory(true, currentMultiplier, netWin);
             document.getElementById('cashoutButton').disabled = true;
+            document.getElementById('cashoutButton').innerHTML = '<span class="control-icon cashout-icon"></span>Выигрыш получен!';
             
             showNotification(`🎉 Вы забрали ${netWin.toFixed(1)} TON! (${currentMultiplier.toFixed(2)}x)`, 'win');
         }
@@ -982,12 +973,13 @@
             
             if (isBetPlaced && !hasAutoCashedOut) {
                 addToHistory(false, currentMultiplier, 0);
-                showNotification(`💥 Крах! ${currentMultiplier.toFixed(2)}x`, 'lose');
+                showNotification(`💥 Крах! Вы проиграли ${currentBet} TON (${currentMultiplier.toFixed(2)}x)`, 'lose');
             } else if (!isBetPlaced) {
                 showNotification(`💥 Крах на ${currentMultiplier.toFixed(2)}x`, 'info');
             }
             
             updateGameStatus('crashed');
+            document.getElementById('cashoutButton').disabled = true;
             
             // Показываем точку краха на графике
             drawGraph();
@@ -1105,11 +1097,11 @@
             element.textContent = currentMultiplier.toFixed(2);
             
             if (currentMultiplier >= 5.00) {
-                element.style.background = 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)';
+                element.style.color = '#FF9800';
             } else if (currentMultiplier >= 2.00) {
-                element.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
+                element.style.color = '#4CAF50';
             } else {
-                element.style.background = 'linear-gradient(135deg, #2aabee 0%, #229ed9 100%)';
+                element.style.color = '#2aabee';
             }
             
             if (gameState === 'playing') {
@@ -1122,6 +1114,16 @@
         function updatePotentialWin() {
             const winAmount = isBetPlaced ? currentBet * currentMultiplier * (1 - HOUSE_EDGE) : 0;
             document.getElementById('potentialWin').textContent = winAmount.toFixed(1);
+            
+            // Меняем цвет в зависимости от выигрыша
+            const element = document.getElementById('potentialWin');
+            if (winAmount > currentBet * 2) {
+                element.style.color = '#4CAF50';
+            } else if (winAmount > currentBet) {
+                element.style.color = '#FF9800';
+            } else {
+                element.style.color = '#1a1a1a';
+            }
         }
 
         function updateBalanceDisplay() {
@@ -1161,6 +1163,19 @@
             
             ctx.clearRect(0, 0, width, height);
             
+            // Рисуем сетку
+            ctx.strokeStyle = '#e6f4ff';
+            ctx.lineWidth = 1;
+            
+            // Вертикальные линии
+            for (let i = 0; i <= 10; i++) {
+                const x = padding + i * (width - padding * 2) / 10;
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, height - padding);
+                ctx.stroke();
+            }
+            
             if (graphPoints.length === 0) return;
             
             // Находим максимальный множитель для масштабирования
@@ -1190,29 +1205,45 @@
             
             ctx.stroke();
             
-            // Рисуем точку краха
+            // Рисуем точку краха если игра завершена
             if (gameState === 'crashed' && crashPoint > 0) {
                 const crashX = width - padding;
                 const crashY = height - padding - crashPoint * scaleY;
                 
-                ctx.fillStyle = '#ff6b6b';
+                // Красный крестик
+                ctx.strokeStyle = '#ff6b6b';
+                ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.arc(crashX, crashY, 6, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(crashX - 4, crashY - 4);
-                ctx.lineTo(crashX + 4, crashY + 4);
-                ctx.moveTo(crashX + 4, crashY - 4);
-                ctx.lineTo(crashX - 4, crashY + 4);
+                ctx.moveTo(crashX - 6, crashY - 6);
+                ctx.lineTo(crashX + 6, crashY + 6);
+                ctx.moveTo(crashX + 6, crashY - 6);
+                ctx.lineTo(crashX - 6, crashY + 6);
                 ctx.stroke();
                 
                 // Подпись точки краха
                 ctx.fillStyle = '#ff6b6b';
-                ctx.font = '12px Arial';
-                ctx.fillText(crashPoint.toFixed(2) + 'x', crashX - 20, crashY - 10);
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(crashPoint.toFixed(2) + 'x', crashX - 25, crashY - 10);
+            }
+            
+            // Рисуем текущую точку если игра активна
+            if (gameState === 'playing' && graphPoints.length > 0) {
+                const lastPoint = graphPoints[graphPoints.length - 1];
+                const x = padding + Math.min(lastPoint.x, 100) * scaleX;
+                const y = height - padding - Math.min(lastPoint.y, maxMultiplier) * scaleY;
+                
+                // Зеленая точка
+                ctx.fillStyle = '#4CAF50';
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Белая обводка
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.stroke();
             }
         }
 
