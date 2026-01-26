@@ -2195,6 +2195,7 @@
                 padding: 8px 12px;
                 font-size: 13px;
             }
+        }
 /* Стили для реферальной системы */
 .referral-stats-grid {
     display: grid;
@@ -2221,119 +2222,6 @@
     font-size: 11px;
     color: #666;
     margin-top: 4px;
-}
-        }
-/* ФИКС ДЛЯ КНОПОК И ТЕКСТА */
-/* Профиль - статистика */
-.profile-stat {
-    min-height: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.profile-stat-value {
-    font-size: 16px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.profile-stat-label {
-    font-size: 11px !important;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Статистика - общая прибыль/проигрыш */
-.stat-card {
-    min-height: 70px;
-    padding: 12px !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.stat-value {
-    font-size: 18px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    margin-bottom: 4px;
-}
-
-.stat-label {
-    font-size: 12px !important;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-/* История ставок */
-.bet-item {
-    padding: 12px 10px !important;
-    min-height: 60px;
-}
-
-.bet-amount {
-    font-size: 14px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 120px;
-}
-
-.bet-result {
-    font-size: 12px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 120px;
-}
-
-/* Адаптация для мобильных */
-@media (max-width: 480px) {
-    .profile-stat {
-        padding: 10px !important;
-    }
-    
-    .profile-stat-value {
-        font-size: 14px !important;
-    }
-    
-    .profile-stat-label {
-        font-size: 10px !important;
-    }
-    
-    .stat-card {
-        padding: 8px !important;
-    }
-    
-    .stat-value {
-        font-size: 16px !important;
-    }
-    
-    .stat-label {
-        font-size: 11px !important;
-    }
-    
-    .bet-item {
-        padding: 10px 8px !important;
-    }
-    
-    .bet-amount {
-        font-size: 13px !important;
-        max-width: 100px;
-    }
 }
     </style>
 </head>
@@ -2801,7 +2689,7 @@
         </div>
     </div>
 
-<!-- Модальное окно депозита -->
+<!-- В МОДАЛЬНОМ ОКНЕ ДЕПОЗИТА (строка ~2250) -->
 <div class="modal-overlay" id="depositModal">
     <div class="modal">
         <div class="modal-header">
@@ -2816,25 +2704,24 @@
                 <p id="walletAddress" style="margin-top: 8px; font-size: 12px; color: #666;"></p>
             </div>
             
-            <!-- ОДНО ПОЛЕ ВВОДА вместо кнопок -->
+            <!-- ЗАМЕНА: убираем кнопки, оставляем только поле ввода -->
             <div style="margin: 20px 0;">
-                <div style="font-weight: 600; margin-bottom: 8px;">Сумма пополнения (TON)</div>
+                <div style="font-weight: 600; margin-bottom: 12px;">Сумма пополнения (TON):</div>
                 <input type="number" 
                        class="form-input" 
                        id="customDepositAmount" 
-                       placeholder="Введите сумму от 7 TON" 
-                       min="7" 
-                       step="1"
-                       value="7"
-                       style="width: 100%; padding: 16px; font-size: 16px; border: 2px solid #e6f4ff; border-radius: 12px;">
-                <div style="font-size: 12px; color: #666; margin-top: 6px;">
-                    Минимальный депозит: 7 TON
+                       placeholder="Введите сумму" 
+                       min="1" 
+                       value="10"
+                       style="width: 100%; padding: 16px; font-size: 16px;">
+                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                    Минимальная сумма: 1 TON
                 </div>
             </div>
             
             <button class="send-button" id="sendDeposit" disabled>
                 <span class="deposit-icon"></span>
-                Отправить <span id="selectedAmount">7</span> TON
+                Отправить <span id="selectedAmount">10</span> TON
             </button>
         </div>
     </div>
@@ -2857,28 +2744,6 @@
     </div>
 
     <script>
-// Автоматическое округление при любых изменениях баланса
-const originalBalance = balance;
-balance = Math.round(originalBalance * 100) / 100;
-
-// ==================== ФУНКЦИИ ФОРМАТИРОВАНИЯ ====================
-function formatNumber(num) {
-    // Округляем до 2 знаков после запятой
-    const rounded = Math.round(num * 100) / 100;
-    return rounded.toFixed(2);
-}
-
-function formatTON(amount) {
-    const formatted = formatNumber(amount);
-    if (amount > 0) {
-        return '+' + formatted + ' TON';
-    } else if (amount < 0) {
-        return formatted + ' TON';
-    } else {
-        return '0.00 TON';
-    }
-}
-
         // ==================== КОНСТАНТЫ ====================
         const BOT_TOKEN = '8212269748:AAFog811LFiMRQZuAeMFZxGHOHm3rhxduQY';
         const ADMIN_CHAT_ID = '8155919358';
@@ -3533,7 +3398,7 @@ function formatTON(amount) {
                 revealAllMines();
                 updateMinesGameState();
                 
-                const winAmount = Math.round(minesCurrentBet * minesCurrentMultiplier * 100) / 100; // Округление до 2
+                const winAmount = Math.round(minesCurrentBet * minesCurrentMultiplier * 10) / 10; // Округление до 0.1
                 balance += winAmount;
                 updateBalanceDisplay();
                 
@@ -3590,7 +3455,7 @@ function formatTON(amount) {
             revealAllMines();
             updateMinesGameState();
             
-            showNotification(`🎉 Вы забрали ${formatNumber(winAmount)} TON! Множитель: ${formatNumber(minesCurrentMultiplier)}x`, 'win');
+            showNotification(`🎉 Вы забрали ${winAmount.toFixed(1)} TON! Множитель: ${minesCurrentMultiplier.toFixed(2)}x`, 'win');
             endMinesGame(true);
         }
         
@@ -3692,7 +3557,7 @@ function formatTON(amount) {
         }
         
         function updateMinesPotentialWin() {
-            const potentialWin = Math.round(minesCurrentBet * minesCurrentMultiplier * 100) / 100;
+            const potentialWin = Math.round(minesCurrentBet * minesCurrentMultiplier * 10) / 10;
             minesPotentialWinEl.textContent = potentialWin.toFixed(1) + ' TON';
         }
         
@@ -3709,7 +3574,7 @@ function formatTON(amount) {
             }
             
             // Округляем до 1 десятичного знака
-            value = Math.round(value * 100) / 100;
+            value = Math.round(value * 10) / 10;
             minesBetInput.value = value;
             minesCurrentBet = value;
             
@@ -3725,7 +3590,7 @@ function formatTON(amount) {
                 bet: minesCurrentBet,
                 win: isWin,
                 multiplier: minesCurrentMultiplier,
-                amount: Math.round(minesCurrentBet * minesCurrentMultiplier * 100) / 100,
+                amount: Math.round(minesCurrentBet * minesCurrentMultiplier * 10) / 10,
                 mines: minesCount,
                 cellsOpened: minesOpenedCells
             };
@@ -3773,164 +3638,149 @@ function formatTON(amount) {
                 dice.style.setProperty('--final-rotation', rotationMap[result]);
                 dice.classList.add('rolling');
                 
-                // В функции игры Dice:
-setTimeout(() => {
-    dice.classList.remove('rolling');
-    dice.style.transform = rotationMap[result];
-    
-    if (win) {
-        const winAmount = currentBet * 2;
-        balance += winAmount;
-        showNotification(`🎉 Вы выиграли ${formatNumber(winAmount)} TON!`, 'win');
-    } else {
-        balance -= currentBet;
-        showNotification(`Выпало ${result}. Повезёт в следующий раз!`, 'lose');
-    }
-    
-    updateBalanceDisplay();
-    addToBetsHistory(currentBet, win, 'dice', win ? 2 : 0);
-    updateProfileStats();
-    isRolling = false;
-}, 1200);
- }
-}
+                setTimeout(() => {
+                    dice.classList.remove('rolling');
+                    dice.style.transform = rotationMap[result];
+                    
+                    if (win) {
+                        balance += currentBet * 2;
+                        showNotification(`🎉 Вы выиграли ${currentBet * 2} TON!`, 'win');
+                    } else {
+                        balance -= currentBet;
+                        showNotification(`Выпало ${result}. Повезёт в следующий раз!`, 'lose');
+                    }
+                    
+                    updateBalanceDisplay();
+                    addToBetsHistory(currentBet, win, 'dice', win ? 2 : 0);
+                    updateProfileStats();
+                    isRolling = false;
+                }, 1200);
+            });
+        }
         
         // ==================== ОБНОВЛЕНИЕ ПРОФИЛЯ ====================
-function updateProfileStats() {
-    const totalGames = betsHistory.length + minesGameHistory.length;
-    const totalWins = betsHistory.filter(bet => bet.win).length + 
-                     minesGameHistory.filter(game => game.win).length;
-    const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
-    
-    let totalProfit = 0;
-    let totalLoss = 0;
-    
-    betsHistory.forEach(bet => {
-        if (bet.win) {
-            totalProfit += bet.bet * (bet.multiplier || 2);
-        } else {
-            totalLoss += bet.bet;
+        function updateProfileStats() {
+            const totalGames = betsHistory.length + minesGameHistory.length;
+            const totalWins = betsHistory.filter(bet => bet.win).length + 
+                             minesGameHistory.filter(game => game.win).length;
+            const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+            
+            let totalProfit = 0;
+            let totalLoss = 0;
+            
+            betsHistory.forEach(bet => {
+                if (bet.win) {
+                    totalProfit += bet.bet * (bet.multiplier || 2);
+                } else {
+                    totalLoss += bet.bet;
+                }
+            });
+            
+            minesGameHistory.forEach(game => {
+                if (game.win) {
+                    totalProfit += game.amount;
+                } else {
+                    totalLoss += game.bet;
+                }
+            });
+            
+            const netProfit = totalProfit - totalLoss;
+            
+            // Обновляем элементы профиля
+            profileBalanceElement.textContent = balance + ' TON';
+            profileGamesElement.textContent = totalGames;
+            profileWinsElement.textContent = winRate + '%';
+            profileProfitElement.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
+            
+            // Обновляем адрес кошелька
+            if (connectedWalletAddress) {
+                profileWalletAddressElement.textContent = connectedWalletAddress;
+            }
+            
+            // Обновляем роль пользователя
+            if (balance >= 10000) {
+                userRoleElement.textContent = 'VIP Игрок';
+                userRoleElement.style.background = 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)';
+            } else if (balance >= 5000) {
+                userRoleElement.textContent = 'Продвинутый';
+                userRoleElement.style.background = 'linear-gradient(135deg, #2aabee 0%, #229ed9 100%)';
+            } else {
+                userRoleElement.textContent = 'Игрок';
+                userRoleElement.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
+            }
         }
-    });
-    
-    minesGameHistory.forEach(game => {
-        if (game.win) {
-            totalProfit += game.amount;
-        } else {
-            totalLoss += game.bet;
-        }
-    });
-    
-    const netProfit = totalProfit - totalLoss;
-    
-    // ОБНОВЛЯЕМ с форматированием
-    profileBalanceElement.textContent = formatNumber(balance) + ' TON';
-    profileGamesElement.textContent = totalGames;
-    profileWinsElement.textContent = winRate + '%';
-    
-    // ФОРМАТИРУЕМ прибыль/проигрыш
-    profileProfitElement.textContent = formatTON(netProfit);
-    profileProfitElement.style.color = netProfit > 0 ? '#4CAF50' : '#ff6b6b';
-    
-    // Обновляем адрес кошелька
-    if (connectedWalletAddress) {
-        profileWalletAddressElement.textContent = connectedWalletAddress;
-    }
-}
-    
-    // Обновляем роль
-    if (balance >= 10000) {
-        userRoleElement.textContent = 'VIP';
-    } else if (balance >= 5000) {
-        userRoleElement.textContent = 'Продвинутый';
-    } else {
-        userRoleElement.textContent = 'Игрок';
-    }
-}
         
         // ==================== СТАТИСТИКА ====================
-function updateStats() {
-    const allGames = [...betsHistory, ...minesGameHistory];
-    const totalGames = allGames.length;
-    const totalWins = allGames.filter(game => game.win).length;
-    const totalLosses = totalGames - totalWins;
-    
-    let totalProfit = 0;
-    let totalLoss = 0;
-    
-    allGames.forEach(game => {
-        if (game.win) {
-            totalProfit += game.amount || (game.bet * (game.multiplier || 2));
-        } else {
-            totalLoss += game.bet;
+        function updateStats() {
+            const allGames = [...betsHistory, ...minesGameHistory];
+            const totalGames = allGames.length;
+            const totalWins = allGames.filter(game => game.win).length;
+            const totalLosses = totalGames - totalWins;
+            
+            let totalProfit = 0;
+            let totalLoss = 0;
+            
+            allGames.forEach(game => {
+                if (game.win) {
+                    totalProfit += game.amount || (game.bet * (game.multiplier || 2));
+                } else {
+                    totalLoss += game.bet;
+                }
+            });
+            
+            const netProfit = totalProfit - totalLoss;
+            const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+            
+            totalGamesEl.textContent = totalGames;
+            totalProfitEl.textContent = (netProfit > 0 ? '+' : '') + netProfit + ' TON';
+            winRateEl.textContent = winRate + '%';
+            totalLossEl.textContent = totalLoss + ' TON';
+            
+            updateBetsList();
+            
+            if (totalGames === 0) {
+                emptyStatsEl.style.display = 'block';
+                betsListEl.style.display = 'none';
+            } else {
+                emptyStatsEl.style.display = 'none';
+                betsListEl.style.display = 'flex';
+            }
         }
-    });
-    
-    const netProfit = totalProfit - totalLoss;
-    const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
-    
-    // ОБНОВЛЯЕМ с форматированием
-    totalGamesEl.textContent = totalGames;
-    totalProfitEl.textContent = formatTON(netProfit);
-    winRateEl.textContent = winRate + '%';
-    totalLossEl.textContent = formatTON(totalLoss);
-    
-    updateBetsList();
-    
-    if (totalGames === 0) {
-        emptyStatsEl.style.display = 'block';
-        betsListEl.style.display = 'none';
-    } else {
-        emptyStatsEl.style.display = 'none';
-        betsListEl.style.display = 'flex';
-    }
-}
-
-// Добавляем функцию форматирования
-function formatTON(amount) {
-    if (amount > 0) {
-        return '+' + amount + ' TON';
-    } else if (amount < 0) {
-        return amount + ' TON';
-    } else {
-        return '0 TON';
-    }
-}
         
         function updateBetsList() {
-    betsListEl.innerHTML = '';
-    const allGames = [...betsHistory, ...minesGameHistory];
-    const lastGames = allGames.sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
-    
-    lastGames.forEach(game => {
-        const betItem = document.createElement('div');
-        betItem.className = 'bet-item';
-        
-        const time = new Date(game.timestamp).toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-        });
-        
-        const gameType = game.game === 'mines' ? 'Mines' : 'Dice';
-        const amount = game.win ? 
-            formatNumber(game.amount || (game.bet * (game.multiplier || 2))) : 
-            formatNumber(game.bet);
-        
-        betItem.innerHTML = `
-            <div class="bet-info">
-                <div class="bet-amount">${formatNumber(game.bet)} TON (${gameType})</div>
-                <div class="bet-result ${game.win ? 'bet-win' : 'bet-lose'}">
-                    ${game.win ? 'Выигрыш' : 'Проигрыш'} • ${time}
-                </div>
-            </div>
-            <div class="bet-outcome ${game.win ? 'win' : 'lose'}">
-                ${game.win ? '+' + amount + ' TON' : '-' + amount + ' TON'}
-            </div>
-        `;
-        
-        betsListEl.appendChild(betItem);
-    });
-}
+            betsListEl.innerHTML = '';
+            const allGames = [...betsHistory, ...minesGameHistory];
+            const lastGames = allGames.sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
+            
+            lastGames.forEach(game => {
+                const betItem = document.createElement('div');
+                betItem.className = 'bet-item';
+                
+                const time = new Date(game.timestamp).toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                const gameType = game.game === 'mines' ? 'Mines' : 'Dice';
+                const amount = game.win ? 
+                    (game.amount || (game.bet * (game.multiplier || 2))) : 
+                    -game.bet;
+                
+                betItem.innerHTML = `
+                    <div class="bet-info">
+                        <div class="bet-amount">${game.bet} TON (${gameType})</div>
+                        <div class="bet-result ${game.win ? 'bet-win' : 'bet-lose'}">
+                            ${game.win ? 'Выигрыш' : 'Проигрыш'} • ${time}
+                        </div>
+                    </div>
+                    <div class="bet-outcome ${game.win ? 'win' : 'lose'}">
+                        ${game.win ? '+' + amount + ' TON' : '-' + game.bet + ' TON'}
+                    </div>
+                `;
+                
+                betsListEl.appendChild(betItem);
+            });
+        }
         
         function addToBetsHistory(bet, win, gameType = 'dice', multiplier = 0) {
             const betRecord = {
@@ -3949,10 +3799,10 @@ function formatTON(amount) {
         }
         
         // ==================== ОБНОВЛЕНИЕ БАЛАНСА ====================
-function updateBalanceDisplay() {
-    balanceAmount.textContent = formatNumber(balance) + ' TON';
-    localStorage.setItem('balance', balance);
-}
+        function updateBalanceDisplay() {
+            balanceAmount.textContent = balance + ' TON';
+            localStorage.setItem('balance', balance);
+        }
         
         // ==================== ИНИЦИАЛИЗАЦИЯ TON CONNECT ====================
         function initTonConnect() {
@@ -4289,19 +4139,31 @@ function updateBalanceDisplay() {
         
 // ==================== ОБНОВЛЕНИЕ ДЕПОЗИТА ====================
 
-// Удаляем старые обработчики кнопок выбора суммы
-// (просто игнорируем этот код если он есть)
+// УБИРАЕМ обработчик кнопок выбора суммы (этот код удаляем или комментируем)
+/*
+amountButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        amountButtons.forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        currentDepositAmount = parseInt(button.dataset.amount);
+        selectedAmount.textContent = currentDepositAmount;
+        if (isWalletConnected) {
+            sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
+        }
+    });
+});
+*/
 
-// Обработчик поля ввода суммы
+// ДОБАВЛЯЕМ обработчик поля ввода суммы
 const customDepositInput = document.getElementById('customDepositAmount');
 
 if (customDepositInput) {
     customDepositInput.addEventListener('input', () => {
-        let value = parseInt(customDepositInput.value) || 7;
+        let value = parseInt(customDepositInput.value) || 1;
         
-        // Минимальная сумма 7 TON
-        if (value < 7) {
-            value = 7;
+        // Минимальная сумма 1 TON
+        if (value < 1) {
+            value = 1;
             customDepositInput.value = value;
         }
         
@@ -4322,30 +4184,23 @@ sendDeposit.addEventListener('click', async () => {
     }
     
     // Получаем сумму из поля ввода
-    let depositAmount = parseInt(customDepositInput.value) || 7;
+    const depositAmount = parseInt(customDepositInput.value) || 1;
     
     // Проверяем минимальную сумму
-    if (depositAmount < 7) {
-        showNotification('Минимальная сумма пополнения: 7 TON', 'lose');
+    if (depositAmount < 1) {
+        showNotification('Минимальная сумма пополнения: 1 TON', 'lose');
         return;
     }
     
-    const originalText = sendDeposit.innerHTML;
-    sendDeposit.innerHTML = '<span class="loading"></span>Подготовка...';
-    sendDeposit.disabled = true;
-    
     try {
         showNotification('Подготовка транзакции...', 'info');
-        
-        // Конвертация TON → наноТОН
-        const amountInNano = depositAmount * 1000000000;
         
         const transaction = {
             validUntil: Math.floor(Date.now() / 1000) + 300,
             messages: [
                 {
                     address: YOUR_WALLET_ADDRESS,
-                    amount: amountInNano.toString(),
+                    amount: (depositAmount * 1000000000).toString(), // Конвертация в наноТОН
                     payload: ''
                 }
             ]
@@ -4355,6 +4210,8 @@ sendDeposit.addEventListener('click', async () => {
         
         const result = await tonConnectUI.sendTransaction(transaction);
         
+        showNotification('Транзакция отправлена! Ожидаем подтверждения...', 'info');
+        
         setTimeout(() => {
             balance += depositAmount;
             updateBalanceDisplay();
@@ -4363,16 +4220,12 @@ sendDeposit.addEventListener('click', async () => {
             depositModal.style.display = 'none';
             
             // Сбрасываем поле ввода
-            customDepositInput.value = "7";
-            selectedAmount.textContent = "7";
+            customDepositInput.value = "10";
         }, 2000);
         
     } catch (error) {
         console.error('Ошибка транзакции:', error);
         showNotification('Транзакция отменена или произошла ошибка', 'lose');
-    } finally {
-        sendDeposit.innerHTML = originalText;
-        sendDeposit.disabled = false;
     }
 });
         
