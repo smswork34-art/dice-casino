@@ -2719,7 +2719,7 @@
         const WITHDRAW_FEE_PERCENT = 5; // 5% комиссия
         
         // ==================== ПЕРЕМЕННЫЕ ДЛЯ MINES ====================
-        let minesBalance = parseInt(localStorage.getItem('balance')) || 1500;
+        let minesBalance = parseInt(localStorage.getItem('balance')) || 0;
         let minesCurrentBet = 0.3; // Минимальная ставка 0.3 TON
         let minesGameActive = false;
         let minesGameFinished = false;
@@ -2770,11 +2770,11 @@
         // ==================== ОБЩИЕ ПЕРЕМЕННЫЕ ====================
         let tonConnectUI;
         let isWalletConnected = false;
-        let currentBet = 10;
-        let balance = parseInt(localStorage.getItem('balance')) || 1500;
+        let currentBet = 0;
+        let balance = parseInt(localStorage.getItem('balance')) || 0;
         let isRolling = false;
         let currentDepositAmount = 10;
-        let username = localStorage.getItem('username') || 'Гость';
+        let username = localStorage.getItem('username') || 'Новенький';
         let betsHistory = JSON.parse(localStorage.getItem('betsHistory')) || [];
         let minesGameHistory = JSON.parse(localStorage.getItem('minesGameHistory')) || [];
         let withdrawHistory = JSON.parse(localStorage.getItem('withdrawHistory')) || [];
