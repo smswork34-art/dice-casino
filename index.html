@@ -2804,7 +2804,7 @@
         let currentBet = 10;
         let balance = parseInt(localStorage.getItem('balance')) || 1500;
         let isRolling = false;
-        let currentDepositAmount = 10;
+        let currentDepositAmount = 7;
         let username = localStorage.getItem('username') || 'Гость';
         let betsHistory = JSON.parse(localStorage.getItem('betsHistory')) || [];
         let minesGameHistory = JSON.parse(localStorage.getItem('minesGameHistory')) || [];
@@ -4652,6 +4652,10 @@ function checkReferralFromURL() {
 
 // Запускаем проверку реферального кода
 setTimeout(checkReferralFromURL, 1000);
+// Простой фикс кнопки баланса
+document.getElementById('openDepositModal').addEventListener('click', function() {
+    document.getElementById('depositModal').style.display = 'flex';
+});
     </script>
 <!-- Модальное окно реферальной системы -->
 <div class="modal-overlay" id="referralModal">
