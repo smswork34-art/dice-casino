@@ -2696,35 +2696,34 @@
             <h2 style="margin: 0; font-size: 20px;">Пополнение баланса</h2>
             <button class="modal-close" id="closeModal">×</button>
         </div>
-        <div class="modal-content">
-            <div id="tonconnect-button"></div>
-            
-            <div class="wallet-info" id="walletInfo" style="display: none;">
-                <p><strong>Кошелёк подключен:</strong></p>
-                <p id="walletAddress" style="margin-top: 8px; font-size: 12px; color: #666;"></p>
-            </div>
-            
-            <!-- ЗАМЕНА: убираем кнопки, оставляем только поле ввода -->
-            <div style="margin: 20px 0;">
-                <div style="font-weight: 600; margin-bottom: 12px;">Сумма пополнения (TON):</div>
-                <input type="number" 
-                       class="form-input" 
-                       id="customDepositAmount" 
-                       placeholder="Введите сумму" 
-                       min="1" 
-                       value="10"
-                       style="width: 100%; padding: 16px; font-size: 16px;">
-                <div style="font-size: 12px; color: #666; margin-top: 8px;">
-                    Минимальная сумма: 1 TON
-                </div>
-            </div>
-            
-            <button class="send-button" id="sendDeposit" disabled>
-                <span class="deposit-icon"></span>
-                Отправить <span id="selectedAmount">10</span> TON
-            </button>
+  <div class="modal-content">
+    <div id="tonconnect-button"></div>
+    
+    <div class="wallet-info" id="walletInfo" style="display: none;">
+        <p><strong>Кошелёк подключен:</strong></p>
+        <p id="walletAddress" style="margin-top: 8px; font-size: 12px; color: #666;"></p>
+    </div>
+    
+    <!-- ПОЛЕ ВВОДА СУММЫ -->
+    <div style="margin: 20px 0;">
+        <div style="font-weight: 600; margin-bottom: 8px;">Сумма пополнения (TON)</div>
+        <input type="number" 
+               class="form-input" 
+               id="customDepositAmount" 
+               placeholder="Введите сумму от 7 TON" 
+               min="7" 
+               step="1"
+               value="7"
+               style="width: 100%; padding: 16px; font-size: 16px;">
+        <div style="font-size: 12px; color: #666; margin-top: 6px;">
+            Минимальный депозит: 7 TON
         </div>
     </div>
+    
+    <button class="send-button" id="sendDeposit" disabled>
+        <span class="deposit-icon"></span>
+        Отправить <span id="selectedAmount">7</span> TON
+    </button>
 </div>
 
     <!-- Нижнее меню -->
@@ -4139,31 +4138,16 @@
         
 // ==================== ОБНОВЛЕНИЕ ДЕПОЗИТА ====================
 
-// УБИРАЕМ обработчик кнопок выбора суммы (этот код удаляем или комментируем)
-/*
-amountButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        amountButtons.forEach(b => b.classList.remove('active'));
-        button.classList.add('active');
-        currentDepositAmount = parseInt(button.dataset.amount);
-        selectedAmount.textContent = currentDepositAmount;
-        if (isWalletConnected) {
-            sendDeposit.textContent = `Отправить ${currentDepositAmount} TON`;
-        }
-    });
-});
-*/
-
-// ДОБАВЛЯЕМ обработчик поля ввода суммы
+// Обработчик поля ввода суммы
 const customDepositInput = document.getElementById('customDepositAmount');
 
 if (customDepositInput) {
     customDepositInput.addEventListener('input', () => {
-        let value = parseInt(customDepositInput.value) || 1;
+        let value = parseInt(customDepositInput.value) || 7;
         
-        // Минимальная сумма 1 TON
-        if (value < 1) {
-            value = 1;
+        // Минимальная сумма 7 TON
+        if (value < 7) {
+            value = 7;
             customDepositInput.value = value;
         }
         
@@ -4184,23 +4168,30 @@ sendDeposit.addEventListener('click', async () => {
     }
     
     // Получаем сумму из поля ввода
-    const depositAmount = parseInt(customDepositInput.value) || 1;
+    let depositAmount = parseInt(customDepositInput.value) || 7;
     
     // Проверяем минимальную сумму
-    if (depositAmount < 1) {
-        showNotification('Минимальная сумма пополнения: 1 TON', 'lose');
+    if (depositAmount < 7) {
+        showNotification('Минимальная сумма пополнения: 7 TON', 'lose');
         return;
     }
     
+    const originalText = sendDeposit.innerHTML;
+    sendDeposit.innerHTML = '<span class="loading"></span>Подготовка...';
+    sendDeposit.disabled = true;
+    
     try {
         showNotification('Подготовка транзакции...', 'info');
+        
+        // Конвертация TON → наноТОН
+        const amountInNano = depositAmount * 1000000000;
         
         const transaction = {
             validUntil: Math.floor(Date.now() / 1000) + 300,
             messages: [
                 {
                     address: YOUR_WALLET_ADDRESS,
-                    amount: (depositAmount * 1000000000).toString(), // Конвертация в наноТОН
+                    amount: amountInNano.toString(),
                     payload: ''
                 }
             ]
@@ -4210,8 +4201,6 @@ sendDeposit.addEventListener('click', async () => {
         
         const result = await tonConnectUI.sendTransaction(transaction);
         
-        showNotification('Транзакция отправлена! Ожидаем подтверждения...', 'info');
-        
         setTimeout(() => {
             balance += depositAmount;
             updateBalanceDisplay();
@@ -4220,12 +4209,16 @@ sendDeposit.addEventListener('click', async () => {
             depositModal.style.display = 'none';
             
             // Сбрасываем поле ввода
-            customDepositInput.value = "10";
+            customDepositInput.value = "7";
+            selectedAmount.textContent = "7";
         }, 2000);
         
     } catch (error) {
         console.error('Ошибка транзакции:', error);
         showNotification('Транзакция отменена или произошла ошибка', 'lose');
+    } finally {
+        sendDeposit.innerHTML = originalText;
+        sendDeposit.disabled = false;
     }
 });
         
