@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата через СБП | ORANGEW1N</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #FF6B00;
+            --primary-dark: #FF4500;
+            --primary-light: #FF8C00;
+            --secondary: #00C2FF;
+            --success: #00C853;
+            --danger: #FF3D00;
+            --bg-dark: #0A0A0A;
+            --bg-card: #111111;
+            --bg-sidebar: #151515;
+            --bg-header: #1A1A1A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #AAAAAA;
+            --border: #2A2A2A;
+            --gradient: linear-gradient(135deg, #FF6B00, #FF4500);
+            --gradient-blue: linear-gradient(135deg, #00C2FF, #0088CC);
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary);
+            transform: translateX(-3px);
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card-title i {
+            color: var(--primary);
+        }
+        
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 600px) {
+            .amount-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .amount-btn {
+            padding: 25px 15px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .amount-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .amount-btn.selected {
+            background: var(--gradient);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .custom-amount {
+            margin-bottom: 30px;
+        }
+        
+        .custom-input {
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .custom-input:focus {
+            border-color: var(--primary);
+        }
+        
+        .primary-btn {
+            width: 100%;
+            padding: 22px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.3);
+        }
+        
+        .primary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .details-card {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .details-card.active {
+            display: block;
+        }
+        
+        .details-grid {
+            background: var(--bg-dark);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        
+        .detail-value {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .phone-value {
+            color: var(--primary);
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 107, 0, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-left: 15px;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 107, 0, 0.2);
+        }
+        
+        .note {
+            background: rgba(0, 194, 255, 0.1);
+            border: 1px solid rgba(0, 194, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .note i {
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+        
+        .status-indicator {
+            text-align: center;
+            padding: 25px;
+            display: none;
+        }
+        
+        .status-indicator.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 107, 0, 0.2);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 20px 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--success);
+            z-index: 1000;
+            max-width: 350px;
+            transform: translateX(400px);
+            transition: transform 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification i {
+            font-size: 24px;
+            color: var(--success);
+        }
+        
+        .notification.error {
+            border-left-color: var(--danger);
+        }
+        
+        .notification.error i {
+            color: var(--danger);
+        }
+        
+        .timer {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">ORANGEW1N</div>
+            <div class="subtitle">Оплата через Систему Быстрых Платежей</div>
+        </div>
+        
+        <!-- Карта выбора суммы -->
+        <div class="card" id="amountCard">
+            <div class="card-title">
+                <i class="fas fa-wallet"></i>
+                Выберите сумму пополнения
+            </div>
+            
+            <div class="amount-grid">
+                <button class="amount-btn" data-amount="500">500 ₽</button>
+                <button class="amount-btn" data-amount="1000">1 000 ₽</button>
+                <button class="amount-btn" data-amount="2000">2 000 ₽</button>
+                <button class="amount-btn" data-amount="3000">3 000 ₽</button>
+                <button class="amount-btn" data-amount="5000">5 000 ₽</button>
+                <button class="amount-btn" data-amount="10000">10 000 ₽</button>
+            </div>
+            
+            <div class="custom-amount">
+                <input type="number" 
+                       class="custom-input" 
+                       id="customAmount" 
+                       placeholder="Или введите свою сумму (мин. 100 ₽)"
+                       min="100">
+            </div>
+            
+            <button class="primary-btn" id="getDetailsBtn" disabled>
+                <i class="fas fa-credit-card"></i>
+                Получить реквизиты
+            </button>
+        </div>
+        
+        <!-- Карта с реквизитами -->
+        <div class="card details-card" id="detailsCard">
+            <div class="card-title">
+                <i class="fas fa-qrcode"></i>
+                Реквизиты для оплаты
+            </div>
+            
+            <div class="details-grid" id="detailsContent">
+                <!-- Динамически заполнится -->
+            </div>
+            
+            <div class="note">
+                <i class="fas fa-info-circle"></i>
+                Оплатите указанную сумму по реквизитам выше через любой банк с поддержкой СБП. После оплаты нажмите «Я оплатил».
+            </div>
+            
+            <button class="primary-btn" id="paidBtn">
+                <i class="fas fa-check-circle"></i>
+                Я оплатил
+            </button>
+            
+            <div class="timer" id="timer">
+                Заявка действительна: 15:00
+            </div>
+        </div>
+        
+        <!-- Индикатор статуса -->
+        <div class="status-indicator" id="statusIndicator">
+            <div class="spinner"></div>
+            <div>Ожидание подтверждения от администратора...</div>
+            <div style="color: var(--text-secondary); margin-top: 10px; font-size: 14px;">
+                Уведомление отправлено, проверьте баланс через 1-3 минуты
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомление -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check"></i>
+        <div>
+            <div style="font-weight: 800; font-size: 16px;" id="notifTitle"></div>
+            <div style="font-size: 14px; opacity: 0.9;" id="notifMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // ТВОИ НАСТРОЙКИ SUPABASE
+        const SUPABASE_URL = 'https://lllmhsatptxscjjoluov.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsbG1oc2F0cHR4c2Nqam9sdW92Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjQ3NTksImV4cCI6MjA4NTkwMDc1OX0.wtzQkF54-HdALvDixNADLwoVqdw7AIPSOM4hmBISQ8U';
+        
+        // Реквизиты для оплаты (ИЗМЕНИ НА СВОИ!)
+        const SBP_DETAILS = {
+            phone: '+7 900 123-45-67',
+            bank: 'Тинькофф',
+            recipient: 'Иванов Иван Иванович',
+            note: 'Оплата за пополнение баланса ORANGEW1N'
+        };
+        
+        // Инициализация Supabase клиента
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Текущий пользователь (в реальном приложении брать из авторизации)
+        const currentUser = {
+            id: 'user_' + Math.floor(Math.random() * 10000), // Временный ID
+            name: 'Игрок'
+        };
+        
+        // Состояние
+        let selectedAmount = 0;
+        let paymentId = null;
+        let countdownTimer = null;
+        let timeLeft = 900; // 15 минут в секундах
+        let subscription = null;
+        
+        // Элементы
+        const amountCard = document.getElementById('amountCard');
+        const detailsCard = document.getElementById('detailsCard');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const getDetailsBtn = document.getElementById('getDetailsBtn');
+        const customAmountInput = document.getElementById('customAmount');
+        const paidBtn = document.getElementById('paidBtn');
+        const detailsContent = document.getElementById('detailsContent');
+        const timerElement = document.getElementById('timer');
+        const notification = document.getElementById('notification');
+        
+        // Выбор суммы
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                customAmountInput.value = '';
+                selectedAmount = parseInt(btn.dataset.amount);
+                updateGetDetailsButton();
+            });
+        });
+        
+        // Кастомная сумма
+        customAmountInput.addEventListener('input', () => {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+            selectedAmount = parseInt(customAmountInput.value) || 0;
+            updateGetDetailsButton();
+        });
+        
+        // Обновление кнопки "Получить реквизиты"
+        function updateGetDetailsButton() {
+            const isValid = selectedAmount >= 100;
+            getDetailsBtn.disabled = !isValid;
+        }
+        
+        // Получить реквизиты
+        getDetailsBtn.addEventListener('click', () => {
+            if (selectedAmount < 100) {
+                showNotification('Ошибка', 'Минимальная сумма 100 ₽', 'error');
+                return;
+            }
+            
+            // Генерируем уникальный ID платежа
+            paymentId = 'SBP-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            
+            // Показываем реквизиты
+            detailsContent.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Сумма к оплате</div>
+                    <div class="detail-value" style="color: var(--primary); font-size: 24px;">
+                        ${selectedAmount.toLocaleString()} ₽
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Номер телефона</div>
+                    <div class="detail-value phone-value">
+                        ${SBP_DETAILS.phone}
+                        <button class="copy-btn" onclick="copyToClipboard('${SBP_DETAILS.phone.replace(/\D/g, '')}')">
+                            <i class="fas fa-copy"></i> Копировать
+                        </button>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Банк получателя</div>
+                    <div class="detail-value">${SBP_DETAILS.bank}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Получатель</div>
+                    <div class="detail-value">${SBP_DETAILS.recipient}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Назначение платежа</div>
+                    <div class="detail-value">${SBP_DETAILS.note}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">ID платежа</div>
+                    <div class="detail-value">${paymentId}</div>
+                </div>
+            `;
+            
+            // Переключаем карты
+            amountCard.style.display = 'none';
+            detailsCard.classList.add('active');
+            
+            // Запускаем таймер
+            startCountdown();
+            
+            showNotification('Реквизиты готовы', 'Скопируйте реквизиты для оплаты');
+        });
+        
+        // Отправка заявки в Supabase
+        async function sendDepositRequest() {
+            try {
+                // Вставка заявки в базу данных
+                const { data, error } = await supabaseClient
+                    .from('deposit_requests')
+                    .insert([{
+                        id: paymentId,
+                        user_id: currentUser.id,
+                        user_name: currentUser.name,
+                        amount: selectedAmount,
+                        phone: SBP_DETAILS.phone,
+                        status: 'pending',
+                        created_at: new Date().toISOString()
+                    }])
+                    .select();
+                
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw new Error(`Ошибка базы данных: ${error.message}`);
+                }
+                
+                console.log('Заявка создана:', data[0]);
+                return data[0];
+                
+            } catch (error) {
+                console.error('Error in sendDepositRequest:', error);
+                throw error;
+            }
+        }
+        
+        // Подписка на изменение статуса заявки
+        function subscribeToStatus(requestId) {
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+            
+            subscription = supabaseClient
+                .channel('deposit-status-' + requestId)
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'deposit_requests',
+                        filter: `id=eq.${requestId}`
+                    },
+                    (payload) => {
+                        console.log('Статус изменился:', payload.new);
+                        handleStatusChange(payload.new);
+                    }
+                )
+                .subscribe((status) => {
+                    console.log('Subscription status:', status);
+                });
+            
+            return subscription;
+        }
+        
+        // Обработчик изменения статуса
+        function handleStatusChange(request) {
+            if (request.status === 'completed') {
+                // Успешное пополнение
+                statusIndicator.innerHTML = `
+                    <div style="font-size: 60px; color: var(--success); margin-bottom: 20px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 10px;">
+                        Баланс пополнен!
+                    </div>
+                    <div style="color: var(--text-secondary); margin-bottom: 20px;">
+                        На ваш счёт зачислено ${selectedAmount.toLocaleString()} ₽
+                    </div>
+                    <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                        Подтверждено администратором: ${new Date(request.confirmed_at).toLocaleTimeString()}
+                    </div>
+                    <button onclick="window.location.href='deepseek_html_20260208_4e0e89 (3).html'" 
+                            style="padding: 15px 40px; background: var(--gradient); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; margin-top: 20px;">
+                        Вернуться в казино
+                    </button>
+                `;
+                
+                if (subscription) {
+                    subscription.unsubscribe();
+                }
+                
+                showNotification('Успех!', 'Баланс пополнен. Приятной игры!');
+            }
+            
+            if (request.status === 'rejected') {
+                // Отклонено админом
+                statusIndicator.innerHTML = `
+                    <div style="font-size: 60px; color: var(--danger); margin-bottom: 20px;">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 10px;">
+                        Заявка отклонена
+                    </div>
+                    <div style="color: var(--text-secondary); margin-bottom: 20px;">
+                        ${request.admin_notes || 'Обратитесь в поддержку'}
+                    </div>
+                    <button onclick="location.reload()" 
+                            style="padding: 15px 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: white; font-weight: 700; cursor: pointer; margin-top: 20px;">
+                        Попробовать снова
+                    </button>
+                `;
+                
+                if (subscription) {
+                    subscription.unsubscribe();
+                }
+                
+                showNotification('Отклонено', 'Администратор отклонил заявку', 'error');
+            }
+        }
+        
+        // Я оплатил
+        paidBtn.addEventListener('click', async () => {
+            paidBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка заявки...';
+            paidBtn.disabled = true;
+            
+            try {
+                // Отправляем заявку в Supabase
+                const request = await sendDepositRequest();
+                
+                // Переключаем на индикатор ожидания
+                detailsCard.classList.remove('active');
+                statusIndicator.classList.add('active');
+                
+                // Останавливаем таймер
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+                
+                // Подписываемся на изменение статуса
+                subscribeToStatus(paymentId);
+                
+                showNotification('Заявка отправлена', 'Админ получил уведомление. Ожидайте подтверждения.');
+                
+            } catch (error) {
+                // Обработка ошибок
+                paidBtn.innerHTML = '<i class="fas fa-check-circle"></i> Я оплатил';
+                paidBtn.disabled = false;
+                showNotification('Ошибка', error.message || 'Не удалось отправить заявку', 'error');
+                console.error('Payment error:', error);
+            }
+        });
+        
+        // Таймер
+        function startCountdown() {
+            timeLeft = 900;
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    timerElement.innerHTML = 'Время истекло';
+                    paidBtn.disabled = true;
+                    paidBtn.innerHTML = '<i class="fas fa-clock"></i> Время истекло';
+                    return;
+                }
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.innerHTML = `Заявка действительна: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        // Вспомогательные функции
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => showNotification('Скопировано', 'Номер телефона скопирован'))
+                .catch(err => showNotification('Ошибка', 'Не удалось скопировать', 'error'));
+        }
+        
+        function showNotification(title, message, type = 'success') {
+            document.getElementById('notifTitle').textContent = title;
+            document.getElementById('notifMessage').textContent = message;
+            
+            notification.classList.remove('error');
+            if (type === 'error') {
+                notification.classList.add('error');
+                notification.querySelector('i').className = 'fas fa-exclamation-triangle';
+            } else {
+                notification.querySelector('i').className = 'fas fa-check';
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+        
+        // Проверка подключения к Supabase
+        async function checkSupabaseConnection() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('deposit_requests')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    console.warn('Supabase connection check failed:', error.message);
+                    return false;
+                }
+                
+                console.log('Supabase подключён успешно');
+                return true;
+            } catch (error) {
+                console.error('Supabase check error:', error);
+                return false;
+            }
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Страница оплаты СБП загружена');
+            
+            // Проверяем подключение к Supabase
+            const connected = await checkSupabaseConnection();
+            if (!connected) {
+                showNotification('Внимание', 'Проверка базы данных не удалась', 'error');
+            }
+            
+            // Сохраняем ID пользователя в localStorage (временное решение)
+            if (!localStorage.getItem('user_id')) {
+                localStorage.setItem('user_id', currentUser.id);
+            } else {
+                currentUser.id = localStorage.getItem('user_id');
+            }
+        });
+    </script>
+</body>
+</html>
