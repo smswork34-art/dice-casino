@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>ORANGEW1N Casino</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -12,6 +12,7 @@
         :root {
             --primary: #FF6B00; --primary-dark: #FF4500; --primary-light: #FF8C00;
             --secondary: #00C2FF; --success: #00C853; --danger: #FF3D00;
+            --warning: #FF9800;
             --bg-dark: #0A0A0A; --bg-card: #111111; --bg-sidebar: #151515;
             --bg-header: #1A1A1A; --text-primary: #FFFFFF; --text-secondary: #AAAAAA;
             --border: #2A2A2A; --gradient: linear-gradient(135deg, #FF6B00, #FF4500);
@@ -24,10 +25,11 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
         
         ::-webkit-scrollbar {
-            width: 8px; height: 8px;
+            width: 6px; height: 6px;
         }
         
         ::-webkit-scrollbar-track {
@@ -50,7 +52,7 @@
         
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
             z-index: 998; display: none; opacity: 0; transition: opacity 0.3s;
         }
         
@@ -66,29 +68,29 @@
         
         .main-header {
             grid-column: 1 / -1; background: var(--bg-header);
-            border-bottom: 1px solid var(--border); padding: 0 20px;
+            border-bottom: 1px solid var(--border); padding: 0 15px;
             display: flex; align-items: center; justify-content: space-between;
-            height: 70px;
+            height: 60px; position: sticky; top: 0; z-index: 997;
         }
         
         .header-left {
-            display: flex; align-items: center; gap: 25px;
+            display: flex; align-items: center; gap: 15px;
         }
         
         .logo {
-            font-size: 28px; font-weight: 900; background: var(--gradient);
+            font-size: 22px; font-weight: 900; background: var(--gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text; letter-spacing: 1px;
         }
         
         .header-nav {
-            display: flex; gap: 20px;
+            display: flex; gap: 15px;
         }
         
         .nav-item {
             color: var(--text-secondary); font-weight: 600; cursor: pointer;
-            padding: 10px 0; position: relative; transition: color 0.3s;
-            font-size: 15px;
+            padding: 8px 0; position: relative; transition: color 0.3s;
+            font-size: 14px;
         }
         
         .nav-item:hover, .nav-item.active { color: var(--text-primary); }
@@ -99,59 +101,41 @@
             border-radius: 3px 3px 0 0;
         }
         
-        .header-right {
-            display: flex; align-items: center; gap: 12px;
+        /* ЕДИНЫЙ БАННЕР ДЛЯ КНОПОК */
+        .header-actions {
+            display: flex; align-items: center; gap: 0;
+            background: var(--bg-card); border-radius: 12px;
+            padding: 0; border: 1px solid var(--border);
+            overflow: hidden; height: 40px;
         }
         
         .menu-toggle {
-            width: 40px; height: 40px; border-radius: 10px;
+            width: 40px; height: 40px; border-radius: 0;
             background: transparent; display: flex; align-items: center;
             justify-content: center; cursor: pointer; transition: all 0.3s;
-            border: 2px solid transparent; color: var(--text-secondary);
-            font-size: 20px;
+            border: none; color: var(--text-secondary); font-size: 18px;
         }
         
         .menu-toggle:hover {
             background: rgba(255, 107, 0, 0.1); color: var(--primary);
-            border-color: rgba(255, 107, 0, 0.2);
         }
         
-        .profile-btn {
-            width: 40px; height: 40px; border-radius: 10px;
-            background: var(--gradient); display: flex; align-items: center;
-            justify-content: center; cursor: pointer; transition: all 0.3s;
-            border: 2px solid transparent;
+        /* КНОПКА БАЛАНСА ВНУТРИ БАННЕРА */
+        .balance-btn {
+            height: 40px; padding: 0 12px; background: var(--gradient);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; border: none;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .profile-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 107, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .profile-btn i { font-size: 18px; color: white; }
-        
-        .balance-card {
-            background: var(--gradient); padding: 8px 12px;
-            border-radius: 10px; min-width: 140px; cursor: pointer;
-            transition: all 0.3s; border: 2px solid transparent;
-            position: relative; overflow: hidden;
-        }
-        
-        .balance-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 107, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .balance-label {
-            font-size: 10px; opacity: 0.9; margin-bottom: 2px;
-            font-weight: 600;
+        .balance-btn:hover {
+            background: var(--primary-dark);
         }
         
         .balance-amount {
-            font-size: 18px; font-weight: 800; display: flex;
-            align-items: center; justify-content: space-between;
+            font-size: 13px; font-weight: 800; display: flex;
+            align-items: center; gap: 2px; color: white;
         }
         
         .balance-number {
@@ -159,36 +143,47 @@
             transition: all 0.3s;
         }
         
-        .balance-arrow {
-            font-size: 10px; opacity: 0.8; transition: transform 0.3s;
+        .balance-currency {
+            font-size: 11px; opacity: 0.9; margin-left: 1px;
         }
         
-        .balance-card:hover .balance-arrow { transform: translateY(3px); }
+        .profile-btn {
+            width: 40px; height: 40px; border-radius: 0;
+            background: var(--gradient); display: flex; align-items: center;
+            justify-content: center; cursor: pointer; transition: all 0.3s;
+            border: none;
+        }
+        
+        .profile-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .profile-btn i { font-size: 16px; color: white; }
         
         @keyframes balanceUpdate {
-            0% { transform: scale(1); color: var(--primary); }
-            50% { transform: scale(1.1); color: var(--success); }
-            100% { transform: scale(1); color: var(--primary); }
+            0% { transform: scale(1); color: white; }
+            50% { transform: scale(1.1); color: #00FF88; }
+            100% { transform: scale(1); color: white; }
         }
         
         .sidebar-menu-expanded {
-            position: fixed; top: 70px; left: 0; width: 280px;
-            height: calc(100vh - 70px); background: var(--bg-sidebar);
+            position: fixed; top: 60px; left: 0; width: 280px;
+            height: calc(100vh - 60px); background: var(--bg-sidebar);
             border-right: 1px solid var(--border); z-index: 999;
             transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto; padding: 20px 0;
+            overflow-y: auto; padding: 15px 0;
         }
         
         .sidebar-menu-expanded.active { transform: translateX(0); }
         
         .expanded-section {
-            padding: 0 20px; margin-bottom: 25px;
+            padding: 0 15px; margin-bottom: 20px;
         }
         
         .expanded-title {
-            color: var(--text-secondary); font-size: 11px;
+            color: var(--text-secondary); font-size: 10px;
             text-transform: uppercase; letter-spacing: 1px;
-            margin-bottom: 15px; padding: 0 10px;
+            margin-bottom: 12px; padding: 0 10px;
         }
         
         .expanded-menu { list-style: none; }
@@ -196,8 +191,8 @@
         .expanded-item {
             display: flex; align-items: center; gap: 12px;
             padding: 12px 15px; border-radius: 8px; cursor: pointer;
-            transition: all 0.3s; margin-bottom: 5px;
-            color: var(--text-secondary);
+            transition: all 0.3s; margin-bottom: 4px;
+            color: var(--text-secondary); font-size: 14px;
         }
         
         .expanded-item:hover, .expanded-item.active {
@@ -207,22 +202,22 @@
         .expanded-item.active { color: var(--primary); }
         
         .expanded-icon {
-            width: 20px; text-align: center; font-size: 18px;
+            width: 20px; text-align: center; font-size: 16px;
         }
         
         .sidebar {
             background: var(--bg-sidebar); border-right: 1px solid var(--border);
-            padding: 25px 0; width: 70px; position: relative;
+            padding: 15px 0; width: 70px; position: relative;
             overflow-y: auto;
         }
         
         .sidebar-menu {
             list-style: none; display: flex; flex-direction: column;
-            align-items: center; gap: 10px;
+            align-items: center; gap: 8px;
         }
         
         .menu-item {
-            width: 50px; height: 50px; border-radius: 12px;
+            width: 46px; height: 46px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s;
             color: var(--text-secondary); position: relative;
@@ -236,13 +231,13 @@
             background: var(--gradient); color: white;
         }
         
-        .menu-icon { font-size: 22px; }
+        .menu-icon { font-size: 20px; }
         
         .menu-tooltip {
             position: absolute; left: 70px; top: 50%;
             transform: translateY(-50%); background: var(--bg-card);
-            color: var(--text-primary); padding: 8px 15px;
-            border-radius: 8px; font-size: 14px; font-weight: 600;
+            color: var(--text-primary); padding: 8px 12px;
+            border-radius: 8px; font-size: 13px; font-weight: 600;
             white-space: nowrap; z-index: 100; opacity: 0;
             visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
             border: 1px solid var(--border);
@@ -262,30 +257,30 @@
         }
         
         .main-content {
-            padding: 25px; background: var(--bg-dark);
-            overflow-y: auto; max-height: calc(100vh - 70px);
+            padding: 15px; background: var(--bg-dark);
+            overflow-y: auto; max-height: calc(100vh - 60px);
         }
         
-        .search-container { margin-bottom: 25px; }
+        .search-container { margin-bottom: 20px; }
         
         .search-box {
             background: var(--bg-card); border-radius: 12px;
-            padding: 14px 18px; display: flex; align-items: center;
-            gap: 12px; border: 1px solid var(--border); max-width: 600px;
+            padding: 12px 15px; display: flex; align-items: center;
+            gap: 10px; border: 1px solid var(--border); width: 100%;
         }
         
-        .search-icon { color: var(--text-secondary); }
+        .search-icon { color: var(--text-secondary); font-size: 14px; }
         
         .search-input {
             background: transparent; border: none; color: var(--text-primary);
-            font-size: 15px; flex: 1; outline: none;
+            font-size: 14px; flex: 1; outline: none;
         }
         
         .full-banner {
-            width: 100%; border-radius: 18px; margin-bottom: 30px;
+            width: 100%; border-radius: 16px; margin-bottom: 25px;
             position: relative; overflow: hidden; cursor: pointer;
             transition: all 0.3s; border: 2px solid transparent;
-            height: 200px;
+            height: 150px;
         }
         
         .full-banner:hover {
@@ -299,25 +294,21 @@
         }
         
         .banner-badge {
-            position: absolute; top: 18px; left: 18px;
-            background: white; color: var(--primary); padding: 6px 18px;
-            border-radius: 18px; font-size: 13px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 1px;
+            position: absolute; top: 12px; left: 12px;
+            background: white; color: var(--primary); padding: 4px 12px;
+            border-radius: 16px; font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
         .quick-actions {
             display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 15px; margin-bottom: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .quick-actions { grid-template-columns: repeat(2, 1fr); }
+            gap: 12px; margin-bottom: 25px;
         }
         
         .quick-card {
-            background: var(--bg-card); border-radius: 14px;
-            padding: 20px 15px; text-align: center; cursor: pointer;
+            background: var(--bg-card); border-radius: 12px;
+            padding: 15px 8px; text-align: center; cursor: pointer;
             transition: all 0.3s; border: 1px solid var(--border);
         }
         
@@ -327,48 +318,44 @@
         }
         
         .quick-icon {
-            width: 50px; height: 50px; background: var(--gradient);
-            border-radius: 12px; display: flex; align-items: center;
-            justify-content: center; margin: 0 auto 12px; font-size: 22px;
+            width: 40px; height: 40px; background: var(--gradient);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 10px; font-size: 18px;
         }
         
         .quick-label {
-            font-size: 14px; font-weight: 700;
+            font-size: 12px; font-weight: 700;
         }
         
         .section-header {
             display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 20px;
+            align-items: center; margin-bottom: 15px;
         }
         
         .section-title {
-            font-size: 22px; font-weight: 700;
+            font-size: 18px; font-weight: 700;
         }
         
         .view-all {
             color: var(--primary); font-weight: 600; cursor: pointer;
             display: flex; align-items: center; gap: 6px;
-            transition: gap 0.3s; font-size: 14px;
+            transition: gap 0.3s; font-size: 13px;
         }
         
         .view-all:hover { gap: 10px; }
         
-        .news-section { margin-bottom: 35px; }
+        .news-section { margin-bottom: 25px; }
         
         .news-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-        
-        @media (max-width: 768px) {
-            .news-grid { grid-template-columns: 1fr; }
+            gap: 12px;
         }
         
         .news-card {
-            background: var(--bg-card); border-radius: 14px;
+            background: var(--bg-card); border-radius: 12px;
             overflow: hidden; border: 1px solid var(--border);
             cursor: pointer; transition: all 0.3s; position: relative;
-            height: 160px;
+            height: 120px;
         }
         
         .news-card:hover {
@@ -376,9 +363,9 @@
         }
         
         .news-badge {
-            position: absolute; top: 12px; left: 12px;
-            background: var(--primary); color: white; padding: 5px 10px;
-            border-radius: 6px; font-size: 11px; font-weight: 700;
+            position: absolute; top: 8px; left: 8px;
+            background: var(--primary); color: white; padding: 4px 8px;
+            border-radius: 6px; font-size: 10px; font-weight: 700;
             z-index: 2;
         }
         
@@ -387,10 +374,10 @@
         }
         
         .game-week-banner {
-            width: 100%; border-radius: 18px; margin-bottom: 35px;
+            width: 100%; border-radius: 16px; margin-bottom: 25px;
             position: relative; overflow: hidden; cursor: pointer;
             transition: all 0.3s; border: 2px solid transparent;
-            height: 200px;
+            height: 150px;
         }
         
         .game-week-banner:hover {
@@ -400,10 +387,10 @@
         }
         
         .game-badge {
-            position: absolute; top: 18px; left: 18px;
-            background: white; color: #0088CC; padding: 6px 18px;
-            border-radius: 18px; font-size: 13px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 1px;
+            position: absolute; top: 12px; left: 12px;
+            background: white; color: #0088CC; padding: 4px 12px;
+            border-radius: 16px; font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
@@ -411,22 +398,18 @@
             width: 100%; height: 100%; object-fit: cover;
         }
         
-        .games-section { margin-bottom: 35px; }
+        .games-section { margin-bottom: 25px; }
         
-        #all-games { scroll-margin-top: 30px; }
+        #all-games { scroll-margin-top: 20px; }
         
         .games-grid {
             display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        
-        @media (max-width: 768px) {
-            .games-grid { grid-template-columns: repeat(2, 1fr); }
+            gap: 12px;
         }
         
         .game-card {
-            background: var(--bg-card); border-radius: 12px;
-            padding: 20px 15px; text-align: center; cursor: pointer;
+            background: var(--bg-card); border-radius: 10px;
+            padding: 15px 8px; text-align: center; cursor: pointer;
             transition: all 0.3s; border: 1px solid var(--border);
         }
         
@@ -435,23 +418,23 @@
         }
         
         .game-card-icon {
-            width: 50px; height: 50px; background: var(--gradient);
-            border-radius: 12px; display: flex; align-items: center;
-            justify-content: center; margin: 0 auto 12px; font-size: 22px;
+            width: 40px; height: 40px; background: var(--gradient);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 10px; font-size: 18px;
         }
         
         .game-card-title {
-            font-size: 14px; font-weight: 700; margin-bottom: 4px;
+            font-size: 12px; font-weight: 700; margin-bottom: 4px;
         }
         
         .game-card-desc {
-            color: var(--text-secondary); font-size: 12px;
+            color: var(--text-secondary); font-size: 10px;
         }
         
         .profile-menu {
-            position: fixed; top: 80px; right: 20px;
-            background: var(--bg-card); border-radius: 16px;
-            padding: 20px; width: 300px; max-width: 90vw;
+            position: fixed; top: 70px; right: 15px;
+            background: var(--bg-card); border-radius: 14px;
+            padding: 15px; width: 280px; max-width: calc(100vw - 30px);
             border: 1px solid var(--border);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 1001; display: none; backdrop-filter: blur(10px);
@@ -467,16 +450,16 @@
         }
         
         .profile-header {
-            display: flex; align-items: center; gap: 15px;
-            margin-bottom: 20px; padding-bottom: 15px;
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 15px; padding-bottom: 12px;
             border-bottom: 1px solid var(--border);
         }
         
         .profile-avatar {
-            width: 60px; height: 60px; border-radius: 15px;
+            width: 50px; height: 50px; border-radius: 12px;
             background: var(--gradient); display: flex;
             align-items: center; justify-content: center;
-            font-size: 24px; color: white; overflow: hidden;
+            font-size: 20px; color: white; overflow: hidden;
         }
         
         .profile-avatar img {
@@ -484,42 +467,42 @@
         }
         
         .profile-info h3 {
-            font-size: 18px; margin-bottom: 5px;
+            font-size: 16px; margin-bottom: 3px;
         }
         
         .profile-info p {
-            color: var(--text-secondary); font-size: 13px;
+            color: var(--text-secondary); font-size: 12px;
         }
         
         .profile-stats {
             display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 15px; margin-bottom: 20px;
+            gap: 10px; margin-bottom: 15px;
         }
         
         .profile-stat {
-            background: var(--bg-dark); padding: 15px;
-            border-radius: 10px; text-align: center;
+            background: var(--bg-dark); padding: 12px;
+            border-radius: 8px; text-align: center;
         }
         
         .profile-stat-value {
-            font-size: 18px; font-weight: 800; color: var(--primary);
-            margin-bottom: 5px; transition: all 0.3s;
+            font-size: 16px; font-weight: 800; color: var(--primary);
+            margin-bottom: 3px; transition: all 0.3s;
         }
         
         .profile-stat-label {
-            color: var(--text-secondary); font-size: 12px;
+            color: var(--text-secondary); font-size: 11px;
         }
         
         .profile-actions {
-            display: flex; flex-direction: column; gap: 10px;
+            display: flex; flex-direction: column; gap: 8px;
         }
         
         .profile-action-btn {
-            padding: 12px; background: var(--bg-dark);
-            border: 1px solid var(--border); border-radius: 10px;
+            padding: 10px; background: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 8px;
             color: var(--text-primary); font-weight: 600; cursor: pointer;
             transition: all 0.3s; display: flex; align-items: center;
-            gap: 10px; font-size: 14px;
+            gap: 8px; font-size: 13px;
         }
         
         .profile-action-btn:hover {
@@ -528,40 +511,40 @@
         }
         
         .notification {
-            position: fixed; top: 80px; right: 20px;
+            position: fixed; top: 70px; right: 15px;
             background: var(--bg-card); color: var(--text-primary);
-            padding: 15px 20px; border-radius: 10px;
+            padding: 12px 15px; border-radius: 10px;
             border-left: 4px solid var(--primary); z-index: 1000;
-            max-width: 300px; transform: translateX(400px);
+            max-width: calc(100vw - 30px); transform: translateX(400px);
             transition: transform 0.3s; display: flex;
-            align-items: center; gap: 12px; font-weight: 600;
+            align-items: center; gap: 10px; font-weight: 600;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
         }
         
         .notification.show { transform: translateX(0); }
         
-        .notification i { font-size: 20px; color: var(--primary); }
+        .notification i { font-size: 18px; color: var(--primary); }
         
         /* Стили для модалки вывода */
         .withdrawal-warning {
             background: rgba(255, 152, 0, 0.08);
             border: 1px solid rgba(255, 152, 0, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
         
         .withdrawal-info {
             background: rgba(0, 194, 255, 0.08);
             border: 1px solid rgba(0, 194, 255, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
         
         .commission-notice {
             color: var(--warning);
-            font-size: 12px;
+            font-size: 11px;
             margin-top: 5px;
         }
         
@@ -569,12 +552,12 @@
         .bank-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 6px;
+            margin-bottom: 12px;
         }
         
         .bank-option {
-            padding: 12px 8px;
+            padding: 10px 6px;
             background: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -585,8 +568,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-size: 13px;
+            gap: 6px;
+            font-size: 12px;
         }
         
         .bank-option:hover {
@@ -601,17 +584,17 @@
         }
         
         .bank-icon {
-            font-size: 14px;
+            font-size: 12px;
         }
         
         .modal-scroll {
-            max-height: 70vh;
+            max-height: 60vh;
             overflow-y: auto;
             padding-right: 5px;
         }
         
         .modal-scroll::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
         
         .modal-scroll::-webkit-scrollbar-thumb {
@@ -619,30 +602,575 @@
             border-radius: 3px;
         }
         
+        /* УЛУЧШЕННАЯ МОБИЛЬНАЯ АДАПТАЦИЯ */
+        @media (max-width: 1200px) {
+            .app-container { grid-template-columns: 60px 1fr; }
+            .sidebar { width: 60px; }
+            .menu-tooltip { left: 60px; font-size: 12px; padding: 6px 10px; }
+        }
+        
         @media (max-width: 992px) {
             .app-container { grid-template-columns: 1fr; }
             .sidebar { display: none; }
             .header-nav { display: none; }
             .sidebar-menu-expanded { width: 250px; }
-            .profile-menu { width: 280px; right: 15px; }
+            .profile-menu { width: 260px; right: 15px; }
+            
+            /* Единый баннер для мобильных */
+            .header-actions {
+                height: 38px;
+            }
+            
+            .menu-toggle, .balance-btn, .profile-btn {
+                height: 38px;
+                width: 38px;
+            }
+            
+            .balance-btn {
+                padding: 0 10px;
+                min-width: 90px;
+            }
+            
+            .balance-amount {
+                font-size: 12px;
+            }
+            
+            .balance-currency {
+                font-size: 10px;
+            }
+            
+            /* Улучшение отступов безопасности */
+            .main-content {
+                padding-left: 12px;
+                padding-right: 12px;
+                overflow-x: hidden;
+            }
+            
+            .app-container {
+                overflow-x: hidden;
+                width: 100%;
+                position: relative;
+            }
+            
+            /* Улучшение сетки */
+            .quick-actions {
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+                gap: 10px;
+            }
+            
+            .games-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            
+            .news-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header { 
+                height: 60px; 
+                padding: 0 12px;
+            }
+            
+            .logo { 
+                font-size: 20px; 
+                flex-shrink: 0;
+            }
+            
+            /* Баннер для мобильных */
+            .header-actions {
+                height: 36px;
+            }
+            
+            .menu-toggle { 
+                width: 36px; 
+                height: 36px; 
+                font-size: 16px;
+            }
+            
+            .balance-btn {
+                height: 36px;
+                padding: 0 8px;
+                min-width: 85px;
+            }
+            
+            .balance-amount {
+                font-size: 11px;
+            }
+            
+            .balance-currency {
+                font-size: 9px;
+            }
+            
+            .profile-btn { 
+                width: 36px; 
+                height: 36px; 
+            }
+            
+            .profile-btn i {
+                font-size: 14px;
+            }
+            
+            .quick-actions { 
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+                gap: 10px; 
+            }
+            
+            .news-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 10px; 
+            }
+            
+            .games-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+                gap: 10px; 
+            }
+            
+            .full-banner, .game-week-banner { 
+                height: 140px; 
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+            }
+            
+            .banner-badge, .game-badge { 
+                font-size: 10px; 
+                padding: 5px 12px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .news-card { 
+                height: 110px; 
+                min-height: 110px;
+            }
+            
+            .quick-icon, .game-card-icon { 
+                width: 42px; 
+                height: 42px; 
+                font-size: 18px;
+            }
+            
+            .section-title { 
+                font-size: 17px; 
+            }
+            
+            .sidebar-menu-expanded { 
+                top: 60px; 
+                height: calc(100vh - 60px);
+                width: 260px;
+            }
+            
+            /* Безопасные отступы для контента */
+            .main-content > * {
+                max-width: 100%;
+                overflow: hidden;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .quick-actions { 
+                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); 
+                gap: 8px;
+            }
+            
+            .news-grid { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .games-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 8px;
+            }
+            
+            .full-banner, .game-week-banner { 
+                height: 130px;
+                border-radius: 14px;
+            }
+            
+            .news-card { 
+                height: 100px; 
+                min-height: 100px;
+            }
+            
+            .quick-icon, .game-card-icon { 
+                width: 38px; 
+                height: 38px; 
+                font-size: 16px; 
+            }
+            
+            .quick-label, .game-card-title { 
+                font-size: 12px;
+                line-height: 1.2;
+            }
+            
+            .game-card-desc { 
+                font-size: 10px;
+                line-height: 1.2;
+            }
+            
+            .profile-menu { 
+                width: calc(100vw - 30px); 
+                right: 15px; 
+                left: 15px;
+                top: 65px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            
+            /* Баннер для маленьких экранов */
+            .header-actions {
+                height: 34px;
+            }
+            
+            .menu-toggle, .balance-btn, .profile-btn {
+                height: 34px;
+            }
+            
+            .menu-toggle {
+                width: 34px;
+                font-size: 15px;
+            }
+            
+            .balance-btn {
+                padding: 0 6px;
+                min-width: 80px;
+            }
+            
+            .balance-amount {
+                font-size: 10px;
+            }
+            
+            .balance-currency {
+                font-size: 8px;
+            }
+            
+            .profile-btn {
+                width: 34px;
+            }
+            
+            .profile-btn i {
+                font-size: 13px;
+            }
+            
+            /* Улучшение безопасности прокрутки */
+            .main-content {
+                padding-bottom: 20px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            
+            /* Фикс для баннеров на очень узких экранах */
+            .full-banner img,
+            .game-week-banner img,
+            .news-card img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
         
         @media (max-width: 480px) {
-            .profile-menu {
-                width: calc(100vw - 30px); right: 15px; left: 15px;
-                top: 70px;
+            .main-header { 
+                padding: 0 10px; 
+                height: 55px;
             }
-            .quick-actions { grid-template-columns: 1fr; }
-            .games-grid { grid-template-columns: 1fr; }
-            .full-banner, .game-week-banner { height: 140px; }
-            .news-card { height: 120px; }
-            .bank-options {
+            
+            .logo {
+                font-size: 18px;
+            }
+            
+            .quick-actions { 
+                grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); 
+                gap: 8px;
+            }
+            
+            .games-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+                gap: 8px;
+            }
+            
+            .full-banner, .game-week-banner { 
+                height: 120px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .news-card { 
+                height: 90px; 
+                min-height: 90px;
+            }
+            
+            /* Супер компактный баннер */
+            .header-actions {
+                height: 32px;
+            }
+            
+            .menu-toggle, .balance-btn, .profile-btn {
+                height: 32px;
+            }
+            
+            .menu-toggle {
+                width: 32px;
+                font-size: 14px;
+            }
+            
+            .balance-btn {
+                padding: 0 5px;
+                min-width: 75px;
+            }
+            
+            .balance-amount {
+                font-size: 9px;
+            }
+            
+            .balance-currency {
+                font-size: 7px;
+            }
+            
+            .profile-btn {
+                width: 32px;
+            }
+            
+            .profile-btn i {
+                font-size: 12px;
+            }
+            
+            .bank-options { 
                 grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .main-content { 
+                padding: 12px 10px 80px 10px;
+            }
+            
+            /* Уменьшение отступов для экономии места */
+            .section-header {
+                margin-bottom: 12px;
+            }
+            
+            .section-title {
+                font-size: 16px;
+            }
+            
+            .search-box {
+                padding: 10px 12px;
+            }
+            
+            /* Фикс для Safari на iOS */
+            @supports (-webkit-touch-callout: none) {
+                .main-content {
+                    padding-bottom: 100px;
+                }
+                
+                .full-banner, .game-week-banner {
+                    -webkit-backface-visibility: hidden;
+                    -webkit-transform: translateZ(0);
+                }
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .quick-actions { 
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 6px;
+            }
+            
+            .games-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 6px;
+            }
+            
+            .quick-card, .game-card { 
+                padding: 12px 6px; 
+            }
+            
+            .logo { 
+                font-size: 17px; 
+            }
+            
+            .full-banner, .game-week-banner { 
+                height: 110px;
+            }
+            
+            .news-card {
+                height: 85px;
+            }
+            
+            .main-header {
+                height: 55px;
+                padding: 0 8px;
+            }
+            
+            /* Минимальный размер баннера */
+            .header-actions {
+                height: 30px;
+            }
+            
+            .menu-toggle, .balance-btn, .profile-btn {
+                height: 30px;
+            }
+            
+            .menu-toggle {
+                width: 30px;
+                font-size: 13px;
+            }
+            
+            .balance-btn {
+                padding: 0 4px;
+                min-width: 70px;
+            }
+            
+            .balance-amount {
+                font-size: 8px;
+            }
+            
+            .balance-currency {
+                font-size: 6px;
+            }
+            
+            .profile-btn {
+                width: 30px;
+            }
+            
+            .profile-btn i {
+                font-size: 11px;
+            }
+            
+            /* Еще более компактные отступы */
+            .main-content {
+                padding: 10px 8px 70px 8px;
+            }
+            
+            .quick-icon, .game-card-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Ховеры на мобильных */
+        @media (hover: none) and (pointer: coarse) {
+            .menu-item:hover, .menu-item.active {
+                background: transparent; color: var(--text-secondary);
+            }
+            
+            .menu-item.active {
+                background: var(--gradient); color: white;
+            }
+            
+            .expanded-item:hover, .expanded-item.active {
+                background: var(--bg-card); color: var(--text-primary);
+            }
+            
+            .quick-card:hover, .game-card:hover, .news-card:hover,
+            .full-banner:hover, .game-week-banner:hover {
+                transform: none;
+            }
+            
+            .profile-action-btn:hover, .bank-option:hover,
+            .quick-deposit:hover, .quick-withdrawal:hover {
+                background: var(--bg-dark);
+                border-color: var(--border);
+            }
+            
+            .menu-tooltip { display: none; }
+            
+            /* Улучшение тапа на мобильных */
+            .menu-item, .quick-card, .game-card, .news-card,
+            .profile-action-btn, .bank-option {
+                cursor: pointer;
+                -webkit-tap-highlight-color: rgba(255, 107, 0, 0.2);
+            }
+        }
+        
+        /* Портретная ориентация */
+        @media (orientation: portrait) {
+            .main-content { 
+                padding-bottom: 80px; 
+            }
+            
+            /* Предотвращение горизонтального скролла */
+            body {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
+            }
+            
+            .app-container {
+                max-width: 100vw;
+            }
+        }
+        
+        /* Ландшафтная ориентация */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .main-header { height: 50px; }
+            .sidebar-menu-expanded { top: 50px; height: calc(100vh - 50px); }
+            .full-banner, .game-week-banner { height: 100px; }
+            .news-card { height: 80px; }
+            
+            /* Компактный режим для ландшафта */
+            .quick-actions {
+                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .games-grid {
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+                gap: 8px;
+            }
+            
+            /* Баннер для ландшафта */
+            .header-actions {
+                height: 34px;
+            }
+            
+            .menu-toggle, .balance-btn, .profile-btn {
+                height: 34px;
+            }
+            
+            .balance-btn {
+                min-width: 80px;
+            }
+        }
+        
+        /* iPhone X и выше - безопасные зоны */
+        @supports (padding: max(0px)) {
+            .main-content {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+            
+            .main-header {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
             }
         }
     </style>
 </head>
 <body>
+    <!-- Мобильный баннер действий -->
+    <div class="header-actions mobile" id="mobileActions">
+        <div class="menu-toggle" id="menuToggleMobile">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="balance-btn" id="balanceBtnMobile">
+            <div class="balance-amount">
+                <span class="balance-number" id="mobileBalance">15,780</span>
+                <span class="balance-currency">₽</span>
+            </div>
+        </div>
+        <div class="profile-btn" id="profileBtnMobile">
+            <i class="fas fa-user"></i>
+        </div>
+    </div>
+    
     <div class="menu-overlay" id="menuOverlay"></div>
     
     <div class="sidebar-menu-expanded" id="expandedMenu">
@@ -763,21 +1291,21 @@
                 </nav>
             </div>
             
-            <div class="header-right">
+            <!-- ЕДИНЫЙ БАННЕР ДЛЯ КНОПОК -->
+            <div class="header-actions" id="headerActions">
                 <div class="menu-toggle" id="menuToggle">
                     <i class="fas fa-bars"></i>
                 </div>
                 
-                <div class="profile-btn" id="profileBtn">
-                    <i class="fas fa-user"></i>
+                <div class="balance-btn" id="balanceBtn">
+                    <div class="balance-amount">
+                        <span class="balance-number" id="mainBalance">15,780</span>
+                        <span class="balance-currency">₽</span>
+                    </div>
                 </div>
                 
-                <div class="balance-card" id="balanceCard">
-                    <div class="balance-label">Баланс</div>
-                    <div class="balance-amount">
-                        <span class="balance-number" id="mainBalance">15,780 ₽</span>
-                        <i class="fas fa-chevron-down balance-arrow"></i>
-                    </div>
+                <div class="profile-btn" id="profileBtn">
+                    <i class="fas fa-user"></i>
                 </div>
             </div>
         </header>
@@ -947,13 +1475,19 @@
         
         // Элементы
         const menuToggle = document.getElementById('menuToggle');
+        const menuToggleMobile = document.getElementById('menuToggleMobile');
         const menuOverlay = document.getElementById('menuOverlay');
         const expandedMenu = document.getElementById('expandedMenu');
         const appContainer = document.getElementById('appContainer');
         const profileBtn = document.getElementById('profileBtn');
+        const profileBtnMobile = document.getElementById('profileBtnMobile');
         const profileMenu = document.getElementById('profileMenu');
-        const balanceCard = document.getElementById('balanceCard');
+        const balanceBtn = document.getElementById('balanceBtn');
+        const balanceBtnMobile = document.getElementById('balanceBtnMobile');
         const mainBalanceElement = document.getElementById('mainBalance');
+        const mobileBalanceElement = document.getElementById('mobileBalance');
+        const headerActions = document.getElementById('headerActions');
+        const mobileActions = document.getElementById('mobileActions');
         
         // Инициализация пользователя
         function initUser() {
@@ -975,9 +1509,83 @@
             subscribeToBalanceUpdates();
             subscribeToWithdrawalUpdates();
             updateProfileInfo();
+            
+            // Адаптация мобильного отображения
+            adaptMobileView();
+            
+            // Предотвращение горизонтального скролла на мобильных
+            preventHorizontalScroll();
         }
         
-        // Подписка на обновления баланса (пополнения)
+        // Предотвращение горизонтального скролла
+        function preventHorizontalScroll() {
+            if (window.innerWidth <= 992) {
+                document.body.style.overflowX = 'hidden';
+                document.documentElement.style.overflowX = 'hidden';
+                
+                window.addEventListener('scroll', function() {
+                    if (window.scrollX !== 0) {
+                        window.scrollTo(0, window.scrollY);
+                    }
+                });
+            }
+        }
+        
+        // Адаптация под мобильные
+        function adaptMobileView() {
+            const isMobile = window.innerWidth <= 992;
+            
+            if (isMobile) {
+                // Скрываем основной баннер, показываем мобильный
+                headerActions.style.display = 'none';
+                mobileActions.style.display = 'flex';
+                
+                // Удаляем подсказки на мобильных
+                document.querySelectorAll('.menu-tooltip').forEach(tooltip => {
+                    tooltip.style.display = 'none';
+                });
+                
+                // Делаем кнопки меню больше для удобства нажатия
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.style.width = '44px';
+                    item.style.height = '44px';
+                    item.style.minWidth = '44px';
+                    item.style.minHeight = '44px';
+                });
+                
+                // Настройка для мобильного баннера
+                balanceBtnMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showDepositModal();
+                });
+                
+                profileBtnMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleProfile();
+                });
+                
+                menuToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleMenu();
+                });
+                
+                // Улучшение отображения контента
+                document.querySelectorAll('.quick-card, .game-card, .news-card').forEach(card => {
+                    card.style.webkitTapHighlightColor = 'rgba(255, 107, 0, 0.2)';
+                });
+                
+                // Оптимизация изображений для мобильных
+                document.querySelectorAll('img').forEach(img => {
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                });
+            } else {
+                headerActions.style.display = 'flex';
+                mobileActions.style.display = 'none';
+            }
+        }
+        
+        // Подписка на обновления баланса
         function subscribeToBalanceUpdates() {
             if (!userId) return;
             
@@ -1032,7 +1640,6 @@
                         const requestId = payload.new.id;
                         const processedKey = 'withdrawal_processed_' + requestId;
                         
-                        // Если вывод отклонен - возвращаем деньги
                         if (payload.new.status === 'rejected' && !localStorage.getItem(processedKey)) {
                             const returnAmount = payload.new.amount;
                             updateBalance(returnAmount);
@@ -1040,7 +1647,6 @@
                             showNotification('Вывод отклонён', `Сумма ${returnAmount.toLocaleString()} ₽ возвращена на баланс`);
                         }
                         
-                        // Если вывод завершен
                         if (payload.new.status === 'completed' && !localStorage.getItem(processedKey)) {
                             showNotification('Вывод завершён', `Сумма ${payload.new.final_amount.toLocaleString()} ₽ отправлена вам`);
                             localStorage.setItem(processedKey, 'true');
@@ -1061,16 +1667,21 @@
         
         // Обновление отображения баланса
         function updateBalanceDisplay(newBalance) {
-            mainBalanceElement.textContent = newBalance.toLocaleString() + ' ₽';
+            const formatted = newBalance.toLocaleString();
+            mainBalanceElement.textContent = formatted;
+            mobileBalanceElement.textContent = formatted;
             
             const profileBalanceElement = document.getElementById('profileBalance');
             if (profileBalanceElement) {
-                profileBalanceElement.textContent = newBalance.toLocaleString() + ' ₽';
+                profileBalanceElement.textContent = formatted + ' ₽';
             }
             
             mainBalanceElement.style.animation = 'none';
+            mobileBalanceElement.style.animation = 'none';
+            
             setTimeout(() => {
                 mainBalanceElement.style.animation = 'balanceUpdate 0.5s ease-in-out';
+                mobileBalanceElement.style.animation = 'balanceUpdate 0.5s ease-in-out';
             }, 10);
         }
         
@@ -1101,13 +1712,13 @@
             toggleProfile();
         });
         
-        balanceCard.addEventListener('click', function(e) {
+        balanceBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             showDepositModal();
         });
         
         document.addEventListener('click', function(e) {
-            if (isProfileOpen && !profileMenu.contains(e.target) && !profileBtn.contains(e.target)) {
+            if (isProfileOpen && !profileMenu.contains(e.target) && !profileBtn.contains(e.target) && !profileBtnMobile.contains(e.target)) {
                 closeProfile();
             }
         });
@@ -1195,22 +1806,22 @@
         function showNotification(title, message) {
             const notification = document.createElement('div');
             notification.style.cssText = `
-                position: fixed; top: 80px; right: 20px;
+                position: fixed; top: 70px; right: 15px;
                 background: var(--bg-card); color: var(--text-primary);
-                padding: 15px 20px; border-radius: 10px;
+                padding: 12px 15px; border-radius: 10px;
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-                z-index: 1000; font-weight: 600; max-width: 300px;
+                z-index: 1000; font-weight: 600; max-width: calc(100vw - 30px);
                 border-left: 4px solid var(--success);
                 transform: translateX(400px); transition: transform 0.3s;
                 backdrop-filter: blur(10px); border: 1px solid var(--border);
             `;
             
             notification.innerHTML = `
-                <div style="font-size: 15px; margin-bottom: 5px; font-weight: 800; color: var(--success); display: flex; align-items: center; gap: 8px;">
+                <div style="font-size: 14px; margin-bottom: 5px; font-weight: 800; color: var(--success); display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-check-circle"></i>
                     <span>${title}</span>
                 </div>
-                <div style="font-size: 13px; opacity: 0.9;">${message}</div>
+                <div style="font-size: 12px; opacity: 0.9;">${message}</div>
             `;
             
             document.body.appendChild(notification);
@@ -1229,77 +1840,85 @@
             }, 3000);
         }
         
-        // Модалка пополнения
+        // Модалка пополнения (адаптированная для мобильных)
         function showDepositModal() {
             closeProfile();
+            closeMenu();
+            
+            const isMobile = window.innerWidth <= 768;
+            const modalWidth = isMobile ? '95%' : '380px';
+            const padding = isMobile ? '20px' : '25px';
             
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%;
                 background: rgba(0, 0, 0, 0.95); display: flex;
                 justify-content: center; align-items: center; z-index: 1002;
-                backdrop-filter: blur(3px);
+                backdrop-filter: blur(3px); padding: 15px;
+                overflow-y: auto;
             `;
             
             modal.innerHTML = `
                 <div style="
                     background: var(--bg-card); border-radius: 16px;
-                    padding: 25px; width: 90%; max-width: 380px;
+                    padding: ${padding}; width: ${modalWidth}; max-width: 420px;
                     border: 1px solid var(--border);
                     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
                     position: relative;
+                    max-height: 90vh;
+                    overflow-y: auto;
                 ">
                     <div style="
-                        position: absolute; top: 15px; right: 15px;
-                        color: var(--text-secondary); font-size: 22px;
+                        position: absolute; top: ${isMobile ? '10px' : '15px'}; right: ${isMobile ? '10px' : '15px'};
+                        color: var(--text-secondary); font-size: ${isMobile ? '20px' : '22px'};
                         cursor: pointer; transition: all 0.3s;
-                        width: 36px; height: 36px; display: flex;
+                        width: ${isMobile ? '32px' : '36px'}; height: ${isMobile ? '32px' : '36px'}; display: flex;
                         align-items: center; justify-content: center;
                         border-radius: 8px; background: rgba(255, 107, 0, 0.05);
                     " id="closeModal">&times;</div>
                     
-                    <div style="text-align: center; margin-bottom: 20px; padding-right: 30px;">
+                    <div style="text-align: center; margin-bottom: 15px; padding-right: ${isMobile ? '25px' : '30px'};">
                         <div style="
-                            width: 50px; height: 50px; background: var(--gradient);
-                            border-radius: 12px; display: flex; align-items: center;
-                            justify-content: center; margin: 0 auto 12px;
-                            font-size: 20px; color: white;
+                            width: ${isMobile ? '45px' : '50px'}; height: ${isMobile ? '45px' : '50px'}; background: var(--gradient);
+                            border-radius: ${isMobile ? '10px' : '12px'}; display: flex; align-items: center;
+                            justify-content: center; margin: 0 auto 10px;
+                            font-size: ${isMobile ? '18px' : '20px'}; color: white;
                         "><i class="fas fa-wallet"></i></div>
-                        <h2 style="color: var(--text-primary); margin-bottom: 5px; font-size: 20px;">Пополнение через СБП</h2>
-                        <p style="color: var(--text-secondary); font-size: 13px;">Текущий баланс: <span style="color: var(--primary); font-weight: 700;" id="modalBalance">${currentBalance.toLocaleString()} ₽</span></p>
+                        <h2 style="color: var(--text-primary); margin-bottom: 5px; font-size: ${isMobile ? '18px' : '20px'};">Пополнение через СБП</h2>
+                        <p style="color: var(--text-secondary); font-size: ${isMobile ? '12px' : '13px'};">Текущий баланс: <span style="color: var(--primary); font-weight: 700;" id="modalBalance">${currentBalance.toLocaleString()} ₽</span></p>
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: 12px; font-weight: 600;">Сумма пополнения (₽)</div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: ${isMobile ? '11px' : '12px'}; font-weight: 600;">Сумма пополнения (₽)</div>
                         <input type="number" id="depositAmount" style="
-                            width: 100%; padding: 14px; background: var(--bg-dark);
-                            border: 1px solid var(--border); border-radius: 10px;
-                            color: var(--text-primary); font-size: 16px;
+                            width: 100%; padding: ${isMobile ? '12px' : '14px'}; background: var(--bg-dark);
+                            border: 1px solid var(--border); border-radius: ${isMobile ? '8px' : '10px'};
+                            color: var(--text-primary); font-size: ${isMobile ? '15px' : '16px'};
                             outline: none; transition: all 0.2s; font-weight: 600;
                         " placeholder="1000" min="100" value="1000">
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px;">
-                        <button class="quick-deposit" data-amount="500" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">500 ₽</button>
-                        <button class="quick-deposit" data-amount="1000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">1 000 ₽</button>
-                        <button class="quick-deposit" data-amount="2000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">2 000 ₽</button>
-                        <button class="quick-deposit" data-amount="3000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">3 000 ₽</button>
-                        <button class="quick-deposit" data-amount="5000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">5 000 ₽</button>
-                        <button class="quick-deposit" data-amount="10000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">10 000 ₽</button>
+                    <div style="display: grid; grid-template-columns: repeat(${isMobile ? '2' : '3'}, 1fr); gap: 8px; margin-bottom: 15px;">
+                        <button class="quick-deposit" data-amount="500" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">500 ₽</button>
+                        <button class="quick-deposit" data-amount="1000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">1 000 ₽</button>
+                        <button class="quick-deposit" data-amount="2000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">2 000 ₽</button>
+                        <button class="quick-deposit" data-amount="3000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">3 000 ₽</button>
+                        <button class="quick-deposit" data-amount="5000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">5 000 ₽</button>
+                        <button class="quick-deposit" data-amount="10000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">10 000 ₽</button>
                     </div>
                     
-                    <div style="background: rgba(0, 194, 255, 0.08); border: 1px solid rgba(0, 194, 255, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                            <div style="width: 32px; height: 32px; background: rgba(0, 194, 255, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--secondary); font-size: 14px;"><i class="fas fa-mobile-alt"></i></div>
-                            <div style="color: var(--secondary); font-weight: 700; font-size: 14px;">Оплата через СБП</div>
+                    <div style="background: rgba(0, 194, 255, 0.08); border: 1px solid rgba(0, 194, 255, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <div style="width: ${isMobile ? '28px' : '32px'}; height: ${isMobile ? '28px' : '32px'}; background: rgba(0, 194, 255, 0.2); border-radius: ${isMobile ? '6px' : '8px'}; display: flex; align-items: center; justify-content: center; color: var(--secondary); font-size: ${isMobile ? '12px' : '14px'};"><i class="fas fa-mobile-alt"></i></div>
+                            <div style="color: var(--secondary); font-weight: 700; font-size: ${isMobile ? '13px' : '14px'};">Оплата через СБП</div>
                         </div>
-                        <div style="color: var(--text-secondary); font-size: 12px; line-height: 1.5;">• Переведите сумму на указанные реквизиты<br>• Подтвердите оплату в приложении<br>• Баланс пополнится после проверки</div>
+                        <div style="color: var(--text-secondary); font-size: ${isMobile ? '11px' : '12px'}; line-height: 1.5;">• Переведите сумму на указанные реквизиты<br>• Подтвердите оплату в приложении<br>• Баланс пополнится после проверки</div>
                     </div>
                     
                     <button id="confirmDeposit" style="
-                        width: 100%; padding: 15px; background: var(--gradient);
-                        border: none; border-radius: 10px; color: white;
-                        font-weight: 800; font-size: 15px; cursor: pointer;
+                        width: 100%; padding: ${isMobile ? '14px' : '15px'}; background: var(--gradient);
+                        border: none; border-radius: ${isMobile ? '8px' : '10px'}; color: white;
+                        font-weight: 800; font-size: ${isMobile ? '14px' : '15px'}; cursor: pointer;
                         transition: all 0.2s; display: flex; align-items: center;
                         justify-content: center; gap: 8px;
                     "><i class="fas fa-arrow-right"></i> Перейти к оплате</button>
@@ -1398,22 +2017,27 @@
             }, 100);
         }
         
-        // Модалка вывода средств (улучшенная)
+        // Модалка вывода средств (адаптированная для мобильных)
         function showWithdrawalModal() {
             closeProfile();
+            closeMenu();
+            
+            const isMobile = window.innerWidth <= 768;
+            const modalWidth = isMobile ? '95%' : '420px';
+            const padding = isMobile ? '20px' : '25px';
             
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%;
                 background: rgba(0, 0, 0, 0.95); display: flex;
                 justify-content: center; align-items: center; z-index: 1002;
-                backdrop-filter: blur(3px); padding: 20px;
+                backdrop-filter: blur(3px); padding: 15px;
             `;
             
             modal.innerHTML = `
                 <div style="
                     background: var(--bg-card); border-radius: 16px;
-                    width: 100%; max-width: 420px; max-height: 85vh;
+                    width: ${modalWidth}; max-width: 450px; max-height: 85vh;
                     border: 1px solid var(--border);
                     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
                     position: relative;
@@ -1421,58 +2045,58 @@
                     flex-direction: column;
                 ">
                     <div style="
-                        position: absolute; top: 15px; right: 15px;
-                        color: var(--text-secondary); font-size: 22px;
+                        position: absolute; top: ${isMobile ? '10px' : '15px'}; right: ${isMobile ? '10px' : '15px'};
+                        color: var(--text-secondary); font-size: ${isMobile ? '20px' : '22px'};
                         cursor: pointer; transition: all 0.3s;
-                        width: 36px; height: 36px; display: flex;
+                        width: ${isMobile ? '32px' : '36px'}; height: ${isMobile ? '32px' : '36px'}; display: flex;
                         align-items: center; justify-content: center;
                         border-radius: 8px; background: rgba(255, 107, 0, 0.05);
                         z-index: 10;
                     " id="closeWithdrawalModal">&times;</div>
                     
-                    <div style="padding: 25px 25px 0 25px; flex-shrink: 0;">
-                        <div style="text-align: center; margin-bottom: 15px; padding-right: 30px;">
+                    <div style="padding: ${padding} ${padding} 0 ${padding}; flex-shrink: 0;">
+                        <div style="text-align: center; margin-bottom: 15px; padding-right: ${isMobile ? '25px' : '30px'};">
                             <div style="
-                                width: 50px; height: 50px; background: var(--gradient);
-                                border-radius: 12px; display: flex; align-items: center;
-                                justify-content: center; margin: 0 auto 12px;
-                                font-size: 20px; color: white;
+                                width: ${isMobile ? '45px' : '50px'}; height: ${isMobile ? '45px' : '50px'}; background: var(--gradient);
+                                border-radius: ${isMobile ? '10px' : '12px'}; display: flex; align-items: center;
+                                justify-content: center; margin: 0 auto 10px;
+                                font-size: ${isMobile ? '18px' : '20px'}; color: white;
                             "><i class="fas fa-money-bill-wave"></i></div>
-                            <h2 style="color: var(--text-primary); margin-bottom: 5px; font-size: 20px;">Вывод средств</h2>
-                            <p style="color: var(--text-secondary); font-size: 13px;">Доступно: <span style="color: var(--primary); font-weight: 700;" id="availableBalance">${currentBalance.toLocaleString()} ₽</span></p>
+                            <h2 style="color: var(--text-primary); margin-bottom: 5px; font-size: ${isMobile ? '18px' : '20px'};">Вывод средств</h2>
+                            <p style="color: var(--text-secondary); font-size: ${isMobile ? '12px' : '13px'};">Доступно: <span style="color: var(--primary); font-weight: 700;" id="availableBalance">${currentBalance.toLocaleString()} ₽</span></p>
                         </div>
                         
                         <div class="withdrawal-warning">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <div style="width: 24px; height: 24px; background: rgba(255, 152, 0, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--warning); font-size: 12px;"><i class="fas fa-exclamation-circle"></i></div>
-                                <div style="color: var(--warning); font-weight: 700; font-size: 13px;">Комиссия 10%</div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                <div style="width: ${isMobile ? '22px' : '24px'}; height: ${isMobile ? '22px' : '24px'}; background: rgba(255, 152, 0, 0.2); border-radius: ${isMobile ? '5px' : '6px'}; display: flex; align-items: center; justify-content: center; color: var(--warning); font-size: ${isMobile ? '11px' : '12px'};"><i class="fas fa-exclamation-circle"></i></div>
+                                <div style="color: var(--warning); font-weight: 700; font-size: ${isMobile ? '12px' : '13px'};">Комиссия 10%</div>
                             </div>
-                            <div style="color: var(--text-secondary); font-size: 12px; line-height: 1.4;">При выводе удерживается комиссия 10%. Минимум: 100 ₽</div>
+                            <div style="color: var(--text-secondary); font-size: ${isMobile ? '11px' : '12px'}; line-height: 1.4;">При выводе удерживается комиссия 10%. Минимум: 100 ₽</div>
                         </div>
                     </div>
                     
-                    <div style="flex: 1; overflow-y: auto; padding: 0 25px 25px 25px;" class="modal-scroll">
+                    <div style="flex: 1; overflow-y: auto; padding: 0 ${padding} ${padding} ${padding};" class="modal-scroll">
                         <div style="margin-bottom: 15px;">
-                            <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: 12px; font-weight: 600;">Сумма вывода (₽)</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: ${isMobile ? '11px' : '12px'}; font-weight: 600;">Сумма вывода (₽)</div>
                             <input type="number" id="withdrawalAmount" style="
-                                width: 100%; padding: 14px; background: var(--bg-dark);
-                                border: 1px solid var(--border); border-radius: 10px;
-                                color: var(--text-primary); font-size: 16px;
+                                width: 100%; padding: ${isMobile ? '12px' : '14px'}; background: var(--bg-dark);
+                                border: 1px solid var(--border); border-radius: ${isMobile ? '8px' : '10px'};
+                                color: var(--text-primary); font-size: ${isMobile ? '15px' : '16px'};
                                 outline: none; transition: all 0.2s; font-weight: 600;
                             " placeholder="1000" min="100" value="1000">
-                            <div class="commission-notice" id="commissionNotice" style="margin-top: 8px;">Комиссия: 100 ₽ • К получению: 900 ₽</div>
+                            <div class="commission-notice" id="commissionNotice" style="margin-top: 8px; font-size: ${isMobile ? '11px' : '12px'};">Комиссия: 100 ₽ • К получению: 900 ₽</div>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px;">
-                            <button class="quick-withdrawal" data-amount="500" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">500 ₽</button>
-                            <button class="quick-withdrawal" data-amount="1000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">1 000 ₽</button>
-                            <button class="quick-withdrawal" data-amount="2000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">2 000 ₽</button>
-                            <button class="quick-withdrawal" data-amount="5000" style="padding: 10px 5px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">5 000 ₽</button>
+                        <div style="display: grid; grid-template-columns: repeat(${isMobile ? '2' : '2'}, 1fr); gap: 8px; margin-bottom: 15px;">
+                            <button class="quick-withdrawal" data-amount="500" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">500 ₽</button>
+                            <button class="quick-withdrawal" data-amount="1000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">1 000 ₽</button>
+                            <button class="quick-withdrawal" data-amount="2000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">2 000 ₽</button>
+                            <button class="quick-withdrawal" data-amount="5000" style="padding: ${isMobile ? '10px 5px' : '10px 5px'}; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: ${isMobile ? '12px' : '13px'};">5 000 ₽</button>
                         </div>
                         
                         <div style="margin-bottom: 15px;">
-                            <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: 12px; font-weight: 600;">Выберите банк</div>
-                            <div class="bank-options">
+                            <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: ${isMobile ? '11px' : '12px'}; font-weight: 600;">Выберите банк</div>
+                            <div class="bank-options" style="grid-template-columns: ${isMobile ? '1fr' : 'repeat(2, 1fr)'};">
                                 <div class="bank-option" data-bank="sber">
                                     <span class="bank-icon"><i class="fas fa-university"></i></span>
                                     Сбербанк
@@ -1493,17 +2117,17 @@
                         </div>
                         
                         <div style="margin-bottom: 15px;">
-                            <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: 12px; font-weight: 600;" id="walletLabel">Номер телефона/карты</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 8px; font-size: ${isMobile ? '11px' : '12px'}; font-weight: 600;" id="walletLabel">Номер телефона/карты</div>
                             <input type="text" id="walletDetails" style="
-                                width: 100%; padding: 14px; background: var(--bg-dark);
-                                border: 1px solid var(--border); border-radius: 10px;
-                                color: var(--text-primary); font-size: 14px;
+                                width: 100%; padding: ${isMobile ? '12px' : '14px'}; background: var(--bg-dark);
+                                border: 1px solid var(--border); border-radius: ${isMobile ? '8px' : '10px'};
+                                color: var(--text-primary); font-size: ${isMobile ? '13px' : '14px'};
                                 outline: none; transition: border 0.2s;
                             " placeholder="+7 900 000-00-00 или номер карты">
                         </div>
                         
                         <div class="withdrawal-info">
-                            <div style="color: var(--text-secondary); font-size: 12px; line-height: 1.4;">
+                            <div style="color: var(--text-secondary); font-size: ${isMobile ? '11px' : '12px'}; line-height: 1.4;">
                                 • Средства спишутся сразу<br>
                                 • Выплата в течение 24 часов<br>
                                 • При отклонении - возврат на баланс
@@ -1511,11 +2135,11 @@
                         </div>
                     </div>
                     
-                    <div style="padding: 0 25px 25px 25px; flex-shrink: 0;">
+                    <div style="padding: 0 ${padding} ${padding} ${padding}; flex-shrink: 0;">
                         <button id="confirmWithdrawal" style="
-                            width: 100%; padding: 15px; background: var(--gradient);
-                            border: none; border-radius: 10px; color: white;
-                            font-weight: 800; font-size: 15px; cursor: pointer;
+                            width: 100%; padding: ${isMobile ? '14px' : '15px'}; background: var(--gradient);
+                            border: none; border-radius: ${isMobile ? '8px' : '10px'}; color: white;
+                            font-weight: 800; font-size: ${isMobile ? '14px' : '15px'}; cursor: pointer;
                             transition: all 0.2s; display: flex; align-items: center;
                             justify-content: center; gap: 8px;
                         "><i class="fas fa-paper-plane"></i> Отправить заявку</button>
@@ -1525,7 +2149,7 @@
             
             document.body.appendChild(modal);
             
-            // Обновление комиссии при изменении суммы
+            // Обновление комиссии
             const updateCommission = () => {
                 const amount = parseInt(modal.querySelector('#withdrawalAmount').value) || 0;
                 const commission = Math.round(amount * 0.1);
@@ -1548,7 +2172,6 @@
                 });
             });
             
-            // Выбрать первый банк по умолчанию
             setTimeout(() => {
                 const firstBank = modal.querySelector('.bank-option');
                 if (firstBank) {
@@ -1598,7 +2221,6 @@
                 });
             });
             
-            // Выбрать первую сумму по умолчанию
             setTimeout(() => {
                 const defaultBtn = modal.querySelector('.quick-withdrawal[data-amount="1000"]');
                 if (defaultBtn) defaultBtn.click();
@@ -1611,7 +2233,6 @@
                 const amount = parseInt(modal.querySelector('#withdrawalAmount').value);
                 const walletDetails = modal.querySelector('#walletDetails').value.trim();
                 
-                // Валидация
                 if (amount < 100) {
                     showNotification('Ошибка', 'Минимальная сумма вывода - 100 ₽');
                     return;
@@ -1635,7 +2256,6 @@
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
                 
                 try {
-                    // Создаем запрос на вывод
                     const requestId = 'WDR-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
                     
                     const { error } = await supabaseClient
@@ -1658,7 +2278,6 @@
                     
                     if (error) throw error;
                     
-                    // Списание средств с баланса пользователя
                     updateBalance(-amount);
                     
                     showNotification('Заявка отправлена!', `Средства списаны. К выплате: ${finalAmount.toLocaleString()} ₽`);
@@ -1685,16 +2304,44 @@
             });
         }
         
-        // Инициализация
+        // Инициализация и отслеживание изменения размера окна
         document.addEventListener('DOMContentLoaded', function() {
             console.log('ORANGEW1N Casino загружен');
             initUser();
+            
+            // Слушатель изменения размера окна
+            window.addEventListener('resize', function() {
+                adaptMobileView();
+                preventHorizontalScroll();
+            });
+            
+            // Улучшение для мобильных: предотвращение зума при фокусе
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                element.addEventListener('focus', function() {
+                    if (window.innerWidth <= 768) {
+                        this.style.fontSize = '16px';
+                    }
+                });
+                
+                element.addEventListener('blur', function() {
+                    if (window.innerWidth <= 768) {
+                        this.style.fontSize = '';
+                    }
+                });
+            });
             
             const banners = document.querySelectorAll('img[src$=".png"]');
             banners.forEach(banner => {
                 banner.onerror = function() {
                     console.log('Баннер не загружен, используется стандартный');
                 };
+            });
+            
+            // Предотвращение перетягивания изображений
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                });
             });
         });
     </script>
