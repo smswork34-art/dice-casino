@@ -159,11 +159,86 @@
             font-weight: 600;
         }
         
+        /* ИСПРАВЛЕННАЯ ВЫСОТА ДЛЯ СЕТКИ МИН */
+        .mines-section {
+            background: var(--bg-dark);
+            border-radius: 15px;
+            padding: 25px; /* Увеличил padding сверху/снизу */
+            margin-bottom: 20px;
+            border: 2px solid var(--border);
+            text-align: center;
+            min-height: 320px; /* Увеличил минимальную высоту */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .mines-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px; /* Немного увеличил gap для лучшего вида */
+            margin: 0 auto;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 10px; /* Увеличил радиус скругления */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 24px;
+            font-weight: 900;
+            min-width: 50px;
+            min-height: 50px;
+        }
+        
+        .cell:hover:not(.revealed):not(.exploded) {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);
+        }
+        
+        .cell.revealed {
+            background: var(--gem-gradient);
+            border-color: var(--secondary);
+            cursor: default;
+        }
+        
+        .cell.revealed.gem {
+            background: var(--gem-gradient);
+            color: white;
+        }
+        
+        .cell.revealed.mine {
+            background: var(--mine-gradient);
+            border-color: var(--danger);
+            color: white;
+        }
+        
+        .cell.exploded {
+            animation: explode 0.5s ease-out;
+            background: var(--mine-gradient);
+            border-color: var(--danger);
+            color: white;
+        }
+        
+        @keyframes explode {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
         .bet-section {
             background: var(--bg-dark);
             border-radius: 15px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid var(--border);
         }
         
@@ -309,73 +384,12 @@
             cursor: not-allowed;
         }
         
-        .mines-grid {
-            background: var(--bg-dark);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 2px solid var(--border);
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            min-height: 280px;
-        }
-        
-        .cell {
-            aspect-ratio: 1;
-            background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 24px;
-            font-weight: 900;
-        }
-        
-        .cell:hover:not(.revealed):not(.exploded) {
-            transform: translateY(-3px);
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);
-        }
-        
-        .cell.revealed {
-            background: var(--gem-gradient);
-            border-color: var(--secondary);
-            cursor: default;
-        }
-        
-        .cell.revealed.gem {
-            background: var(--gem-gradient);
-            color: white;
-        }
-        
-        .cell.revealed.mine {
-            background: var(--mine-gradient);
-            border-color: var(--danger);
-            color: white;
-        }
-        
-        .cell.exploded {
-            animation: explode 0.5s ease-out;
-            background: var(--mine-gradient);
-            border-color: var(--danger);
-            color: white;
-        }
-        
-        @keyframes explode {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        
         .history-section {
             background: var(--bg-dark);
             border-radius: 15px;
             padding: 15px;
             border: 1px solid var(--border);
+            margin-top: 10px;
         }
         
         .history-list {
@@ -521,13 +535,19 @@
                 max-height: 700px;
             }
             
+            .mines-section {
+                min-height: 280px;
+                padding: 20px;
+            }
+            
             .mines-grid {
-                min-height: 230px;
-                padding: 15px;
-                gap: 8px;
+                gap: 10px;
+                max-width: 320px;
             }
             
             .cell {
+                min-width: 45px;
+                min-height: 45px;
                 font-size: 20px;
             }
         }
@@ -550,15 +570,21 @@
                 padding: 15px;
             }
             
+            .mines-section {
+                padding: 20px;
+                min-height: 260px;
+            }
+            
             .mines-grid {
-                padding: 15px;
-                gap: 8px;
-                min-height: 250px;
+                gap: 10px;
+                max-width: 300px;
             }
             
             .cell {
-                font-size: 20px;
-                border-radius: 6px;
+                min-width: 40px;
+                min-height: 40px;
+                font-size: 18px;
+                border-radius: 8px;
             }
             
             .stats-container {
@@ -588,6 +614,24 @@
             .mine-count-btn {
                 padding: 10px 3px;
                 font-size: 13px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .mines-grid {
+                gap: 8px;
+                max-width: 280px;
+            }
+            
+            .cell {
+                min-width: 38px;
+                min-height: 38px;
+                font-size: 16px;
+            }
+            
+            .mines-section {
+                min-height: 240px;
+                padding: 15px;
             }
         }
     </style>
@@ -624,8 +668,11 @@
                 </div>
             </div>
             
-            <div class="mines-grid" id="minesGrid">
-                <!-- 25 ячеек будут созданы через JavaScript -->
+            <!-- ИСПРАВЛЕННЫЙ КОНТЕЙНЕР ДЛЯ СЕТКИ -->
+            <div class="mines-section">
+                <div class="mines-grid" id="minesGrid">
+                    <!-- 25 ячеек будут созданы через JavaScript -->
+                </div>
             </div>
             
             <div class="bet-section">
