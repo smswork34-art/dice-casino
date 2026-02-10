@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
+        /* Стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
@@ -769,7 +770,6 @@
         let minesPositions = [];
         let revealedCells = [];
         let currentMultiplier = 1.0;
-        let baseMultiplier = 1.0; // ДОБАВЛЕНО: базовый множитель
         let gameStartTime = null;
         let gameId = null;
         
@@ -858,8 +858,16 @@
         
         // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ ТЕКУЩИХ НАСТРОЕК
         function updateCurrentSettings() {
-            baseMultiplier = baseMultipliersByMines[selectedMinesCount];
-            currentMultiplierElement.textContent = baseMultiplier.toFixed(2) + 'x';
+            // ВЫВЕДЕНА ОТЛАДОЧНАЯ ИНФОРМАЦИЯ
+            console.log('updateCurrentSettings вызвана');
+            console.log('selectedMinesCount:', selectedMinesCount);
+            console.log('baseMultipliersByMines[selectedMinesCount]:', baseMultipliersByMines[selectedMinesCount]);
+            
+            // ИСПРАВЛЕНО: В начале игры показываем только 1.00x
+            if (!gameActive) {
+                currentMultiplierElement.textContent = "1.00x";
+            }
+            
             currentMinesElement.textContent = selectedMinesCount;
             currentBetElement.textContent = currentBetAmount.toLocaleString();
         }
@@ -944,6 +952,9 @@
         function startGame() {
             if (gameActive || currentBetAmount > currentBalance) return;
             
+            console.log('Начало игры...');
+            console.log('Базовый множитель для', selectedMinesCount, 'мин:', baseMultipliersByMines[selectedMinesCount]);
+            
             // Снимаем ставку с баланса
             currentBalance -= currentBetAmount;
             localStorage.setItem('user_balance', currentBalance);
@@ -953,8 +964,8 @@
             gameActive = true;
             minesPositions = [];
             revealedCells = [];
-            baseMultiplier = baseMultipliersByMines[selectedMinesCount];
-            currentMultiplier = baseMultiplier; // ИСПРАВЛЕНО: начинаем с базового множителя
+            // ИСПРАВЛЕНО: Начинаем с 1.00x, а не с базового множителя
+            currentMultiplier = 1.0;
             gameStartTime = Date.now();
             gameId = 'MINES_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
             
@@ -967,7 +978,7 @@
             cashoutButton.disabled = false;
             betAmountInput.disabled = true;
             
-            // Обновляем отображение множителя
+            // ИСПРАВЛЕНО: Обновляем отображение множителя - показываем 1.00x
             updateMultiplierDisplay();
             
             // Прячем выбор количества мин во время игры
@@ -976,7 +987,7 @@
                 btn.style.cursor = 'not-allowed';
             });
             
-            console.log(`Игра начата. Ставка: ${currentBetAmount}₽, Мины: ${selectedMinesCount}, Базовый множитель: ${currentMultiplier}x`);
+            console.log(`Игра начата. Ставка: ${currentBetAmount}₽, Мины: ${selectedMinesCount}, Текущий множитель: ${currentMultiplier}x`);
         }
         
         // ГЕНЕРАЦИЯ ПОЗИЦИЙ МИН
@@ -1102,9 +1113,8 @@
                 btn.style.cursor = 'pointer';
             });
             
-            // Сбрасываем множитель
+            // ИСПРАВЛЕНО: Сбрасываем множитель к 1.00x
             currentMultiplier = 1.0;
-            baseMultiplier = baseMultipliersByMines[selectedMinesCount];
             updateMultiplierDisplay();
             
             // Сохраняем результат в историю
