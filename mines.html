@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>ORANGEW1N - Мины</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #FF6B00; --primary-dark: #FF4500; --primary-light: #FF8C00;
+            --secondary: #00C2FF; --success: #00C853; --danger: #FF3D00;
+            --warning: #FF9800; --mine: #FF3D00; --diamond: #00C2FF;
+            --bg-dark: #0A0A0A; --bg-card: #111111; --bg-input: #1A1A1A;
+            --bg-header: #1A1A1A; --text-primary: #FFFFFF; --text-secondary: #AAAAAA;
+            --border: #2A2A2A; --border-light: #3A3A3A;
+            --gradient: linear-gradient(135deg, #FF6B00, #FF4500);
+            --gradient-blue: linear-gradient(135deg, #00C2FF, #0088CC);
+            --cell-bg: #1A1A1A; --cell-hover: #252525;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Заголовок как у Ван Вин */
+        .game-header {
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .back-btn {
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 107, 0, 0.08);
+            border: 1px solid var(--border);
+        }
+        
+        .back-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: rgba(255, 107, 0, 0.15);
+        }
+        
+        .game-title {
+            font-size: 20px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Баннер баланса как у Ван Вин */
+        .balance-container {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            height: 44px;
+            padding-right: 4px;
+        }
+        
+        .balance-display {
+            padding: 0 16px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--gradient);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 140px;
+        }
+        
+        .balance-amount {
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: white;
+        }
+        
+        .balance-number {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .balance-currency {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-left: 1px;
+        }
+        
+        .deposit-btn {
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .deposit-btn:hover {
+            color: var(--primary);
+            background: rgba(255, 107, 0, 0.1);
+        }
+        
+        /* Основной контейнер */
+        .game-wrapper {
+            display: flex;
+            height: calc(100vh - 64px);
+            padding: 20px;
+            gap: 20px;
+            overflow: hidden;
+        }
+        
+        /* Левая панель - управление */
+        .control-panel {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        /* Карточки как у Ван Вин */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient);
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Поле ставки */
+        .bet-field {
+            margin-bottom: 16px;
+        }
+        
+        .bet-input-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .bet-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .bet-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.1);
+        }
+        
+        .bet-half-btn {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 107, 0, 0.1);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bet-half-btn:hover {
+            background: rgba(255, 107, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .bet-max-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--gradient);
+            border: 1px solid var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bet-max-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .quick-bets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .quick-bet {
+            padding: 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .quick-bet:hover {
+            background: rgba(255, 107, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .quick-bet.active {
+            background: var(--gradient);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        /* Слайдер мин */
+        .mines-control {
+            margin-bottom: 16px;
+        }
+        
+        .mines-slider-container {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .mines-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-input);
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .mines-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
+        }
+        
+        .mines-count-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+        
+        .mines-preview {
+            text-align: center;
+            padding: 12px;
+            background: var(--bg-input);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .mines-preview-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        
+        .mines-preview-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* Кнопки игры */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid transparent;
+        }
+        
+        .play-btn {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .play-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+        }
+        
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .cashout-btn {
+            background: var(--gradient-blue);
+            color: white;
+        }
+        
+        .cashout-btn:hover:not(:disabled) {
+            background: #0088CC;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 200, 255, 0.2);
+        }
+        
+        .cashout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Правая панель - игровое поле */
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .game-board {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .board-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .game-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        
+        .mines-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            background: var(--cell-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cell::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .cell:hover:not(.revealed):not(.mine):not(.diamond)::before {
+            opacity: 1;
+        }
+        
+        .cell:hover:not(.revealed):not(.mine):not(.diamond) {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cell.revealed {
+            cursor: default;
+            border-color: var(--border-light);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .cell.revealed::before {
+            display: none;
+        }
+        
+        .cell.mine {
+            background: var(--mine);
+            border-color: var(--danger);
+            animation: mineReveal 0.5s ease-out;
+        }
+        
+        @keyframes mineReveal {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .cell.mine i {
+            color: white;
+            animation: bounce 0.5s ease-out;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .cell.diamond {
+            background: var(--diamond);
+            border-color: var(--secondary);
+            animation: diamondReveal 0.5s ease-out;
+        }
+        
+        @keyframes diamondReveal {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .cell.diamond i {
+            color: white;
+            animation: spin 0.5s ease-out;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .cell-icon {
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        
+        /* Панель множителя */
+        .multiplier-panel {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .multiplier-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .multiplier-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .multiplier-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--success);
+            text-shadow: 0 0 20px rgba(0, 200, 83, 0.3);
+        }
+        
+        .win-amount {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .win-value {
+            color: var(--success);
+            font-weight: 700;
+        }
+        
+        /* Адаптация для мобильных */
+        @media (max-width: 1024px) {
+            .game-wrapper {
+                flex-direction: column;
+                height: auto;
+                max-height: calc(100vh - 64px);
+                overflow-y: auto;
+                padding: 16px;
+                gap: 16px;
+            }
+            
+            .control-panel {
+                width: 100%;
+                order: 2;
+            }
+            
+            .game-area {
+                order: 1;
+            }
+            
+            .mines-grid {
+                min-height: 300px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .game-header {
+                padding: 0 16px;
+                height: 60px;
+            }
+            
+            .balance-display {
+                min-width: 120px;
+                padding: 0 12px;
+            }
+            
+            .balance-amount {
+                font-size: 13px;
+            }
+            
+            .game-title {
+                font-size: 18px;
+            }
+            
+            .game-wrapper {
+                padding: 12px;
+            }
+            
+            .card {
+                padding: 16px;
+            }
+            
+            .mines-grid {
+                gap: 8px;
+            }
+            
+            .cell {
+                border-radius: 10px;
+            }
+            
+            .cell-icon {
+                font-size: 18px;
+            }
+            
+            .multiplier-value {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-header {
+                padding: 0 12px;
+                height: 56px;
+            }
+            
+            .back-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .balance-container {
+                height: 40px;
+            }
+            
+            .balance-display {
+                height: 40px;
+                min-width: 100px;
+                padding: 0 10px;
+            }
+            
+            .deposit-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .game-wrapper {
+                padding: 10px;
+                gap: 12px;
+            }
+            
+            .card {
+                padding: 14px;
+                border-radius: 14px;
+            }
+            
+            .bet-input {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+            
+            .bet-half-btn, .bet-max-btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+            
+            .action-btn {
+                padding: 14px;
+                font-size: 14px;
+            }
+            
+            .mines-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 6px;
+            }
+            
+            .cell {
+                border-radius: 8px;
+            }
+            
+            .multiplier-panel {
+                padding: 16px;
+            }
+            
+            .multiplier-value {
+                font-size: 24px;
+            }
+        }
+        
+        /* Ховеры на мобильных */
+        @media (hover: none) and (pointer: coarse) {
+            .cell:hover:not(.revealed):not(.mine):not(.diamond) {
+                transform: none;
+                border-color: var(--border);
+            }
+            
+            .cell:active:not(.revealed):not(.mine):not(.diamond) {
+                border-color: var(--primary);
+                transform: scale(0.98);
+            }
+            
+            .back-btn:active {
+                background: rgba(255, 107, 0, 0.2);
+            }
+            
+            .quick-bet:active {
+                background: rgba(255, 107, 0, 0.2);
+            }
+            
+            .action-btn:active:not(:disabled) {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка как у Ван Вин -->
+    <header class="game-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="game-title">МИНЫ</div>
+            </div>
+            
+            <!-- Баннер баланса -->
+            <div class="balance-container">
+                <div class="balance-display">
+                    <div class="balance-amount">
+                        <span class="balance-number" id="gameBalance">0</span>
+                        <span class="balance-currency">₽</span>
+                    </div>
+                </div>
+                <button class="deposit-btn" onclick="showDepositModal()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контейнер -->
+    <div class="game-wrapper">
+        <!-- Левая панель - управление -->
+        <div class="control-panel">
+            <!-- Карточка ставки -->
+            <div class="card">
+                <div class="card-title">СТАВКА</div>
+                <div class="bet-field">
+                    <div class="bet-input-wrapper">
+                        <input type="number" id="betAmount" class="bet-input" value="100" min="10" max="100000">
+                        <button class="bet-half-btn" onclick="setHalfBet()">½</button>
+                        <button class="bet-max-btn" onclick="setMaxBet()">MAX</button>
+                    </div>
+                    <div class="quick-bets">
+                        <button class="quick-bet" data-amount="10">10 ₽</button>
+                        <button class="quick-bet" data-amount="100">100 ₽</button>
+                        <button class="quick-bet" data-amount="500">500 ₽</button>
+                        <button class="quick-bet" data-amount="1000">1 000 ₽</button>
+                        <button class="quick-bet" data-amount="5000">5 000 ₽</button>
+                        <button class="quick-bet" data-amount="10000">10 000 ₽</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Карточка мин -->
+            <div class="card">
+                <div class="card-title">КОЛИЧЕСТВО МИН</div>
+                <div class="mines-control">
+                    <div class="mines-slider-container">
+                        <input type="range" id="minesSlider" class="mines-slider" min="1" max="24" value="5">
+                        <div class="mines-count-display">
+                            <span>1</span>
+                            <span id="currentMines">5</span>
+                            <span>24</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Карточка действий -->
+            <div class="card">
+                <div class="action-buttons">
+                    <button id="playBtn" class="action-btn play-btn" onclick="startGame()">
+                        <i class="fas fa-play"></i>
+                        ИГРАТЬ
+                    </button>
+                    <button id="cashoutBtn" class="action-btn cashout-btn" onclick="cashout()" disabled>
+                        <i class="fas fa-wallet"></i>
+                        ЗАБРАТЬ
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Правая панель - игровое поле -->
+        <div class="game-area">
+            <!-- Игровое поле -->
+            <div class="game-board">
+                <div class="board-header">
+                    <h2 class="board-title">ИГРОВОЕ ПОЛЕ 5×5</h2>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Открыто</div>
+                            <div class="stat-value" id="openedCells">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Мин</div>
+                            <div class="stat-value" id="minesCount">5</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Множитель</div>
+                            <div class="stat-value" id="currentMultiplier">1.00x</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mines-grid" id="minesGrid">
+                    <!-- 25 клеток будут созданы через JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Панель множителя -->
+            <div class="multiplier-panel">
+                <div class="multiplier-info">
+                    <div class="multiplier-label">ПОТЕНЦИАЛЬНЫЙ ВЫИГРЫШ</div>
+                    <div class="multiplier-value" id="potentialMultiplier">1.00x</div>
+                    <div class="win-amount">
+                        <span class="win-value" id="potentialWin">0 ₽</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // НАСТРОЙКИ SUPABASE
+        const SUPABASE_URL = 'https://lllmhsatptxscjjoluov.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsbG1oc2F0cHR4c2Nqam9sdW92Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjQ3NTksImV4cCI6MjA4NTkwMDc1OX0.wtzQkF54-HdALvDixNADLwoVqdw7AIPSOM4hmBISQ8U';
+        
+        // Инициализация Supabase
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Переменные игры
+        let currentBalance = 0;
+        let userId = null;
+        let gameActive = false;
+        let currentBet = 100;
+        let minesCount = 5;
+        let openedCells = 0;
+        let gameCells = [];
+        let gameMultiplier = 1.0;
+        let currentGameId = null;
+        let cashoutAvailable = false;
+        
+        // Элементы DOM
+        const gameBalanceElement = document.getElementById('gameBalance');
+        const betAmountInput = document.getElementById('betAmount');
+        const minesSlider = document.getElementById('minesSlider');
+        const currentMinesElement = document.getElementById('currentMines');
+        const minesCountElement = document.getElementById('minesCount');
+        const playBtn = document.getElementById('playBtn');
+        const cashoutBtn = document.getElementById('cashoutBtn');
+        const minesGrid = document.getElementById('minesGrid');
+        const openedCellsElement = document.getElementById('openedCells');
+        const currentMultiplierElement = document.getElementById('currentMultiplier');
+        const potentialMultiplierElement = document.getElementById('potentialMultiplier');
+        const potentialWinElement = document.getElementById('potentialWin');
+        
+        // Инициализация пользователя
+        function initUser() {
+            userId = localStorage.getItem('user_id');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+                localStorage.setItem('user_id', userId);
+                localStorage.setItem('username', 'Игрок');
+            }
+            
+            const savedBalance = localStorage.getItem('user_balance');
+            if (savedBalance) {
+                currentBalance = parseInt(savedBalance);
+            } else {
+                currentBalance = 1000;
+                localStorage.setItem('user_balance', currentBalance);
+            }
+            
+            updateBalanceDisplay();
+            createGameGrid();
+            
+            // Настройка быстрых ставок
+            document.querySelectorAll('.quick-bet').forEach(button => {
+                button.addEventListener('click', function() {
+                    const amount = parseInt(this.dataset.amount);
+                    betAmountInput.value = amount;
+                    currentBet = amount;
+                    
+                    document.querySelectorAll('.quick-bet').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    updatePotentialWin();
+                });
+            });
+            
+            // Настройка слайдера мин
+            minesSlider.addEventListener('input', function() {
+                minesCount = parseInt(this.value);
+                currentMinesElement.textContent = minesCount;
+                minesCountElement.textContent = minesCount;
+                updatePotentialWin();
+            });
+            
+            // Настройка поля ставки
+            betAmountInput.addEventListener('input', function() {
+                currentBet = parseInt(this.value) || 100;
+                if (currentBet < 10) currentBet = 10;
+                if (currentBet > 100000) currentBet = 100000;
+                this.value = currentBet;
+                updatePotentialWin();
+            });
+            
+            // Инициализация быстрой ставки
+            const quickBet100 = document.querySelector('.quick-bet[data-amount="100"]');
+            if (quickBet100) quickBet100.click();
+            
+            updatePotentialWin();
+        }
+        
+        // Создание игровой сетки
+        function createGameGrid() {
+            minesGrid.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.dataset.type = 'hidden';
+                
+                cell.innerHTML = '<i class="fas fa-question cell-icon"></i>';
+                
+                cell.addEventListener('click', function() {
+                    if (gameActive && !cell.classList.contains('revealed')) {
+                        revealCell(i);
+                    }
+                });
+                
+                minesGrid.appendChild(cell);
+            }
+        }
+        
+        // Расчет множителя
+        function calculateMultiplier(opened) {
+            const totalCells = 25;
+            let multiplier = 1.0;
+            
+            for (let i = 0; i < opened; i++) {
+                multiplier *= (totalCells - minesCount - i) / (totalCells - i);
+            }
+            
+            return opened > 0 ? 1 / multiplier : 1.0;
+        }
+        
+        // Обновление потенциального выигрыша
+        function updatePotentialWin() {
+            const multiplier = calculateMultiplier(1);
+            const winAmount = Math.round(currentBet * multiplier);
+            
+            potentialMultiplierElement.textContent = multiplier.toFixed(2) + 'x';
+            potentialWinElement.textContent = winAmount.toLocaleString() + ' ₽';
+        }
+        
+        // Установить половину ставки
+        function setHalfBet() {
+            const halfBet = Math.floor(currentBalance / 2);
+            if (halfBet >= 10) {
+                currentBet = halfBet;
+                betAmountInput.value = currentBet;
+                updatePotentialWin();
+            }
+        }
+        
+        // Установить максимальную ставку
+        function setMaxBet() {
+            currentBet = Math.min(currentBalance, 100000);
+            betAmountInput.value = currentBet;
+            updatePotentialWin();
+        }
+        
+        // Обновление отображения баланса
+        function updateBalanceDisplay() {
+            gameBalanceElement.textContent = currentBalance.toLocaleString();
+        }
+        
+        // Начало игры
+        async function startGame() {
+            if (gameActive) return;
+            
+            // Проверка баланса
+            if (currentBet > currentBalance) {
+                showNotification('Недостаточно средств', 'Пополните баланс');
+                return;
+            }
+            
+            if (currentBet < 10) {
+                showNotification('Минимальная ставка', '10 ₽');
+                return;
+            }
+            
+            // Сброс игры
+            resetGame();
+            gameActive = true;
+            
+            // Списываем ставку
+            const newBalance = currentBalance - currentBet;
+            currentBalance = newBalance;
+            localStorage.setItem('user_balance', newBalance);
+            updateBalanceDisplay();
+            
+            // Создание игрового поля
+            generateGameField();
+            
+            // Обновление UI
+            playBtn.disabled = true;
+            cashoutBtn.disabled = false;
+            betAmountInput.disabled = true;
+            minesSlider.disabled = true;
+            
+            // Создание записи об игре
+            currentGameId = 'mines_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            
+            // Сохраняем игру в Supabase
+            try {
+                const { error } = await supabaseClient
+                    .from('game_history')
+                    .insert({
+                        game_id: currentGameId,
+                        user_id: userId,
+                        game_type: 'mines',
+                        bet_amount: currentBet,
+                        mines_count: minesCount,
+                        status: 'active',
+                        created_at: new Date().toISOString()
+                    });
+                    
+                if (error) throw error;
+            } catch (error) {
+                console.error('Ошибка сохранения игры:', error);
+            }
+            
+            showNotification('Игра началась', `Ставка: ${currentBet.toLocaleString()} ₽`);
+        }
+        
+        // Сброс игры
+        function resetGame() {
+            gameActive = false;
+            openedCells = 0;
+            gameMultiplier = 1.0;
+            gameCells = [];
+            cashoutAvailable = false;
+            
+            // Сброс клеток
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.className = 'cell';
+                cell.dataset.type = 'hidden';
+                cell.innerHTML = '<i class="fas fa-question cell-icon"></i>';
+            });
+            
+            // Обновление UI
+            openedCellsElement.textContent = '0';
+            currentMultiplierElement.textContent = '1.00x';
+        }
+        
+        // Генерация игрового поля
+        function generateGameField() {
+            gameCells = Array(25).fill('diamond');
+            
+            // Расставляем мины
+            let minesPlaced = 0;
+            while (minesPlaced < minesCount) {
+                const randomIndex = Math.floor(Math.random() * 25);
+                if (gameCells[randomIndex] !== 'mine') {
+                    gameCells[randomIndex] = 'mine';
+                    minesPlaced++;
+                }
+            }
+        }
+        
+        // Открытие клетки
+        async function revealCell(index) {
+            if (!gameActive || gameCells.length === 0) return;
+            
+            const cell = document.querySelector(`.cell[data-index="${index}"]`);
+            
+            if (cell.classList.contains('revealed')) return;
+            
+            const cellType = gameCells[index];
+            cell.classList.add('revealed', cellType);
+            cell.dataset.type = cellType;
+            
+            if (cellType === 'mine') {
+                cell.innerHTML = '<i class="fas fa-bomb cell-icon"></i>';
+                await gameOver(false);
+            } else {
+                cell.innerHTML = '<i class="fas fa-gem cell-icon"></i>';
+                openedCells++;
+                gameMultiplier = calculateMultiplier(openedCells);
+                
+                // Обновление UI
+                openedCellsElement.textContent = openedCells;
+                currentMultiplierElement.textContent = gameMultiplier.toFixed(2) + 'x';
+                
+                cashoutAvailable = true;
+                
+                // Проверка на победу
+                if (openedCells === 25 - minesCount) {
+                    await gameOver(true);
+                }
+            }
+        }
+        
+        // Забрать выигрыш
+        async function cashout() {
+            if (!gameActive || !cashoutAvailable) return;
+            
+            const winAmount = Math.round(currentBet * gameMultiplier);
+            const newBalance = currentBalance + winAmount;
+            currentBalance = newBalance;
+            localStorage.setItem('user_balance', newBalance);
+            updateBalanceDisplay();
+            
+            // Сохраняем результат игры
+            await saveGameResult('won', winAmount);
+            
+            showNotification('Успешно', `+${winAmount.toLocaleString()} ₽`);
+            
+            // Сбрасываем игру
+            resetGameState();
+        }
+        
+        // Конец игры
+        async function gameOver(win) {
+            gameActive = false;
+            
+            // Показываем все мины
+            gameCells.forEach((cellType, index) => {
+                if (cellType === 'mine') {
+                    const cell = document.querySelector(`.cell[data-index="${index}"]`);
+                    cell.classList.add('revealed', 'mine');
+                    cell.innerHTML = '<i class="fas fa-bomb cell-icon"></i>';
+                }
+            });
+            
+            if (win) {
+                const winAmount = Math.round(currentBet * gameMultiplier);
+                const newBalance = currentBalance + winAmount;
+                currentBalance = newBalance;
+                localStorage.setItem('user_balance', newBalance);
+                updateBalanceDisplay();
+                
+                await saveGameResult('won', winAmount);
+                showNotification('Победа!', `+${winAmount.toLocaleString()} ₽`);
+            } else {
+                await saveGameResult('lost', 0);
+                showNotification('Поражение', 'Попробуйте еще раз');
+            }
+            
+            resetGameState();
+        }
+        
+        // Сброс состояния игры
+        function resetGameState() {
+            gameActive = false;
+            playBtn.disabled = false;
+            cashoutBtn.disabled = true;
+            betAmountInput.disabled = false;
+            minesSlider.disabled = false;
+            
+            setTimeout(() => {
+                resetGame();
+                updatePotentialWin();
+            }, 2000);
+        }
+        
+        // Сохранение результата игры
+        async function saveGameResult(result, winAmount) {
+            if (!currentGameId) return;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('game_history')
+                    .update({
+                        status: 'completed',
+                        result: result,
+                        win_amount: winAmount,
+                        multiplier: gameMultiplier,
+                        cells_opened: openedCells,
+                        completed_at: new Date().toISOString()
+                    })
+                    .eq('game_id', currentGameId);
+                    
+                if (error) throw error;
+            } catch (error) {
+                console.error('Ошибка сохранения результата:', error);
+            }
+        }
+        
+        // Навигация
+        function goBack() {
+            window.history.back();
+        }
+        
+        function goHome() {
+            window.location.href = 'deepseek_html_20260209_30d3f6 (1).html';
+        }
+        
+        // Уведомления
+        function showNotification(title, message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 80px; right: 20px;
+                background: var(--bg-card); color: var(--text-primary);
+                padding: 14px 18px; border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                z-index: 1000; font-weight: 600; max-width: calc(100vw - 40px);
+                border-left: 4px solid var(--success);
+                transform: translateX(400px); transition: transform 0.3s;
+                border: 1px solid var(--border); backdrop-filter: blur(10px);
+            `;
+            
+            notification.innerHTML = `
+                <div style="font-size: 15px; margin-bottom: 6px; font-weight: 800; color: var(--success); display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-bell"></i>
+                    <span>${title}</span>
+                </div>
+                <div style="font-size: 13px; opacity: 0.9;">${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 2000);
+        }
+        
+        // Модалка пополнения
+        function showDepositModal() {
+            showNotification('Пополнение', 'Доступно в главном меню');
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            initUser();
+            
+            // Предотвращение зума на мобильных
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('focus', function() {
+                    if (window.innerWidth <= 768) {
+                        this.style.fontSize = '16px';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
