@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Multiplier X - Угадай множитель | ORANGEW1N</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #FF6B00; --primary-dark: #FF4500; --primary-light: #FF8C00;
+            --secondary: #00C2FF; --success: #00C853; --danger: #FF3D00;
+            --warning: #FF9800;
+            --bg-dark: #0A0A0A; --bg-card: #111111; --text-primary: #FFFFFF; 
+            --text-secondary: #AAAAAA; --border: #2A2A2A; 
+            --gradient: linear-gradient(135deg, #FF6B00, #FF4500);
+            --success-gradient: linear-gradient(135deg, #00C853, #00B248);
+            --danger-gradient: linear-gradient(135deg, #FF3D00, #D32F2F);
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            height: 95vh;
+            max-height: 920px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-header {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .back-button {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 107, 0, 0.1);
+        }
+        
+        .balance-display {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .balance-amount {
+            color: var(--primary);
+        }
+        
+        .game-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .game-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .game-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .multiplier-display {
+            background: var(--bg-dark);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 2px solid var(--border);
+            text-align: center;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .hidden-multiplier {
+            font-size: 64px;
+            font-weight: 900;
+            color: var(--text-secondary);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .hidden-multiplier.revealed {
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(255, 107, 0, 0.5);
+            animation: pulse 1s infinite;
+        }
+        
+        .multiplier-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .multiplier-option {
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .multiplier-option:hover:not(.selected):not(.disabled) {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+        }
+        
+        .multiplier-option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 107, 0, 0.1);
+        }
+        
+        .multiplier-option.correct {
+            border-color: var(--success);
+            background: rgba(0, 200, 83, 0.1);
+        }
+        
+        .multiplier-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(255, 61, 0, 0.1);
+        }
+        
+        .multiplier-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .multiplier-value {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .multiplier-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .bet-section {
+            background: var(--bg-dark);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .bet-amount {
+            margin-bottom: 20px;
+        }
+        
+        .bet-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .amount-input-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 107, 0, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 5px;
+        }
+        
+        .amount-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            padding: 12px 15px;
+            outline: none;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .quick-amount {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .quick-amount:hover {
+            background: rgba(255, 107, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .game-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .start-button {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .start-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.3);
+        }
+        
+        .reveal-button {
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .reveal-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 200, 83, 0.3);
+        }
+        
+        .game-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value.win {
+            color: var(--success);
+            text-shadow: 0 0 10px rgba(0, 200, 83, 0.3);
+        }
+        
+        .stat-value.loss {
+            color: var(--danger);
+            text-shadow: 0 0 10px rgba(255, 61, 0, 0.3);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .history-section {
+            background: var(--bg-dark);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+        }
+        
+        .history-list {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 5px;
+            height: 45px;
+        }
+        
+        .history-item {
+            min-width: 50px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .history-win {
+            background: rgba(0, 200, 83, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 200, 83, 0.3);
+        }
+        
+        .history-lose {
+            background: rgba(255, 61, 0, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 61, 0, 0.3);
+        }
+        
+        /* АНИМАЦИИ */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        /* МОДАЛЬНОЕ ОКНО РЕЗУЛЬТАТА */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+        
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+        }
+        
+        .modal-icon.win {
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .modal-icon.lose {
+            background: var(--danger-gradient);
+            color: white;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+        
+        .modal-message {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        
+        .modal-amount {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 25px;
+        }
+        
+        .modal-amount.win {
+            color: var(--success);
+            text-shadow: 0 0 15px rgba(0, 200, 83, 0.5);
+        }
+        
+        .modal-amount.lose {
+            color: var(--danger);
+            text-shadow: 0 0 15px rgba(255, 61, 0, 0.5);
+        }
+        
+        .modal-button {
+            background: var(--gradient);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            padding: 16px 30px;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .modal-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.4);
+        }
+        
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
+        @media (max-height: 700px) {
+            .game-container {
+                height: 97vh;
+                max-height: 700px;
+            }
+            
+            .multiplier-display {
+                min-height: 150px;
+                padding: 20px;
+            }
+            
+            .hidden-multiplier {
+                font-size: 54px;
+            }
+            
+            .multiplier-option {
+                padding: 20px 10px;
+            }
+            
+            .multiplier-value {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .game-container {
+                height: 96vh;
+                border-radius: 15px;
+            }
+            
+            .game-header {
+                padding: 12px 15px;
+            }
+            
+            .game-content {
+                padding: 15px;
+            }
+            
+            .multiplier-display {
+                padding: 25px 15px;
+                min-height: 140px;
+            }
+            
+            .hidden-multiplier {
+                font-size: 48px;
+            }
+            
+            .options-grid {
+                gap: 10px;
+            }
+            
+            .multiplier-option {
+                padding: 18px 8px;
+            }
+            
+            .multiplier-value {
+                font-size: 24px;
+            }
+            
+            .bet-section {
+                padding: 15px;
+            }
+            
+            .quick-amounts {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hidden-multiplier {
+                font-size: 42px;
+            }
+            
+            .multiplier-value {
+                font-size: 22px;
+            }
+            
+            .quick-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <button class="back-button" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Назад
+            </button>
+            <div class="balance-display">
+                <i class="fas fa-coins" style="color: var(--primary);"></i>
+                <span id="gameBalance">0</span> ₽
+            </div>
+        </div>
+        
+        <div class="game-content">
+            <h1 class="game-title">MULTIPLIER X</h1>
+            <p class="game-subtitle">Угадай правильный множитель!</p>
+            
+            <div class="multiplier-display">
+                <div class="hidden-multiplier" id="hiddenMultiplier">
+                    ?x
+                </div>
+                <div class="multiplier-label" id="multiplierLabel">
+                    Скрытый множитель
+                </div>
+            </div>
+            
+            <div class="stats-section">
+                <div class="stat-box">
+                    <div class="stat-value win" id="winStreak">0</div>
+                    <div class="stat-label">ПОБЕД ПОДРЯД</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value loss" id="lossStreak">0</div>
+                    <div class="stat-label">ПРОИГРЫШИ ПОДРЯД</div>
+                </div>
+            </div>
+            
+            <div class="options-grid" id="optionsGrid">
+                <!-- Множители будут генерироваться через JS -->
+            </div>
+            
+            <div class="bet-section">
+                <div class="bet-amount">
+                    <label class="bet-label">СУММА СТАВКИ (₽)</label>
+                    <div class="amount-input-container">
+                        <input type="number" id="betAmount" class="amount-input" value="100" min="1">
+                    </div>
+                    
+                    <div class="quick-amounts">
+                        <div class="quick-amount" data-amount="50">50 ₽</div>
+                        <div class="quick-amount" data-amount="100">100 ₽</div>
+                        <div class="quick-amount" data-amount="500">500 ₽</div>
+                        <div class="quick-amount" data-amount="1000">1000 ₽</div>
+                        <div class="quick-amount" id="halfBalance">½ баланса</div>
+                        <div class="quick-amount" id="maxBalance">МАКС</div>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="game-button start-button" id="startButton">
+                        <i class="fas fa-play"></i>
+                        НОВАЯ ИГРА
+                    </button>
+                    <button class="game-button reveal-button" id="revealButton" disabled>
+                        <i class="fas fa-eye"></i>
+                        ПРОВЕРИТЬ
+                    </button>
+                </div>
+            </div>
+            
+            <div class="history-section">
+                <div class="section-title">ПОСЛЕДНИЕ РЕЗУЛЬТАТЫ</div>
+                <div class="history-list" id="historyList">
+                    <!-- История будет добавляться здесь -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // НАСТРОЙКИ SUPABASE
+        const SUPABASE_URL = 'https://lllmhsatptxscjjoluov.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsbG1oc2F0cHR4c2Nqam9sdW92Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjQ3NTksImV4cCI6MjA4NTkwMDc1OX0.wtzQkF54-HdALvDixNADLwoVqdw7AIPSOM4hmBISQ8U';
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // ПЕРЕМЕННЫЕ ИГРЫ
+        let currentBalance = 0;
+        let currentBetAmount = 100;
+        let userId = null;
+        let gameHistory = [];
+        
+        // ПЕРЕМЕННЫЕ ТЕКУЩЕЙ ИГРЫ
+        let gameActive = false;
+        let selectedMultiplier = null;
+        let correctMultiplier = null;
+        let currentMultipliers = [];
+        let gameId = null;
+        
+        // СТАТИСТИКА
+        let winStreak = 0;
+        let lossStreak = 0;
+        let gamesPlayed = 0;
+        
+        // ДОСТУПНЫЕ МНОЖИТЕЛИ
+        const AVAILABLE_MULTIPLIERS = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 10];
+        
+        // СИСТЕМА ПОДКРУТКИ
+        const MAX_LOSS_STREAK = 3;
+        const LOSS_BOOST = 0.2;
+        
+        // ЭЛЕМЕНТЫ
+        const gameBalanceElement = document.getElementById('gameBalance');
+        const betAmountInput = document.getElementById('betAmount');
+        const startButton = document.getElementById('startButton');
+        const revealButton = document.getElementById('revealButton');
+        const hiddenMultiplier = document.getElementById('hiddenMultiplier');
+        const multiplierLabel = document.getElementById('multiplierLabel');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const historyList = document.getElementById('historyList');
+        const winStreakElement = document.getElementById('winStreak');
+        const lossStreakElement = document.getElementById('lossStreak');
+        
+        // ИНИЦИАЛИЗАЦИЯ ИГРЫ
+        function initGame() {
+            console.log('Инициализация игры Multiplier X...');
+            
+            // Получаем user_id из localStorage
+            userId = localStorage.getItem('user_id');
+            if (!userId) {
+                userId = 'multix_temp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+                localStorage.setItem('user_id', userId);
+                localStorage.setItem('username', 'Игрок');
+            }
+            
+            // Получаем баланс из localStorage
+            const savedBalance = localStorage.getItem('user_balance');
+            if (savedBalance) {
+                currentBalance = parseInt(savedBalance);
+            } else {
+                currentBalance = 1000;
+                localStorage.setItem('user_balance', currentBalance);
+            }
+            
+            // Загружаем статистику
+            loadPlayerStats();
+            
+            updateBalanceDisplay();
+            setupEventListeners();
+            loadLocalHistory();
+            updateStatsDisplay();
+            
+            console.log('Игра Multiplier X инициализирована. Баланс:', currentBalance, '₽');
+        }
+        
+        // ЗАГРУЗКА СТАТИСТИКИ ИГРОКА
+        function loadPlayerStats() {
+            const stats = localStorage.getItem('multix_stats');
+            if (stats) {
+                try {
+                    const parsed = JSON.parse(stats);
+                    winStreak = parsed.winStreak || 0;
+                    lossStreak = parsed.lossStreak || 0;
+                    gamesPlayed = parsed.gamesPlayed || 0;
+                } catch (e) {
+                    console.error('Ошибка загрузки статистики:', e);
+                }
+            }
+        }
+        
+        // СОХРАНЕНИЕ СТАТИСТИКИ ИГРОКА
+        function savePlayerStats() {
+            const stats = {
+                winStreak: winStreak,
+                lossStreak: lossStreak,
+                gamesPlayed: gamesPlayed,
+                lastPlayed: new Date().toISOString()
+            };
+            localStorage.setItem('multix_stats', JSON.stringify(stats));
+        }
+        
+        // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ СТАТИСТИКИ
+        function updateStatsDisplay() {
+            winStreakElement.textContent = winStreak;
+            lossStreakElement.textContent = lossStreak;
+        }
+        
+        // ГЕНЕРАЦИЯ МНОЖИТЕЛЕЙ С ПОДКРУТКОЙ
+        function generateMultipliers() {
+            gamesPlayed++;
+            
+            // Количество множителей (от 3 до 5)
+            const optionCount = Math.floor(Math.random() * 3) + 3;
+            
+            // Базовое распределение
+            let baseProbability = Math.random();
+            
+            // Увеличиваем вероятность проигрыша при серии проигрышей
+            if (lossStreak > 0) {
+                const streakBoost = Math.min(0.5, lossStreak * LOSS_BOOST);
+                baseProbability = Math.max(0.1, baseProbability - streakBoost);
+            }
+            
+            // Выбираем правильный множитель
+            let correctMultiplier;
+            
+            if (baseProbability < 0.7) {
+                // 70% - множитель от 1.5x до 3x (легче угадать)
+                const easyMultipliers = AVAILABLE_MULTIPLIERS.filter(m => m <= 3);
+                correctMultiplier = easyMultipliers[Math.floor(Math.random() * easyMultipliers.length)];
+            } else {
+                // 30% - множитель от 3x до 10x (сложнее угадать)
+                const hardMultipliers = AVAILABLE_MULTIPLIERS.filter(m => m > 3);
+                correctMultiplier = hardMultipliers[Math.floor(Math.random() * hardMultipliers.length)];
+            }
+            
+            // Выбираем неправильные множители
+            const wrongMultipliers = AVAILABLE_MULTIPLIERS
+                .filter(m => m !== correctMultiplier)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, optionCount - 1);
+            
+            // Создаем массив всех множителей и перемешиваем
+            const allMultipliers = [correctMultiplier, ...wrongMultipliers];
+            allMultipliers.sort(() => Math.random() - 0.5);
+            
+            console.log(`Генерация множителей. Правильный: ${correctMultiplier}x, варианты: ${allMultipliers.join(', ')}, вероятность проигрыша: ${(baseProbability*100).toFixed(1)}%`);
+            
+            return {
+                options: allMultipliers,
+                correct: correctMultiplier
+            };
+        }
+        
+        // НАСТРОЙКА ОБРАБОТЧИКОВ СОБЫТИЙ
+        function setupEventListeners() {
+            // Изменение суммы ставки
+            betAmountInput.addEventListener('input', () => {
+                currentBetAmount = parseInt(betAmountInput.value) || 0;
+                validateBetAmount();
+            });
+            
+            // Быстрый выбор суммы
+            document.querySelectorAll('.quick-amount').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.id === 'halfBalance') {
+                        currentBetAmount = Math.floor(currentBalance / 2);
+                    } else if (this.id === 'maxBalance') {
+                        currentBetAmount = currentBalance;
+                    } else {
+                        currentBetAmount = parseInt(this.dataset.amount);
+                    }
+                    
+                    betAmountInput.value = currentBetAmount;
+                    validateBetAmount();
+                });
+            });
+            
+            // Кнопка НОВАЯ ИГРА
+            startButton.addEventListener('click', startNewGame);
+            
+            // Кнопка ПРОВЕРИТЬ
+            revealButton.addEventListener('click', revealResult);
+        }
+        
+        // ПРОВЕРКА ВАЛИДНОСТИ СТАВКИ
+        function validateBetAmount() {
+            if (currentBetAmount < 1) {
+                currentBetAmount = 1;
+                betAmountInput.value = 1;
+            }
+            
+            if (currentBetAmount > currentBalance) {
+                currentBetAmount = currentBalance;
+                betAmountInput.value = currentBalance;
+            }
+            
+            updateGameStatus();
+        }
+        
+        // ОБНОВЛЕНИЕ СТАТУСА ИГРЫ
+        function updateGameStatus() {
+            const hasSelected = selectedMultiplier !== null;
+            const canStart = !gameActive && currentBetAmount <= currentBalance;
+            const canReveal = gameActive && hasSelected;
+            
+            startButton.disabled = !canStart;
+            revealButton.disabled = !canReveal;
+            
+            if (gameActive) {
+                startButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ИГРА ИДЁТ';
+                if (hasSelected) {
+                    revealButton.innerHTML = '<i class="fas fa-eye"></i> ПРОВЕРИТЬ';
+                } else {
+                    revealButton.innerHTML = '<i class="fas fa-exclamation-circle"></i> ВЫБЕРИТЕ МНОЖИТЕЛЬ';
+                }
+            } else {
+                startButton.innerHTML = '<i class="fas fa-play"></i> НОВАЯ ИГРА';
+                revealButton.innerHTML = '<i class="fas fa-eye"></i> ПРОВЕРИТЬ';
+            }
+            
+            if (!canStart && !gameActive) {
+                startButton.innerHTML = '<i class="fas fa-exclamation-circle"></i> НЕДОСТАТОЧНО СРЕДСТВ';
+            }
+        }
+        
+        // НАЧАЛО НОВОЙ ИГРЫ
+        function startNewGame() {
+            if (gameActive || currentBetAmount > currentBalance) return;
+            
+            // Снимаем ставку с баланса
+            currentBalance -= currentBetAmount;
+            localStorage.setItem('user_balance', currentBalance);
+            updateBalanceDisplay();
+            
+            // Сбрасываем состояние игры
+            gameActive = true;
+            selectedMultiplier = null;
+            gameId = 'MULTIX_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            
+            // Генерируем множители
+            const generated = generateMultipliers();
+            currentMultipliers = generated.options;
+            correctMultiplier = generated.correct;
+            
+            // Обновляем UI
+            hiddenMultiplier.textContent = '?x';
+            hiddenMultiplier.className = 'hidden-multiplier';
+            multiplierLabel.textContent = 'Скрытый множитель';
+            createOptionsGrid();
+            updateGameStatus();
+            
+            // Блокируем поле ставки
+            betAmountInput.disabled = true;
+            
+            console.log(`Новая игра начата. Ставка: ${currentBetAmount}₽, Правильный множитель: ${correctMultiplier}x`);
+        }
+        
+        // СОЗДАНИЕ СЕТКИ С МНОЖИТЕЛЯМИ
+        function createOptionsGrid() {
+            optionsGrid.innerHTML = '';
+            
+            currentMultipliers.forEach((multiplier, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'multiplier-option';
+                optionElement.dataset.multiplier = multiplier;
+                optionElement.dataset.index = index;
+                
+                optionElement.innerHTML = `
+                    <div class="multiplier-value">${multiplier}x</div>
+                    <div class="multiplier-text">Множитель</div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectMultiplier(multiplier, index));
+                optionsGrid.appendChild(optionElement);
+            });
+        }
+        
+        // ВЫБОР МНОЖИТЕЛЯ
+        function selectMultiplier(multiplier, index) {
+            if (!gameActive || selectedMultiplier !== null) return;
+            
+            selectedMultiplier = multiplier;
+            
+            // Обновляем UI выбранного варианта
+            document.querySelectorAll('.multiplier-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            const selectedOption = document.querySelector(`.multiplier-option[data-index="${index}"]`);
+            selectedOption.classList.add('selected');
+            
+            updateGameStatus();
+            
+            console.log(`Выбран множитель: ${multiplier}x`);
+        }
+        
+        // ПРОВЕРКА РЕЗУЛЬТАТА
+        function revealResult() {
+            if (!gameActive || selectedMultiplier === null) return;
+            
+            const isCorrect = selectedMultiplier === correctMultiplier;
+            const winAmount = isCorrect ? Math.floor(currentBetAmount * correctMultiplier) : 0;
+            const profit = winAmount - currentBetAmount;
+            
+            // Обновляем UI с результатом
+            hiddenMultiplier.textContent = `${correctMultiplier}x`;
+            hiddenMultiplier.classList.add('revealed');
+            multiplierLabel.textContent = isCorrect ? 'Правильный множитель!' : 'Не угадали!';
+            
+            // Показываем правильные/неправильные варианты
+            document.querySelectorAll('.multiplier-option').forEach(option => {
+                const multiplier = parseFloat(option.dataset.multiplier);
+                option.classList.remove('selected');
+                
+                if (multiplier === correctMultiplier) {
+                    option.classList.add('correct');
+                } else if (multiplier === selectedMultiplier) {
+                    option.classList.add('incorrect');
+                }
+                
+                // Блокируем все кнопки
+                option.classList.add('disabled');
+                option.style.cursor = 'default';
+            });
+            
+            // Обновляем баланс
+            if (isCorrect) {
+                currentBalance += winAmount;
+                winStreak++;
+                lossStreak = 0;
+                showConfetti();
+            } else {
+                lossStreak++;
+                winStreak = 0;
+            }
+            
+            localStorage.setItem('user_balance', currentBalance);
+            updateBalanceDisplay();
+            updateStatsDisplay();
+            
+            // Сохраняем в историю
+            saveToLocalHistory(isCorrect, correctMultiplier, profit);
+            
+            // Сохраняем статистику
+            savePlayerStats();
+            
+            // Сохраняем в базу данных
+            saveGameToDatabase(isCorrect, winAmount, profit);
+            
+            // Разблокируем поле ставки
+            betAmountInput.disabled = false;
+            
+            // Завершаем игру
+            gameActive = false;
+            updateGameStatus();
+            
+            // Показываем модальное окно с результатом
+            setTimeout(() => {
+                showResultModal(isCorrect, profit, correctMultiplier);
+            }, 1000);
+            
+            console.log(`Результат: ${isCorrect ? 'ВЫИГРЫШ' : 'ПРОИГРЫШ'}. Правильный: ${correctMultiplier}x, Выбранный: ${selectedMultiplier}x, Выигрыш: ${winAmount}₽`);
+        }
+        
+        // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ БАЛАНСА
+        function updateBalanceDisplay() {
+            gameBalanceElement.textContent = currentBalance.toLocaleString();
+            
+            // Анимация обновления
+            gameBalanceElement.style.animation = 'none';
+            setTimeout(() => {
+                gameBalanceElement.style.animation = 'pulse 0.5s ease-in-out';
+            }, 10);
+            
+            updateGameStatus();
+        }
+        
+        // КОНФЕТТИ ДЛЯ ВЫИГРЫША
+        function showConfetti() {
+            const confettiCount = 30;
+            const colors = ['#FF6B00', '#FF4500', '#00C2FF', '#00C853', '#FF9800'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 8px;
+                    height: 8px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    border-radius: 50%;
+                    z-index: 1000;
+                    pointer-events: none;
+                    top: 50%;
+                    left: 50%;
+                `;
+                
+                document.body.appendChild(confetti);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 1.5 + Math.random() * 1.5;
+                
+                confetti.animate([
+                    {
+                        transform: `translate(-50%, -50%) scale(1)`,
+                        opacity: 1
+                    },
+                    {
+                        transform: `translate(${Math.cos(angle) * velocity * 100}%, ${Math.sin(angle) * velocity * 100}%) scale(0)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: 800 + Math.random() * 800,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                });
+                
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        document.body.removeChild(confetti);
+                    }
+                }, 1600);
+            }
+        }
+        
+        // СОХРАНЕНИЕ В ЛОКАЛЬНУЮ ИСТОРИЮ
+        function saveToLocalHistory(isWin, multiplier, profit) {
+            const historyItem = document.createElement('div');
+            historyItem.className = `history-item ${isWin ? 'history-win' : 'history-lose'}`;
+            historyItem.textContent = `${multiplier}x`;
+            historyItem.title = `${multiplier}x ${isWin ? '✅' : '❌'} ${profit > 0 ? '+' : ''}${profit.toLocaleString()}₽`;
+            
+            // Добавляем в начало
+            historyList.insertBefore(historyItem, historyList.firstChild);
+            
+            // Ограничиваем историю 15 элементами
+            if (historyList.children.length > 15) {
+                historyList.removeChild(historyList.lastChild);
+            }
+            
+            // Сохраняем в массив
+            gameHistory.unshift({
+                isWin: isWin,
+                multiplier: multiplier,
+                profit: profit,
+                bet: currentBetAmount,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('multix_history', JSON.stringify(gameHistory.slice(0, 50)));
+        }
+        
+        // СОХРАНЕНИЕ ИГРЫ В SUPABASE
+        async function saveGameToDatabase(isWin, winAmount, profit) {
+            if (!userId) return;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('multix_history')
+                    .insert({
+                        id: gameId,
+                        user_id: userId,
+                        user_name: localStorage.getItem('username') || 'Игрок',
+                        bet_amount: currentBetAmount,
+                        is_win: isWin,
+                        win_amount: winAmount,
+                        profit: profit,
+                        correct_multiplier: correctMultiplier,
+                        selected_multiplier: selectedMultiplier,
+                        options_count: currentMultipliers.length,
+                        balance_before: currentBalance - (isWin ? winAmount : -currentBetAmount),
+                        balance_after: currentBalance,
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+                // Обновляем баланс пользователя в базе
+                await updateUserBalanceInDatabase();
+                
+            } catch (error) {
+                console.error('Ошибка сохранения в базу:', error);
+            }
+        }
+        
+        // ОБНОВЛЕНИЕ БАЛАНСА В БАЗЕ ДАННЫХ
+        async function updateUserBalanceInDatabase() {
+            if (!userId) return;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('user_balances')
+                    .upsert({
+                        user_id: userId,
+                        balance: currentBalance,
+                        updated_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+            } catch (error) {
+                console.error('Ошибка обновления баланса в базе:', error);
+            }
+        }
+        
+        // ПОКАЗ МОДАЛЬНОГО ОКНА РЕЗУЛЬТАТА
+        function showResultModal(isWin, amount, multiplier) {
+            const modal = document.createElement('div');
+            modal.className = 'result-modal';
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-icon ${isWin ? 'win' : 'lose'}">
+                        <i class="fas ${isWin ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                    </div>
+                    
+                    <h2 class="modal-title">${isWin ? 'ПОБЕДА!' : 'ПРОИГРЫШ'}</h2>
+                    
+                    <p class="modal-message">
+                        Правильный множитель: <span style="color: var(--primary); font-weight: 900;">${multiplier}x</span><br>
+                        ${isWin 
+                            ? 'Вы угадали правильный множитель!' 
+                            : 'Вы не угадали правильный множитель.'}
+                    </p>
+                    
+                    <div class="modal-amount ${isWin ? 'win' : 'lose'}">
+                        ${isWin ? '+' : '-'}${Math.abs(amount).toLocaleString()} ₽
+                    </div>
+                    
+                    <button class="modal-button" id="closeModal">
+                        ${isWin ? 'ИГРАТЬ ЕЩЁ' : 'ПОПРОБОВАТЬ СНОВА'}
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Закрытие модального окна
+            const closeButton = document.getElementById('closeModal');
+            closeButton.addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // Автоматическое закрытие через 5 секунд
+            setTimeout(() => {
+                if (document.body.contains(modal)) {
+                    document.body.removeChild(modal);
+                }
+            }, 5000);
+        }
+        
+        // ЗАГРУЗКА ИСТОРИИ ИЗ LOCALSTORAGE
+        function loadLocalHistory() {
+            const savedHistory = localStorage.getItem('multix_history');
+            if (savedHistory) {
+                try {
+                    gameHistory = JSON.parse(savedHistory);
+                    
+                    // Отображаем последние 15 результатов
+                    gameHistory.slice(0, 15).forEach(game => {
+                        const historyItem = document.createElement('div');
+                        historyItem.className = `history-item ${game.isWin ? 'history-win' : 'history-lose'}`;
+                        historyItem.textContent = `${game.multiplier}x`;
+                        historyItem.title = `${game.multiplier}x ${game.isWin ? '✅' : '❌'} ${game.profit > 0 ? '+' : ''}${game.profit.toLocaleString()}₽`;
+                        historyList.appendChild(historyItem);
+                    });
+                } catch (e) {
+                    console.error('Ошибка загрузки истории:', e);
+                }
+            }
+        }
+        
+        // НАЗАД В ГЛАВНОЕ МЕНЮ
+        function goBack() {
+            localStorage.setItem('user_balance', currentBalance);
+            window.location.href = 'index.html';
+        }
+        
+        // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+        document.addEventListener('DOMContentLoaded', function() {
+            initGame();
+            
+            // Предотвращение ухода со страницы без сохранения
+            window.addEventListener('beforeunload', function(e) {
+                localStorage.setItem('user_balance', currentBalance);
+                savePlayerStats();
+            });
+            
+            // Обновление баланса при возвращении на вкладку
+            window.addEventListener('focus', function() {
+                const savedBalance = localStorage.getItem('user_balance');
+                if (savedBalance && parseInt(savedBalance) !== currentBalance) {
+                    currentBalance = parseInt(savedBalance);
+                    updateBalanceDisplay();
+                }
+            });
+            
+            // Горячие клавиши
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Enter' && !gameActive && !startButton.disabled) {
+                    e.preventDefault();
+                    startNewGame();
+                }
+                
+                if (e.code === 'Space' && gameActive && !revealButton.disabled) {
+                    e.preventDefault();
+                    revealResult();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
