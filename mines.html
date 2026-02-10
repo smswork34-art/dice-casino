@@ -41,7 +41,7 @@
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             height: 95vh;
-            max-height: 920px; /* Чуть увеличил максимальную высоту */
+            max-height: 920px;
             display: flex;
             flex-direction: column;
         }
@@ -159,15 +159,14 @@
             font-weight: 600;
         }
         
-        /* ЕЩЕ БОЛЬШЕ УВЕЛИЧЕННЫЙ БАННЕР С ЯЧЕЙКАМИ */
         .mines-section {
             background: var(--bg-dark);
             border-radius: 15px;
-            padding: 35px 25px; /* Увеличил padding сверху/снизу еще больше */
+            padding: 35px 25px;
             margin-bottom: 20px;
             border: 2px solid var(--border);
             text-align: center;
-            min-height: 380px; /* Еще увеличил высоту */
+            min-height: 380px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -176,10 +175,10 @@
         .mines-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px; /* Чуть увеличил gap */
+            gap: 15px;
             margin: 0 auto;
             width: 100%;
-            max-width: 400px; /* Чуть увеличил максимальную ширину */
+            max-width: 400px;
         }
         
         .cell {
@@ -192,9 +191,9 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 28px; /* Чуть увеличил шрифт */
+            font-size: 28px;
             font-weight: 900;
-            min-width: 60px; /* Чуть увеличил минимальный размер */
+            min-width: 60px;
             min-height: 60px;
             position: relative;
         }
@@ -460,7 +459,6 @@
             font-size: 12px;
         }
         
-        /* Модальное окно результата */
         .result-modal {
             position: fixed;
             top: 0;
@@ -553,7 +551,6 @@
             box-shadow: 0 10px 25px rgba(255, 107, 0, 0.4);
         }
         
-        /* Мобильная адаптация */
         @media (max-height: 700px) {
             .game-container {
                 height: 97vh;
@@ -693,7 +690,6 @@
                 </div>
             </div>
             
-            <!-- ЕЩЕ БОЛЬШЕ УВЕЛИЧЕННЫЙ БАННЕР С ЯЧЕЙКАМИ -->
             <div class="mines-section">
                 <div class="mines-grid" id="minesGrid">
                     <!-- 25 ячеек будут созданы через JavaScript -->
@@ -773,6 +769,7 @@
         let minesPositions = [];
         let revealedCells = [];
         let currentMultiplier = 1.0;
+        let baseMultiplier = 1.0; // ДОБАВЛЕНО: базовый множитель
         let gameStartTime = null;
         let gameId = null;
         
@@ -861,7 +858,8 @@
         
         // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ ТЕКУЩИХ НАСТРОЕК
         function updateCurrentSettings() {
-            currentMultiplierElement.textContent = baseMultipliersByMines[selectedMinesCount].toFixed(2) + 'x';
+            baseMultiplier = baseMultipliersByMines[selectedMinesCount];
+            currentMultiplierElement.textContent = baseMultiplier.toFixed(2) + 'x';
             currentMinesElement.textContent = selectedMinesCount;
             currentBetElement.textContent = currentBetAmount.toLocaleString();
         }
@@ -955,7 +953,8 @@
             gameActive = true;
             minesPositions = [];
             revealedCells = [];
-            currentMultiplier = baseMultipliersByMines[selectedMinesCount];
+            baseMultiplier = baseMultipliersByMines[selectedMinesCount];
+            currentMultiplier = baseMultiplier; // ИСПРАВЛЕНО: начинаем с базового множителя
             gameStartTime = Date.now();
             gameId = 'MINES_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
             
@@ -1105,6 +1104,7 @@
             
             // Сбрасываем множитель
             currentMultiplier = 1.0;
+            baseMultiplier = baseMultipliersByMines[selectedMinesCount];
             updateMultiplierDisplay();
             
             // Сохраняем результат в историю
