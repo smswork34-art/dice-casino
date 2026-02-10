@@ -159,15 +159,15 @@
             font-weight: 600;
         }
         
-        /* ИСПРАВЛЕННАЯ ВЫСОТА ДЛЯ СЕТКИ МИН */
+        /* УВЕЛИЧЕННЫЙ БАННЕР С ЯЧЕЙКАМИ */
         .mines-section {
             background: var(--bg-dark);
             border-radius: 15px;
-            padding: 25px; /* Увеличил padding сверху/снизу */
+            padding: 30px 25px; /* Увеличил padding сверху/снизу */
             margin-bottom: 20px;
             border: 2px solid var(--border);
             text-align: center;
-            min-height: 320px; /* Увеличил минимальную высоту */
+            min-height: 360px; /* Увеличил высоту */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -176,26 +176,27 @@
         .mines-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px; /* Немного увеличил gap для лучшего вида */
+            gap: 14px; /* Увеличил gap */
             margin: 0 auto;
             width: 100%;
-            max-width: 350px;
+            max-width: 380px; /* Увеличил максимальную ширину */
         }
         
         .cell {
             aspect-ratio: 1;
             background: var(--bg-card);
             border: 2px solid var(--border);
-            border-radius: 10px; /* Увеличил радиус скругления */
+            border-radius: 12px; /* Увеличил радиус */
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 24px;
+            font-size: 26px; /* Увеличил шрифт */
             font-weight: 900;
-            min-width: 50px;
-            min-height: 50px;
+            min-width: 55px; /* Увеличил минимальный размер */
+            min-height: 55px;
+            position: relative;
         }
         
         .cell:hover:not(.revealed):not(.exploded) {
@@ -226,6 +227,30 @@
             background: var(--mine-gradient);
             border-color: var(--danger);
             color: white;
+        }
+        
+        .cell-bonus {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--success);
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bonusAppear 0.5s ease-out;
+            z-index: 2;
+        }
+        
+        @keyframes bonusAppear {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
         }
         
         @keyframes explode {
@@ -536,19 +561,19 @@
             }
             
             .mines-section {
-                min-height: 280px;
-                padding: 20px;
+                min-height: 320px;
+                padding: 25px 20px;
             }
             
             .mines-grid {
-                gap: 10px;
-                max-width: 320px;
+                gap: 12px;
+                max-width: 350px;
             }
             
             .cell {
-                min-width: 45px;
-                min-height: 45px;
-                font-size: 20px;
+                min-width: 50px;
+                min-height: 50px;
+                font-size: 24px;
             }
         }
         
@@ -571,20 +596,20 @@
             }
             
             .mines-section {
-                padding: 20px;
-                min-height: 260px;
+                padding: 25px 15px;
+                min-height: 300px;
             }
             
             .mines-grid {
-                gap: 10px;
-                max-width: 300px;
+                gap: 12px;
+                max-width: 330px;
             }
             
             .cell {
-                min-width: 40px;
-                min-height: 40px;
-                font-size: 18px;
-                border-radius: 8px;
+                min-width: 48px;
+                min-height: 48px;
+                font-size: 22px;
+                border-radius: 10px;
             }
             
             .stats-container {
@@ -619,19 +644,19 @@
         
         @media (max-width: 380px) {
             .mines-grid {
-                gap: 8px;
-                max-width: 280px;
+                gap: 10px;
+                max-width: 300px;
             }
             
             .cell {
-                min-width: 38px;
-                min-height: 38px;
-                font-size: 16px;
+                min-width: 45px;
+                min-height: 45px;
+                font-size: 20px;
             }
             
             .mines-section {
-                min-height: 240px;
-                padding: 15px;
+                min-height: 280px;
+                padding: 20px 15px;
             }
         }
     </style>
@@ -668,7 +693,7 @@
                 </div>
             </div>
             
-            <!-- ИСПРАВЛЕННЫЙ КОНТЕЙНЕР ДЛЯ СЕТКИ -->
+            <!-- УВЕЛИЧЕННЫЙ БАННЕР С ЯЧЕЙКАМИ -->
             <div class="mines-section">
                 <div class="mines-grid" id="minesGrid">
                     <!-- 25 ячеек будут созданы через JavaScript -->
@@ -751,11 +776,18 @@
         let gameStartTime = null;
         let gameId = null;
         
-        // МНОЖИТЕЛИ ДЛЯ РАЗНОГО КОЛИЧЕСТВА МИН
-        const multipliersByMines = {
+        // БАЗОВЫЕ МНОЖИТЕЛИ ДЛЯ РАЗНОГО КОЛИЧЕСТВА МИН
+        const baseMultipliersByMines = {
             3: 1.20,   5: 1.50,   8: 1.80,   10: 2.00,
             12: 2.50,  15: 3.00,  18: 3.50,  20: 4.00,
             22: 4.50,  24: 5.00
+        };
+        
+        // БОНУСНЫЕ МНОЖИТЕЛИ ЗА КАЖДУЮ ОТКРЫТУЮ ЯЧЕЙКУ
+        const cellBonusMultipliers = {
+            3: 0.08,   5: 0.10,   8: 0.12,   10: 0.15,
+            12: 0.18,  15: 0.22,  18: 0.26,  20: 0.30,
+            22: 0.35,  24: 0.40
         };
         
         // ЭЛЕМЕНТЫ
@@ -829,7 +861,7 @@
         
         // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ ТЕКУЩИХ НАСТРОЕК
         function updateCurrentSettings() {
-            currentMultiplierElement.textContent = multipliersByMines[selectedMinesCount].toFixed(2) + 'x';
+            currentMultiplierElement.textContent = baseMultipliersByMines[selectedMinesCount].toFixed(2) + 'x';
             currentMinesElement.textContent = selectedMinesCount;
             currentBetElement.textContent = currentBetAmount.toLocaleString();
         }
@@ -923,7 +955,7 @@
             gameActive = true;
             minesPositions = [];
             revealedCells = [];
-            currentMultiplier = 1.0;
+            currentMultiplier = baseMultipliersByMines[selectedMinesCount];
             gameStartTime = Date.now();
             gameId = 'MINES_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
             
@@ -936,16 +968,16 @@
             cashoutButton.disabled = false;
             betAmountInput.disabled = true;
             
+            // Обновляем отображение множителя
+            updateMultiplierDisplay();
+            
             // Прячем выбор количества мин во время игры
             document.querySelectorAll('.mine-count-btn').forEach(btn => {
                 btn.style.opacity = '0.5';
                 btn.style.cursor = 'not-allowed';
             });
             
-            // Запускаем обновление множителя
-            startMultiplierUpdate();
-            
-            console.log(`Игра начата. Ставка: ${currentBetAmount}₽, Мины: ${selectedMinesCount}`);
+            console.log(`Игра начата. Ставка: ${currentBetAmount}₽, Мины: ${selectedMinesCount}, Базовый множитель: ${currentMultiplier}x`);
         }
         
         // ГЕНЕРАЦИЯ ПОЗИЦИЙ МИН
@@ -964,29 +996,13 @@
             console.log('Позиции мин:', minesPositions);
         }
         
-        // ОБНОВЛЕНИЕ МНОЖИТЕЛЯ В РЕАЛЬНОМ ВРЕМЕНИ
-        function startMultiplierUpdate() {
-            if (!gameActive) return;
+        // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ МНОЖИТЕЛЯ
+        function updateMultiplierDisplay() {
+            currentMultiplierElement.textContent = currentMultiplier.toFixed(2) + 'x';
             
-            const multiplierInterval = setInterval(() => {
-                if (!gameActive) {
-                    clearInterval(multiplierInterval);
-                    return;
-                }
-                
-                // Увеличиваем множитель
-                const baseMultiplier = multipliersByMines[selectedMinesCount];
-                const timePassed = (Date.now() - gameStartTime) / 1000; // в секундах
-                const multiplierIncrease = 0.01 * Math.sqrt(timePassed); // Медленный рост
-                
-                currentMultiplier = baseMultiplier + multiplierIncrease;
-                currentMultiplierElement.textContent = currentMultiplier.toFixed(2) + 'x';
-                
-                // Обновляем потенциальный выигрыш
-                const potentialWin = Math.floor(currentBetAmount * currentMultiplier);
-                cashoutButton.innerHTML = `<i class="fas fa-money-bill-wave"></i> ЗАБРАТЬ ${potentialWin.toLocaleString()}₽`;
-                
-            }, 100); // Обновляем каждые 100мс
+            // Обновляем потенциальный выигрыш
+            const potentialWin = Math.floor(currentBetAmount * currentMultiplier);
+            cashoutButton.innerHTML = `<i class="fas fa-money-bill-wave"></i> ЗАБРАТЬ ${potentialWin.toLocaleString()}₽`;
         }
         
         // КЛИК ПО ЯЧЕЙКЕ
@@ -1007,26 +1023,30 @@
                 // Завершаем игру (проигрыш)
                 endGame(false);
             } else {
-                // АЛМАЗ - ПРОДОЛЖАЕМ ИГРУ
+                // АЛМАЗ - УВЕЛИЧИВАЕМ МНОЖИТЕЛЬ
                 cell.classList.add('revealed', 'gem');
                 cell.innerHTML = '<i class="fas fa-gem"></i>';
                 revealedCells.push(cellIndex);
                 
-                // Обновляем множитель
-                const cellsOpened = revealedCells.length;
-                const multiplierBonus = 0.05 * cellsOpened; // Бонус за каждую открытую ячейку
+                // Увеличиваем множитель за каждую открытую ячейку
+                const cellBonus = cellBonusMultipliers[selectedMinesCount];
+                currentMultiplier += cellBonus;
                 
-                const baseMultiplier = multipliersByMines[selectedMinesCount];
-                const timePassed = (Date.now() - gameStartTime) / 1000;
-                const timeBonus = 0.01 * Math.sqrt(timePassed);
-                const cellBonus = multiplierBonus;
+                // Добавляем бонусную иконку на ячейку
+                const bonusIcon = document.createElement('div');
+                bonusIcon.className = 'cell-bonus';
+                bonusIcon.textContent = `+${cellBonus.toFixed(2)}x`;
+                cell.appendChild(bonusIcon);
                 
-                currentMultiplier = baseMultiplier + timeBonus + cellBonus;
-                currentMultiplierElement.textContent = currentMultiplier.toFixed(2) + 'x';
+                // Удаляем бонусную иконку через 1.5 секунды
+                setTimeout(() => {
+                    if (bonusIcon.parentNode === cell) {
+                        cell.removeChild(bonusIcon);
+                    }
+                }, 1500);
                 
-                // Обновляем кнопку вывода
-                const potentialWin = Math.floor(currentBetAmount * currentMultiplier);
-                cashoutButton.innerHTML = `<i class="fas fa-money-bill-wave"></i> ЗАБРАТЬ ${potentialWin.toLocaleString()}₽`;
+                // Обновляем отображение множителя
+                updateMultiplierDisplay();
                 
                 // Проверяем, все ли безопасные ячейки открыты
                 const safeCellsCount = 25 - selectedMinesCount;
@@ -1034,6 +1054,8 @@
                     // Все безопасные ячейки открыты - автоматический вывод
                     cashout();
                 }
+                
+                console.log(`Открыта ячейка ${cellIndex}. Множитель: ${currentMultiplier.toFixed(2)}x (+${cellBonus}x)`);
             }
         }
         
@@ -1083,6 +1105,7 @@
             
             // Сбрасываем множитель
             currentMultiplier = 1.0;
+            updateMultiplierDisplay();
             
             // Сохраняем результат в историю
             saveToLocalHistory(isWin, winAmount);
@@ -1090,7 +1113,7 @@
             // Сохраняем в базу данных
             saveGameToDatabase(isWin, winAmount);
             
-            console.log(`Игра завершена. ${isWin ? 'Выигрыш' : 'Проигрыш'}: ${isWin ? winAmount + '₽' : currentBetAmount + '₽'}`);
+            console.log(`Игра завершена. ${isWin ? 'Выигрыш' : 'Проигрыш'}: ${isWin ? winAmount + '₽' : currentBetAmount + '₽'}, Открыто ячеек: ${revealedCells.length}`);
         }
         
         // СОХРАНЕНИЕ В ЛОКАЛЬНУЮ ИСТОРИЮ
@@ -1103,7 +1126,7 @@
                     <i class="fas fa-gem"></i>
                     <span class="win-amount">+${winAmount.toLocaleString()}₽</span>
                 `;
-                historyItem.title = `Выигрыш: ${winAmount.toLocaleString()}₽ | Мин: ${selectedMinesCount}`;
+                historyItem.title = `Выигрыш: ${winAmount.toLocaleString()}₽ | Мин: ${selectedMinesCount} | Ячеек: ${revealedCells.length}`;
             } else {
                 historyItem.innerHTML = `
                     <i class="fas fa-bomb"></i>
@@ -1125,6 +1148,8 @@
                 isWin: isWin,
                 amount: isWin ? winAmount : -currentBetAmount,
                 mines: selectedMinesCount,
+                cells: revealedCells.length,
+                multiplier: currentMultiplier.toFixed(2),
                 bet: currentBetAmount,
                 timestamp: new Date().toISOString()
             });
@@ -1200,13 +1225,15 @@
                     
                     <p class="modal-message">
                         ${isWin 
-                            ? `Вы нашли алмаз и забрали выигрыш!` 
+                            ? `Вы открыли ${revealedCells.length} ячеек с алмазами!` 
                             : `Вы наступили на мину и потеряли ставку.`}
                     </p>
                     
                     <div class="modal-amount ${isWin ? 'win' : 'lose'}">
                         ${isWin ? '+' : '-'}${amount.toLocaleString()} ₽
                     </div>
+                    
+                    ${isWin ? `<p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 14px;">Множитель: ${currentMultiplier.toFixed(2)}x</p>` : ''}
                     
                     <button class="modal-button" id="closeModal">
                         ${isWin ? 'ИГРАТЬ ЕЩЁ' : 'ПОПРОБОВАТЬ СНОВА'}
@@ -1247,7 +1274,7 @@
                                 <i class="fas fa-gem"></i>
                                 <span class="win-amount">+${game.amount.toLocaleString()}₽</span>
                             `;
-                            historyItem.title = `Выигрыш: ${game.amount.toLocaleString()}₽ | Мин: ${game.mines}`;
+                            historyItem.title = `Выигрыш: ${game.amount.toLocaleString()}₽ | Мин: ${game.mines} | Ячеек: ${game.cells}`;
                         } else {
                             historyItem.innerHTML = `
                                 <i class="fas fa-bomb"></i>
