@@ -849,15 +849,24 @@
             }
             
             init() {
-                // Загружаем баланс
+                console.log('Инициализация игры Blackjack');
+                
+                // Загружаем баланс из localStorage
                 const savedBalance = localStorage.getItem('user_balance');
                 if (savedBalance) {
                     this.balance = parseInt(savedBalance);
+                    console.log('Баланс загружен:', this.balance);
+                } else {
+                    // Если нет в localStorage, сохраняем текущий
+                    localStorage.setItem('user_balance', this.balance);
                 }
+                
+                // Обновляем отображение баланса
                 this.updateBalance();
                 
                 // Создаем колоду
                 this.createDeck();
+                console.log('Колода создана:', this.deck.length, 'карт');
                 
                 // Настраиваем обработчики
                 this.setupEventListeners();
@@ -866,7 +875,13 @@
                 this.updateUI();
                 
                 // Активируем начальную ставку
-                document.querySelector('.bet-btn[data-bet="500"]').classList.add('active');
+                const initialBetBtn = document.querySelector('.bet-btn[data-bet="500"]');
+                if (initialBetBtn) {
+                    initialBetBtn.classList.add('active');
+                    console.log('Активирована ставка 500');
+                }
+                
+                this.showStatus('Сделайте ставку и начните игру');
             }
             
             createDeck() {
@@ -888,10 +903,12 @@
                     const j = Math.floor(Math.random() * (i + 1));
                     [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
                 }
+                console.log('Колода перемешана');
             }
             
             drawCard() {
                 if (this.deck.length < 10) {
+                    console.log('Колода почти закончилась, создаем новую');
                     this.createDeck();
                 }
                 return this.deck.pop();
@@ -922,9 +939,12 @@
             }
             
             startGame() {
+                console.log('Начало игры, ставка:', this.bet);
+                
                 // Проверяем ставку
                 if (this.bet > this.balance) {
                     this.showStatus('Недостаточно средств!', 'status-lose');
+                    console.log('Недостаточно средств:', this.bet, '>', this.balance);
                     return;
                 }
                 
@@ -939,10 +959,14 @@
                 // Снимаем ставку
                 this.balance -= this.bet;
                 this.updateBalance();
+                console.log('Списано:', this.bet, 'Остаток:', this.balance);
                 
                 // Раздаем карты
                 this.playerHand = [this.drawCard(), this.drawCard()];
                 this.dealerHand = [this.drawCard(), this.drawCard()];
+                
+                console.log('Карты игрока:', this.playerHand);
+                console.log('Карты дилера:', this.dealerHand);
                 
                 // Считаем очки
                 this.playerScore = this.calculateScore(this.playerHand);
@@ -950,6 +974,7 @@
                 
                 // Проверяем блекджек
                 this.hasBlackjack = this.playerScore === 21 && this.playerHand.length === 2;
+                console.log('Блекджек?:', this.hasBlackjack);
                 
                 // Обновляем отображение
                 this.updateCards();
@@ -961,6 +986,7 @@
                 
                 if (this.hasBlackjack) {
                     this.showStatus('БЛЭКДЖЕК!', 'status-blackjack');
+                    console.log('У игрока блекджек');
                     setTimeout(() => this.dealerTurn(), 1500);
                 } else {
                     this.showStatus('Ваш ход. Выберите действие', '');
@@ -970,9 +996,15 @@
             hit() {
                 if (this.gameState !== 'playing') return;
                 
+                console.log('Игрок берет карту');
+                
                 // Берем карту
-                this.playerHand.push(this.drawCard());
+                const newCard = this.drawCard();
+                this.playerHand.push(newCard);
                 this.playerScore = this.calculateScore(this.playerHand);
+                
+                console.log('Новая карта:', newCard);
+                console.log('Новый счет игрока:', this.playerScore);
                 
                 // Обновляем отображение
                 this.updateCards();
@@ -981,9 +1013,11 @@
                 // Проверяем перебор
                 if (this.playerScore > 21) {
                     this.showStatus('ПЕРЕБОР!', 'status-lose');
+                    console.log('Игрок перебрал');
                     this.endGame('lose');
                 } else if (this.playerScore === 21) {
                     this.showStatus('21 ОЧКО!', 'status-win');
+                    console.log('Игрок набрал 21');
                     setTimeout(() => this.stand(), 1000);
                 }
                 
@@ -995,6 +1029,8 @@
             stand() {
                 if (this.gameState !== 'playing') return;
                 
+                console.log('Игрок остановился');
+                
                 this.gameState = 'dealer';
                 this.updateControls();
                 this.showStatus('Ход дилера...', '');
@@ -1003,13 +1039,19 @@
             }
             
             double() {
-                if (this.gameState !== 'playing' || !this.canDouble || this.bet * 2 > this.balance) return;
+                if (this.gameState !== 'playing' || !this.canDouble || this.bet * 2 > this.balance) {
+                    console.log('Удвоение невозможно');
+                    return;
+                }
+                
+                console.log('Игрок удваивает ставку');
                 
                 // Удваиваем ставку
                 this.balance -= this.bet;
                 this.bet *= 2;
                 this.updateBalance();
                 this.updateBetDisplay();
+                console.log('Новая ставка:', this.bet);
                 
                 // Берем одну карту
                 this.hit();
@@ -1021,12 +1063,15 @@
             }
             
             dealerTurn() {
+                console.log('Ход дилера');
+                
                 this.gameState = 'dealer';
                 this.updateControls();
                 
                 // Показываем все карты дилера
                 this.dealerScore = this.calculateScore(this.dealerHand);
                 this.updateScores();
+                console.log('Счет дилера:', this.dealerScore);
                 
                 // Анимация открытия карт
                 this.showDealerCards();
@@ -1051,21 +1096,31 @@
             }
             
             dealerLogic() {
+                console.log('Дилер думает... Текущий счет:', this.dealerScore);
+                
                 // Дилер берет карты до 17
                 if (this.dealerScore < 17) {
+                    console.log('Дилер берет карту');
+                    
                     setTimeout(() => {
-                        this.dealerHand.push(this.drawCard());
+                        const newCard = this.drawCard();
+                        this.dealerHand.push(newCard);
                         this.dealerScore = this.calculateScore(this.dealerHand);
                         this.updateCards();
                         this.updateScores();
+                        console.log('Дилер взял:', newCard, 'Новый счет:', this.dealerScore);
                         this.dealerLogic();
                     }, 800);
                 } else {
+                    console.log('Дилер остановился');
                     setTimeout(() => this.determineWinner(), 1000);
                 }
             }
             
             determineWinner() {
+                console.log('Определение победителя');
+                console.log('Счет игрока:', this.playerScore, 'Счет дилера:', this.dealerScore);
+                
                 let result = '';
                 let winAmount = 0;
                 
@@ -1074,39 +1129,48 @@
                     winAmount = Math.floor(this.bet * 2.5);
                     this.balance += winAmount;
                     result = 'blackjack';
+                    console.log('БЛЭКДЖЕК! Выигрыш:', winAmount);
                 } else if (this.playerScore > 21) {
                     // Игрок перебрал
                     winAmount = 0;
                     result = 'lose';
+                    console.log('Игрок перебрал');
                 } else if (this.dealerScore > 21) {
                     // Дилер перебрал
                     winAmount = this.bet * 2;
                     this.balance += winAmount;
                     result = 'win';
+                    console.log('Дилер перебрал, выигрыш:', winAmount);
                 } else if (this.playerScore > this.dealerScore) {
                     // Игрок выиграл
                     winAmount = this.bet * 2;
                     this.balance += winAmount;
                     result = 'win';
+                    console.log('Игрок выиграл, выигрыш:', winAmount);
                 } else if (this.playerScore < this.dealerScore) {
                     // Дилер выиграл
                     winAmount = 0;
                     result = 'lose';
+                    console.log('Дилер выиграл');
                 } else {
                     // Ничья
                     winAmount = this.bet;
                     this.balance += winAmount;
                     result = 'push';
+                    console.log('Ничья, возврат ставки');
                 }
                 
                 // Сохраняем баланс
                 localStorage.setItem('user_balance', this.balance);
+                console.log('Новый баланс сохранен:', this.balance);
                 
                 // Завершаем игру
                 this.endGame(result, winAmount);
             }
             
             endGame(result, winAmount = 0) {
+                console.log('Конец игры. Результат:', result);
+                
                 this.gameState = 'ended';
                 this.updateControls();
                 
@@ -1118,6 +1182,8 @@
             }
             
             resetGame() {
+                console.log('Сброс игры');
+                
                 this.playerHand = [];
                 this.dealerHand = [];
                 this.playerScore = 0;
@@ -1131,6 +1197,7 @@
             }
             
             updateUI() {
+                console.log('Обновление UI');
                 this.updateBetDisplay();
                 this.updateControls();
                 this.updateBetButtons();
@@ -1138,10 +1205,12 @@
             
             updateBalance() {
                 this.elements.balance.textContent = this.balance.toLocaleString();
+                console.log('Баланс обновлен:', this.balance);
             }
             
             updateBetDisplay() {
                 this.elements.currentBet.textContent = `${this.bet.toLocaleString()} ₽`;
+                console.log('Ставка обновлена:', this.bet);
             }
             
             updateScores() {
@@ -1156,6 +1225,8 @@
             }
             
             updateCards() {
+                console.log('Обновление карт');
+                
                 // Карты игрока
                 this.elements.playerCards.innerHTML = '';
                 this.playerHand.forEach(card => {
@@ -1199,6 +1270,8 @@
             }
             
             updateControls() {
+                console.log('Обновление кнопок, состояние:', this.gameState);
+                
                 const isPlaying = this.gameState === 'playing';
                 const isBetting = this.gameState === 'betting';
                 
@@ -1206,21 +1279,37 @@
                 this.elements.hitBtn.disabled = !isPlaying;
                 this.elements.standBtn.disabled = !isPlaying;
                 this.elements.doubleBtn.disabled = !isPlaying || !this.canDouble || this.bet * 2 > this.balance;
+                
+                console.log('Кнопки:', {
+                    dealBtn: !isBetting,
+                    hitBtn: !isPlaying,
+                    standBtn: !isPlaying,
+                    doubleBtn: !isPlaying || !this.canDouble || this.bet * 2 > this.balance
+                });
             }
             
             updateBetButtons() {
+                console.log('Обновление кнопок ставок');
+                
                 document.querySelectorAll('.bet-btn').forEach(btn => {
                     const bet = parseInt(btn.dataset.bet);
-                    btn.disabled = bet > this.balance;
-                    if (bet === this.bet) {
+                    const isDisabled = bet > this.balance;
+                    const isActive = bet === this.bet;
+                    
+                    btn.disabled = isDisabled;
+                    
+                    if (isActive) {
                         btn.classList.add('active');
                     } else {
                         btn.classList.remove('active');
                     }
+                    
+                    console.log(`Кнопка ${bet}: disabled=${isDisabled}, active=${isActive}`);
                 });
             }
             
             showStatus(message, className = '') {
+                console.log('Статус:', message);
                 this.elements.gameStatus.textContent = message;
                 this.elements.gameStatus.className = 'game-status';
                 if (className) {
@@ -1229,6 +1318,8 @@
             }
             
             showResult(result, winAmount) {
+                console.log('Показ результата:', result);
+                
                 // Настраиваем попап
                 this.elements.resultContent.className = 'result-content';
                 
@@ -1275,8 +1366,10 @@
                 
                 // Настраиваем кнопку продолжения
                 this.elements.continueBtn.onclick = () => {
+                    console.log('Продолжить игру');
                     this.elements.resultModal.classList.remove('show');
                     this.gameState = 'betting';
+                    this.bet = 500; // Сбрасываем ставку к значению по умолчанию
                     this.updateUI();
                     this.updateBetButtons();
                     this.showStatus('Сделайте ставку и начните игру', '');
@@ -1284,50 +1377,70 @@
             }
             
             setupEventListeners() {
+                console.log('Настройка обработчиков событий');
+                
                 // Кнопки ставок
                 document.querySelectorAll('.bet-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const bet = parseInt(btn.dataset.bet);
+                        console.log('Клик по ставке:', bet);
+                        
                         if (bet <= this.balance) {
                             this.bet = bet;
                             this.updateBetDisplay();
                             this.updateBetButtons();
+                            console.log('Ставка установлена:', this.bet);
+                        } else {
+                            console.log('Недостаточно средств для ставки:', bet);
                         }
                     });
                 });
                 
                 // Кнопка раздачи
                 this.elements.dealBtn.addEventListener('click', () => {
+                    console.log('Клик по кнопке "Раздать"');
                     this.startGame();
                 });
                 
                 // Кнопка "Ещё"
                 this.elements.hitBtn.addEventListener('click', () => {
+                    console.log('Клик по кнопке "Ещё"');
                     this.hit();
                 });
                 
                 // Кнопка "Хватит"
                 this.elements.standBtn.addEventListener('click', () => {
+                    console.log('Клик по кнопке "Хватит"');
                     this.stand();
                 });
                 
                 // Кнопка "Удвоить"
                 this.elements.doubleBtn.addEventListener('click', () => {
+                    console.log('Клик по кнопке "Удвоить"');
                     this.double();
                 });
                 
                 // Кнопка назад
                 document.querySelector('.back-btn').addEventListener('click', () => {
+                    console.log('Назад в меню');
                     // Сохраняем баланс перед уходом
                     localStorage.setItem('user_balance', this.balance);
                     window.history.back();
                 });
+                
+                console.log('Обработчики настроены');
             }
         }
         
         // Запуск игры при загрузке страницы
         document.addEventListener('DOMContentLoaded', () => {
-            window.game = new BlackjackGame();
+            console.log('DOM загружен, запуск игры');
+            try {
+                window.game = new BlackjackGame();
+                console.log('Игра успешно запущена');
+            } catch (error) {
+                console.error('Ошибка при запуске игры:', error);
+            }
         });
     </script>
 </body>
